@@ -1,3 +1,17 @@
+# Bloquino
+
+Plataforma educativa de Arduino para niños: circuitos, programación por
+bloques (con scripts que corren en paralelo), simulación y carga a la placa.
+En desarrollo.
+
+> **Bloquino es un fork de [Velxio](https://github.com/davidmonterocrespo24/velxio)**
+> (Copyright © 2025 David Montero Crespo), modificado desde el 10-nov-2026 a
+> partir del commit `8a254109`. Se distribuye bajo la misma licencia,
+> **AGPLv3** (ver [LICENSE](LICENSE)). No es un producto oficial de Velxio.
+> El README original de Velxio sigue a continuación.
+
+---
+
 # Velxio: Arduino & Embedded Board Emulator
 
 **Live at [velxio.dev](https://velxio.dev)**

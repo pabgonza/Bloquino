@@ -38,6 +38,8 @@ import { EditorMenuBar } from '../components/editor/EditorMenuBar';
 import type { CompilationLog } from '../utils/compilationLogger';
 import '../App.css';
 
+const BlocksPanel = React.lazy(() => import('../blocks/BlocksPanel'));
+
 const MOBILE_BREAKPOINT = 768;
 
 const BOTTOM_PANEL_MIN = 80;
@@ -98,6 +100,7 @@ export const EditorPage: React.FC = () => {
   const activeBoardId = useSimulatorStore((s) => s.activeBoardId);
   const oscilloscopeOpen = useOscilloscopeStore((s) => s.open);
   const [consoleOpen, setConsoleOpen] = useState(false);
+  const [editorTab, setEditorTab] = useState<'blocks' | 'code'>('code');
   // compileLogs live in a Zustand store so the velxio-pro agent overlay
   // (mounted in a separate React tree via slotMounter) can subscribe and
   // build a "diagnose this failure" prompt without prop-drilling.
@@ -729,11 +732,35 @@ export const EditorPage: React.FC = () => {
                 panel (SerialMonitor renders an xterm for Pi kinds). The old
                 RaspberryPiWorkspace (own file tree + own editor + upload
                 button) confused users with three competing file surfaces. */}
+            <div style={{ display: 'flex', flexShrink: 0 }}>
+              {(['blocks', 'code'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setEditorTab(tab)}
+                  style={{
+                    flex: 1,
+                    padding: '4px 0',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'inherit',
+                    background: editorTab === tab ? 'var(--wb-7)' : 'transparent',
+                  }}
+                >
+                  {tab === 'blocks' ? 'Bloques' : 'Código'}
+                </button>
+              ))}
+            </div>
             <div
               className="editor-wrapper"
               style={{ flex: 1, overflow: 'hidden', minHeight: 0, position: 'relative' }}
             >
-              <CodeEditor />
+              {editorTab === 'blocks' ? (
+                <React.Suspense fallback={null}>
+                  <BlocksPanel />
+                </React.Suspense>
+              ) : (
+                <CodeEditor />
+              )}
               {/* The compile card lives over the simulator canvas, which is
                   where the build's result appears. In code-only view (and on
                   a phone showing the editor) that pane is display:none, so it
