@@ -1,0 +1,46 @@
+schema: spec-driven
+
+context: |
+  Language: es
+  All artifacts must be written in es.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+  Proyecto: Bloquino, plataforma web educativa de Arduino para niños de 9 a 12 años (curso de 10 sesiones,
+  una sala, un profesor). Fork de Velxio (AGPLv3) congelado en el commit 8a254109; se le agrega programación
+  por bloques (Blockly 13, renderer Zelos) que genera Arduino C++, scripts paralelos tipo Scratch compilados a
+  corrutinas cooperativas, interfaz estilo Tinkercad en español, autosave local y carga a la placa por Web Serial.
+  Alcance del MVP: solo Arduino UNO R3 (clon con CH340) y los componentes del kit del curso: LED, resistencia,
+  botón, buzzer pasivo, servo SG90, potenciómetro, HC-SR04, DHT11 en módulo, LED RGB KY-016, LCD 16x2 sin I2C,
+  display de 7 segmentos, receptor infrarrojo + control remoto. Sin cuentas, cursos, entregas ni servidor de
+  proyectos. Terminado = las 10 sesiones del curso se hacen sin Tinkercad.
+  Stack: frontend React + Vite + TypeScript + Zustand (frontend/), backend FastAPI + arduino-cli (backend/),
+  simulación AVR con avr8js, componentes de @wokwi/elements. Tests con vitest (frontend/src/__tests__).
+  Reglas del fork: lo nuevo va en módulos propios (frontend/src/blocks/, etc.); los archivos grandes de Velxio
+  (useSimulatorStore.ts, SimulatorCanvas.tsx, EditorToolbar.tsx) se tocan lo mínimo; lo que no es UNO se oculta,
+  no se borra; components-metadata.json es generado (los componentes propios van en
+  scripts/component-overrides.json); Blockly se importa siempre entre amdOff y amdOn; nunca push a upstream.
+  Código compacto, sin funciones de un solo uso; comentarios y textos de interfaz en español.
+  Hitos (un change por hito, en orden): h1 bloques con generador clásico, h2 scripts paralelos, h3 interfaz de
+  alumno, h4 autosave, h5 componente DHT11, h6 librería BuzzerMusic, h7 carga por Web Serial, h8 componentes
+  extendidos (LCD, 7 segmentos, infrarrojo, puerto serie).
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
