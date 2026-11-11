@@ -12,6 +12,9 @@ import textos from '../i18n/locales/es/bloquino.json';
 import { filtrarKit } from './kit';
 
 const LADO = 56; // px del cuadro de la miniatura
+// Cómo sale cada componente del kit cuando difiere de Velxio: la resistencia
+// del curso es de 220 Ω (Velxio: 1 kΩ).
+const AJUSTES: Record<string, object> = { resistor: { value: '220' } };
 
 /** El elemento web del componente, reducido para caber en el cuadro. */
 function Miniatura({ componente }: { componente: ComponentMetadata }) {
@@ -54,6 +57,7 @@ function agregar(componente: ComponentMetadata) {
     { step: 36 / zoom },
   );
   const nuevo = createComponentFromMetadata(componente, x, y);
+  Object.assign(nuevo.properties, AJUSTES[componente.id]);
   sim.recordAddComponent(nuevo as Parameters<typeof sim.recordAddComponent>[0]);
 }
 

@@ -25,8 +25,18 @@ Herramienta: MCP de Playwright sobre `http://localhost:5173/editor?alumno` a 136
 
 ## 4. Recorrido de las sesiones
 
-- [ ] 4.1 Tomar de las slides el circuito y el programa de cada sesión (1 a 10) y anotar las diferencias entre slides y kit.
-- [ ] 4.2 Por cada sesión: armar en la protoboard con el mouse, programar con bloques, simular y comprobar. Sesión 8 (DHT11) ya hecha.
+- [x] 4.1 Circuito y programa de cada sesión, tomados de `Curso_Arduino/sketches/sesion-NN`:
+  - S2 parpadeo del LED de la placa (pin 13). S3 semáforo: LEDs rojo 13, verde 12, amarillo 11, cada uno con 220 Ω al riel −.
+  - S4 botón en el pin 2 y LED en el 13. S5 buzzer en el pin 8 (sirena, timbre con botón).
+  - S6 servo en el pin 9 y potenciómetro en A0. S7 HC-SR04 con TRIG 9 y ECHO 10, LED 13 y buzzer 8.
+  - S8 DHT11 en el pin 2. S9 LED RGB en los pines 3, 5 y 6. S10 integración: HC-SR04, servo, LEDs y buzzer.
+  - Diferencias entre curso y Bloquino: la sesión 4 arma el botón con resistencia de 10 kΩ a GND (`INPUT`, apretado = HIGH) y el bloque de botón usa `INPUT_PULLUP` (botón entre el pin y GND, apretado = LOW); la slide de la sesión 8 dibuja el DHT11 como «+ / datos / −» y el módulo del kit es «S / + / −».
+- [ ] 4.2 Por cada sesión: armar en la protoboard con el mouse, programar con bloques, simular y comprobar. Arnés en `recorrido/` (ver su README).
+  - [x] Sesión 8 (DHT11): hecha a mano con Playwright.
+  - [ ] Sesión 3 (semáforo): el arnés la arma y simula; rojo y verde prenden en orden. Falta repetirla con el amarillo en la columna 40: en la 38 no hay agujero de riel debajo, Velxio corre la resistencia una columna y el LED queda sin conectar (la simulación lo refleja: no prende).
+  - [ ] Sesiones 2, 4, 5, 6, 7, 9 y 10.
+  - Encontrado y corregido: la resistencia de la paleta salía de 1 kΩ; ahora sale de 220 Ω, la del curso.
+- [ ] 4.4 Arrastrar bloques desde la paleta de bloques con el mouse (hasta ahora los programas se cargaron como JSON).
 - [ ] 4.3 Lista corta para probar a mano con el kit.
 
 ## 5. Cierre
