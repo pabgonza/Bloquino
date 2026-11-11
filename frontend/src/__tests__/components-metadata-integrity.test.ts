@@ -111,7 +111,7 @@ describe('components-metadata.json — file integrity', () => {
   });
 
   it('every entry has a tagName matching the wokwi/velxio convention', () => {
-    const pattern = /^(wokwi|velxio)-/;
+    const pattern = /^(wokwi|velxio|bloquino)-/; // bloquino-: componentes propios del fork
     const bad = entries.filter((e) => !pattern.test(e.tagName));
     expect(bad.map((e) => `${e.id}: ${e.tagName}`), 'malformed tagName').toEqual([]);
   });

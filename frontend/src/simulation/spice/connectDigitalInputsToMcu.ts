@@ -129,6 +129,14 @@ export function connectDigitalInputsToMcu(): () => void {
         // and fight the part. This is what makes it safe to enable
         // spiceDrivenInputs on the AVR (which has many such part-driven pins).
         if (!sourcedNets.has(net)) continue;
+        // Bloquino: el programa ya activó el pull interno de este pin, pero el
+        // mazo se armó antes y no lo trae (NetlistBuilder marca los que sí):
+        // su red sale en ~0 V y el programa leía «botón apretado» al arrancar.
+        // Se espera el resultado del mazo rehecho, olvidando lo ya enviado.
+        if (pm?.getPinPull?.(gpio) && !sourcedNets.has(`pull:${board.id}:${pinName}`)) {
+          lastLevel.delete(`${board.id}:${gpio}`);
+          continue;
+        }
         const v = nodeVoltages[net];
         if (v == null) continue;
         // A number the solver could not produce is not a level. ngspice hands

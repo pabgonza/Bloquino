@@ -46,7 +46,18 @@ La paleta calcula la esquina visible del lienzo a partir de la transformación d
 - Panel del sensor de distancia: las dos cadenas de `hc-sr04` en `sensorControlConfig.ts` quedan en español; ese registro no pasa por i18n y Bloquino solo se usa en español.
 - Inspector: se ocultan por CSS los proyectos de ejemplo, la marca y el enlace de compra (`body:has(.bq-pagina)`, porque el inspector está fuera de la página).
 
+### 7. Cómo salen los componentes de la paleta
+`PaletaComponentes` aplica ajustes propios al crear el componente: la resistencia sale de 220 Ω y el botón girado 90°. El pulsador de Velxio tiene las patitas de un lado a 2 filas y el canal de la protoboard pide 3; girado, sus patitas quedan en las filas c y h, a caballo del canal, que es como lo dibuja el curso.
+
+### 8. Fallos del simulador encontrados en el recorrido
+Se corrigen en los archivos de Velxio con el cambio más chico posible, marcado con un comentario `Bloquino:`, y cada uno con su test:
+- **Tiempo** (`AVRSimulator.ts`): el cuadro ejecutaba N instrucciones contándolas como N ciclos; ahora corre hasta completar los ciclos del cuadro.
+- **Buzzer** (`ComplexParts.ts`): `tone()` conmuta el pin desde una interrupción, sin PWM. Cada flanco de subida lee la frecuencia del Timer2 y, si cambió, empieza una nota; un vigía corta la nota cuando el pin deja de conmutar. El audio se abre al conectar el buzzer. La señal puede venir de cualquiera de las dos patitas.
+- **Botón al arrancar** (`NetlistBuilder.ts`, `connectDigitalInputsToMcu.ts`): el netlist deja una marca `pull:<placa>:<pin>` en `sourcedNets` por cada pin cuyo pull interno incluye; el conector descarta el resultado de un netlist anterior a que el programa activara el pull. Se usa `sourcedNets` porque ya viaja del netlist al conector; un campo propio habría tocado cinco archivos.
+- **Servo** (`ComplexParts.ts`): margen de 100 µs alrededor de 544-2400 µs y recorte a 0-180°.
+
 ## Risks / Trade-offs
 
 - **Clases de Velxio en el CSS propio** (`.dynamic-component-wrapper`, `.component-label`, `.pid-*`, `.canvas-world`): si Velxio las renombra, los ajustes dejan de aplicarse sin error. Mitigación: el recorrido de verificación los cubre.
 - **`:has()`** exige navegadores de 2023 en adelante; los de la sala lo cumplen si están al día.
+- **Arreglos dentro de archivos de Velxio**: al traer cambios de `upstream` pueden chocar. Mitigación: son pocos, están marcados con `Bloquino:` y cada uno tiene un test que falla si se pierde.

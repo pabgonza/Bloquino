@@ -431,11 +431,14 @@ PartSimulationRegistry.register('servo', {
             const pulseCycles = getCycles() - riseTime;
             const pulseUs = (pulseCycles / clockHz) * 1_000_000;
             riseTime = -1;
-            if (pulseUs >= MIN_PULSE_US && pulseUs <= MAX_PULSE_US) {
+            // Bloquino: margen de 100 µs y recorte a 0-180. El pulso de
+            // write(0) mide unos µs menos que 544 y se descartaba: el servo
+            // no volvía a 0°.
+            if (pulseUs >= MIN_PULSE_US - 100 && pulseUs <= MAX_PULSE_US + 100) {
               const angle = Math.round(
                 ((pulseUs - MIN_PULSE_US) / (MAX_PULSE_US - MIN_PULSE_US)) * 180,
               );
-              el.angle = angle;
+              el.angle = Math.max(0, Math.min(180, angle));
             }
           }
         });
@@ -512,14 +515,18 @@ PartSimulationRegistry.register('servo', {
  */
 PartSimulationRegistry.register('buzzer', {
   attachEvents: (element, avrSimulator, getArduinoPinHelper, _componentId, getPinResolver) => {
+    // Bloquino: un buzzer pasivo suena con cualquiera de sus dos patitas al pin
+    // y la otra a GND; antes solo sonaba con la 1 al pin.
+    const senal =
+      ['1', '2', '+', 'POS'].find((n) => (getArduinoPinHelper(n) ?? -1) >= 0) ?? '1';
     const pinSIG =
-      getArduinoPinHelper('1') ?? getArduinoPinHelper('+') ?? getArduinoPinHelper('POS');
+      getArduinoPinHelper(senal) ?? getArduinoPinHelper('+') ?? getArduinoPinHelper('POS');
     const pinManager = (avrSimulator as any).pinManager;
     // PWM tracking still needs the integer pin number; resolver doesn't
     // expose duty. The HIGH/LOW path migrates to PinResolver below.
     const useResolver = typeof getPinResolver === 'function';
     const sigResolver = useResolver
-      ? getPinResolver!('1') ?? getPinResolver!('+') ?? getPinResolver!('POS')
+      ? getPinResolver!(senal) ?? getPinResolver!('+') ?? getPinResolver!('POS')
       : null;
 
     let audioCtx: AudioContext | null = null;
@@ -741,35 +748,41 @@ PartSimulationRegistry.register('buzzer', {
         }),
       );
 
-      // Also respond to digital HIGH/LOW (tone() toggles the pin).
+      // Bloquino: tone() conmuta el pin desde una interrupción del Timer2, sin
+      // pasar por el PWM. Cada flanco de subida lee la frecuencia del Timer2 y,
+      // si cambió, empieza una nota nueva; el vigía corta la nota cuando el pin
+      // deja de conmutar (terminó la duración o se llamó a noTone()). Antes la
+      // primera nota quedaba sonando para siempre.
+      // El audio se abre ya: su reloj tarda en arrancar y, abierto con la
+      // primera nota, las primeras salían apuradas.
+      if (typeof AudioContext !== 'undefined') ensureCtx();
+      const simMs = () => ((avrSimulator as any).cpu?.cycles ?? 0) / 16_000;
+      let toneFreq = 0;
+      let lastEdgeMs = 0;
+      const onDigital = (high: boolean) => {
+        if (pwmActive || !high) return; // PWM-driven: the duty handler owns audio
+        const cpu = (avrSimulator as any).cpu;
+        const freq = Math.max(20, Math.min(20000, cpu ? getFrequency(cpu) : 440));
+        lastEdgeMs = simMs();
+        if (!isSounding || freq !== toneFreq) {
+          toneFreq = freq;
+          startTone(freq, lastEdgeMs);
+        }
+      };
+      const vigia = setInterval(() => {
+        if (!pwmActive && isSounding && simMs() - lastEdgeMs > 2000 / toneFreq)
+          stopTone(lastEdgeMs + 500 / toneFreq);
+      }, 10);
+      unsubscribers.push(() => clearInterval(vigia));
+
       // Prefer the resolver — a buzzer driven through a transistor sees
       // the real collector voltage and threshold-converts via the board
       // logic family.
-      if (sigResolver) {
-        unsubscribers.push(
-          sigResolver.onChange((state) => {
-            if (pwmActive) return; // PWM-driven: the duty handler owns audio
-            if (!isSounding && state === 'HIGH') {
-              const cpu = (avrSimulator as any).cpu;
-              const freq = cpu ? getFrequency(cpu) : 440;
-              startTone(Math.max(20, Math.min(20000, freq)));
-            }
-            // tone() produces a square wave — don't stop on every LOW;
-            // stop only when duty drops to 0 via onPwmChange.
-          }),
-        );
-      } else {
-        unsubscribers.push(
-          pinManager.onPinChange(pinSIG, (_: number, state: boolean) => {
-            if (pwmActive) return; // PWM-driven: the duty handler owns audio
-            if (!isSounding && state) {
-              const cpu = (avrSimulator as any).cpu;
-              const freq = cpu ? getFrequency(cpu) : 440;
-              startTone(Math.max(20, Math.min(20000, freq)));
-            }
-          }),
-        );
-      }
+      unsubscribers.push(
+        sigResolver
+          ? sigResolver.onChange((state) => onDigital(state === 'HIGH'))
+          : pinManager.onPinChange(pinSIG, (_: number, state: boolean) => onDigital(state)),
+      );
     }
 
     return () => {

@@ -18,6 +18,12 @@ async function nuevo() {
   });
 }
 
+/** Deja el lienzo solo con la placa. */
+async function limpiar() {
+  await page.evaluate(() => { const s = window.__s.useSimulatorStore.getState(); s.setWires([]); s.setComponents([]); });
+  await espera(300);
+}
+
 /** Agrega un componente desde la paleta y devuelve su id. */
 async function agregar(nombre) {
   const antes = await page.evaluate(() => window.__s.useSimulatorStore.getState().components.map((c) => c.id));
@@ -39,6 +45,18 @@ function posPin(id, pin) {
   }, { id, pin });
 }
 
+/** Punto de un componente del que se lo toma o por el que se le pasa el mouse.
+ *  La perilla se toma por una esquina (el dial gira) y por la caja de su dibujo: la del elemento mide mal. */
+function agarre(id) {
+  return page.evaluate((id) => {
+    const el = id === 'uno' ? document.querySelector('[data-board-id="arduino-uno"]') : document.getElementById(id);
+    const perilla = id.startsWith('potentiometer');
+    const r = (perilla ? el.shadowRoot.querySelector('svg') : el).getBoundingClientRect();
+    if (perilla) return { x: r.left + 6, y: r.bottom - 14 };
+    return id.startsWith('breadboard') ? { x: r.right - 10, y: r.top + r.height / 2 } : { x: r.left + r.width / 2, y: r.top + Math.min(r.height / 2, 14) };
+  }, id);
+}
+
 /** Arrastra un componente con el mouse hasta que `pin` quede sobre `hoyo` de la protoboard.
  *  Dos pasadas: Velxio gira las resistencias al entrar a la protoboard y la primera queda corrida. */
 async function asentar(id, pin, proto, hoyo) {
@@ -46,15 +64,27 @@ async function asentar(id, pin, proto, hoyo) {
     const hasta = await posPin(proto, hoyo);
     if (!hasta) throw new Error('sin agujero ' + hoyo);
     const desde = await cuadro(id, pin);
-        const agarre = await page.evaluate((id) => { const r = document.getElementById(id).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + Math.min(r.height / 2, 14) }; }, id);
-    await page.mouse.move(agarre.x, agarre.y);
+    const a = await agarre(id);
+    await page.mouse.move(a.x, a.y);
     await page.mouse.down();
-    await page.mouse.move(agarre.x + (hasta.x - desde.x) / 2, agarre.y + (hasta.y - desde.y) / 2, { steps: 6 });
-    await page.mouse.move(agarre.x + hasta.x - desde.x, agarre.y + hasta.y - desde.y, { steps: 8 });
+    await page.mouse.move(a.x + (hasta.x - desde.x) / 2, a.y + (hasta.y - desde.y) / 2, { steps: 6 });
+    await page.mouse.move(a.x + hasta.x - desde.x, a.y + hasta.y - desde.y, { steps: 8 });
     await page.mouse.up();
     await espera(400);
   }
+  if ((await asientos(id))[pin] !== hoyo) nota(`NO ASENTÓ ${id.split('_')[0]} ${pin} en ${hoyo}`);
   return asientos(id);
+}
+
+/** LED con la patita − en `col`, su 220 Ω al riel − y un cable de la patita + al pin de la placa. */
+async function ledConResistencia(proto, col, pin) {
+  const l = await agregar('LED');
+  await asentar(l, 'C', proto, `${col}b.f`);
+  const res = await agregar('Resistencia');
+  const r = await asentar(res, '1', proto, `${col}b.g`);
+  if (!r['2']?.startsWith('bn.')) nota(`RESISTENCIA de la columna ${col} no llegó al riel: ${JSON.stringify(r)}`);
+  await cable(proto, `${col + 1}b.j`, 'uno', pin);
+  return l;
 }
 
 /** Dónde quedó asentada cada patita: { patita: agujero }. */
@@ -64,11 +94,7 @@ function asientos(id) {
 
 /** Centro en pantalla del cuadro de un pin. Los cuadros solo existen mientras el mouse está sobre su componente. */
 async function cuadro(id, pin) {
-  const sobre = await page.evaluate((id) => {
-    const el = id === 'uno' ? document.querySelector('[data-board-id="arduino-uno"]') : document.getElementById(id);
-    const r = el.getBoundingClientRect();
-    return id.startsWith('breadboard') ? { x: r.right - 10, y: r.top + r.height / 2 } : { x: r.left + r.width / 2, y: r.top + Math.min(r.height / 2, 14) };
-  }, id);
+  const sobre = await agarre(id);
   await page.mouse.move(sobre.x + 1, sobre.y + 1);
   await page.mouse.move(sobre.x, sobre.y);
   await espera(300);
@@ -116,8 +142,7 @@ async function programar(bloques, variables = []) {
 async function simular() {
   await page.getByRole('button', { name: 'Iniciar simulación' }).click();
   const ok = await page.getByRole('button', { name: 'Detener simulación' }).waitFor({ timeout: 60000 }).then(() => true, () => false);
-  const error = await page.locator('.bq-error').innerText().catch(() => null);
-  if (!ok) nota('NO ARRANCÓ: ' + (error ?? 'sin mensaje'));
+  if (!ok) nota('NO ARRANCÓ: ' + ((await page.locator('.bq-error').count()) ? await page.locator('.bq-error').first().innerText() : 'sin mensaje'));
   return ok;
 }
 async function detener() {
@@ -139,6 +164,73 @@ async function muestrear(id, nombre, ms, paso = 50) {
   }
   return vistos;
 }
+
+/** Con la simulación corriendo, abre el panel de un sensor (un clic sobre él) y lleva su
+ *  deslizador a `valor`: clic en la barra y ajuste fino con las flechas. Devuelve lo que quedó. */
+async function deslizar(id, valor, indice = 0) {
+  if (!(await page.locator('.sensor-control-panel').count())) {
+    const a = await agarre(id);
+    await page.mouse.click(a.x, a.y);
+    await espera(500);
+  }
+  const barra = page.locator('.sensor-slider').nth(indice);
+  if (!(await barra.count())) throw new Error('sin panel de sensor para ' + id.split('_')[0]);
+  const [min, max] = await barra.evaluate((e) => [Number(e.min), Number(e.max)]);
+  const c = await barra.boundingBox();
+  await page.mouse.click(c.x + 8 + ((valor - min) / (max - min)) * (c.width - 16), c.y + c.height / 2);
+  for (let n = 0; n < 60; n++) {
+    const falta = valor - Number(await barra.inputValue());
+    if (!falta) break;
+    await page.keyboard.press(falta > 0 ? 'ArrowRight' : 'ArrowLeft');
+  }
+  await espera(300);
+  return Number(await barra.inputValue());
+}
+
+/** Sensor de distancia en la protoboard (VCC en `col`), con TRIG al pin 9, ECHO al 10 y sus cables a los rieles. */
+async function sensorDistancia(proto, col) {
+  const s = await agregar('Sensor de distancia');
+  const a = await asentar(s, 'VCC', proto, `${col}b.f`);
+  if (a.GND !== `${col + 3}b.f`) nota('SENSOR mal asentado: ' + JSON.stringify(a));
+  await cable(proto, `${col}b.j`, proto, `bp.${col - 4}`);
+  await cable(proto, `${col + 1}b.j`, 'uno', '9');
+  await cable(proto, `${col + 2}b.j`, 'uno', '10');
+  await cable(proto, `${col + 3}b.j`, proto, `bn.${col + 2}`);
+  return s;
+}
+
+/** Buzzer en la protoboard (patita 1 en `col`) al pin 8 y al riel −. */
+async function buzzerEn(proto, col) {
+  const b = await agregar('Buzzer');
+  const a = await asentar(b, '1', proto, `${col}b.f`);
+  if (a['2'] !== `${col + 1}b.f`) nota('BUZZER mal asentado: ' + JSON.stringify(a));
+  await cable(proto, `${col}b.j`, 'uno', '8');
+  await cable(proto, `${col + 1}b.j`, proto, `bn.${col - 4}`);
+  return b;
+}
+
+/** Espía del audio: anota cada nota que un buzzer pide al navegador. */
+function espiarAudio() {
+  return page.evaluate(() => {
+    window.__notas = [];
+    if (window.__espia) return;
+    window.__espia = true;
+    const crear = AudioContext.prototype.createOscillator;
+    AudioContext.prototype.createOscillator = function () {
+      const o = crear.call(this);
+      const n = {};
+      const [start, stop] = [o.start, o.stop];
+      o.start = (t) => { Object.assign(n, { hz: Math.round(o.frequency.value), desde: t, pedida: performance.now() }); window.__notas.push(n); start.call(o, t); };
+      o.stop = (t) => { n.dura = Math.round((t - n.desde) * 1000); stop.call(o, t); };
+      return o;
+    };
+  });
+}
+/** Notas oídas desde espiarAudio(): frecuencia, ms desde la nota anterior (o desde ahora, la primera, en negativo) y duración. */
+const notasOidas = () => page.evaluate(() => window.__notas.map((n, i, v) => n.hz + 'Hz ' + (i ? '+' + Math.round((n.desde - v[i - 1].desde) * 1000) : Math.round(n.pedida - performance.now())) + ' ' + (n.dura ? n.dura + 'ms' : 'sigue')));
+
+/** Primeras líneas del sketch, en una sola. */
+const resumen = (sketch, n = 12) => sketch.split(/\r?\n/).filter((x) => x.trim()).slice(0, n).map((x) => x.trim()).join(' / ');
 
 // Constructores de bloques
 const num = (n) => ({ shadow: { type: 'math_number', fields: { NUM: n } } });

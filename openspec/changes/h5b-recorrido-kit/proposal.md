@@ -23,6 +23,7 @@ Fuera de este hito: componentes que no usan las 10 sesiones (h8), carga a la pla
 
 ### New Capabilities
 - `interfaz/protoboard`: cómo se asientan, se resaltan y se cablean los componentes en la protoboard.
+- `simulacion/kit`: los componentes del kit se comportan en el simulador como en la mesa (tiempo real, botón, buzzer, servo, sensores con valor ajustable). Sale de los fallos que encontró el recorrido.
 
 ### Modified Capabilities
 - `interfaz/identidad`: todos los textos que ve el alumno están en español.

@@ -34,3 +34,11 @@ Al soltar un componente sobre la protoboard, sus patitas SHALL quedar exactament
 #### Scenario: Soltar el DHT11
 - **WHEN** el alumno arrastra el DHT11 y lo suelta sobre la protoboard
 - **THEN** sus tres patitas quedan en tres columnas vecinas y marcadas como asentadas
+
+#### Scenario: Botón a caballo del canal
+- **WHEN** el alumno toma el botón de la paleta y lo suelta sobre el canal central de la protoboard
+- **THEN** sus cuatro patitas quedan asentadas, dos en cada mitad, y las patitas de un mismo lado del canal quedan en columnas distintas
+
+#### Scenario: Resistencia de 220 Ω al riel
+- **WHEN** el alumno toma la resistencia de la paleta y suelta una patita en la fila g de la mitad inferior
+- **THEN** la resistencia es de 220 Ω, queda vertical y su otra patita cae en el riel negativo

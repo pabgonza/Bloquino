@@ -263,6 +263,10 @@ export function buildNetlist(input: BuildNetlistInput): BuildNetlistResult {
     for (const [pinName, state] of Object.entries(board.pins)) {
       const net = netLookup(board.id, pinName);
       if (state.type === 'input') {
+        // Bloquino: marca (no es una red) de que este mazo ya conoce el pull
+        // interno del pin; connectDigitalInputsToMcu descarta sin ella un
+        // resultado calculado antes de que el programa lo activara.
+        if (state.pull) sourcedNets.add(`pull:${board.id}:${pinName}`);
         // Internal pull-up / pull-down (INPUT_PULLUP / INPUT_PULLDOWN): a weak
         // resistor to the rail so the idle level is correct. 45 kΩ matches the
         // ESP32 internal pull and is weak enough that any real external driver

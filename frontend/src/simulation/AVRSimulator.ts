@@ -1631,7 +1631,10 @@ export class AVRSimulator implements LineCapable, BusCapableSimulator {
       const cyclesPerFrame = Math.floor(CYCLES_PER_MS * deltaMs * this.speed);
 
       try {
-        for (let i = 0; i < cyclesPerFrame; i++) {
+        // Bloquino: el cuadro termina por ciclos, no por instrucciones (una
+        // instrucción dura de 1 a 4 ciclos y el tiempo corría más rápido).
+        const hasta = this.cpu.cycles + cyclesPerFrame;
+        for (let i = 0; this.cpu.cycles < hasta; i++) {
           avrInstruction(this.cpu); // Execute the AVR instruction
           this.cpu.tick(); // Update peripheral timers and cycles
           if (this.scheduledPinChanges.length > 0) this.flushScheduledPinChanges();
