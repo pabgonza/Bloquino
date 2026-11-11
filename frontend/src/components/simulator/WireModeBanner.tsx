@@ -12,6 +12,7 @@
  * native `touchend` on the button to fire the action directly.
  */
 
+import { useTranslation } from 'react-i18next';
 import React, { useEffect, useRef } from 'react';
 
 interface WireModeBannerProps {
@@ -20,6 +21,7 @@ interface WireModeBannerProps {
 }
 
 export const WireModeBanner: React.FC<WireModeBannerProps> = ({ message, onCancel }) => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -58,7 +60,7 @@ export const WireModeBanner: React.FC<WireModeBannerProps> = ({ message, onCance
     <div ref={containerRef} className="wire-mode-banner" style={{ touchAction: 'none' }}>
       <span>{message}</span>
       <button ref={buttonRef} type="button" onClick={onCancel}>
-        Cancel
+        {t('editor.canvas.touch.cancel', 'Cancel')}
       </button>
     </div>
   );

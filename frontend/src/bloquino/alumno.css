@@ -280,3 +280,36 @@
 .bq-pagina .dynamic-component-wrapper > .web-component-container {
   pointer-events: auto;
 }
+/* Sin el nombre bajo cada componente, como en Tinkercad: viene en inglés de
+   los metadatos y tapa la protoboard. */
+.bq-pagina .component-label {
+  display: none !important;
+}
+/* Tira conectada de la protoboard (ver tiras.ts). */
+.bq-tiras {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bq-tira-hoyo,
+.bq-tira-linea {
+  position: absolute;
+  box-sizing: border-box;
+}
+.bq-tira-hoyo {
+  border: 2px solid #4caf1e;
+  border-radius: 50%;
+}
+.bq-tira-linea {
+  background: rgba(76, 175, 30, 0.45);
+  border-radius: 4px;
+}
+/* Inspector de componentes de Velxio (se dibuja fuera de la página): sin los
+   proyectos de ejemplo, la marca ni el enlace de compra, que no son del curso. */
+body:has(.bq-pagina) .pid-examples,
+body:has(.bq-pagina) .pid-brand,
+body:has(.bq-pagina) .pid-buy-button {
+  display: none;
+}

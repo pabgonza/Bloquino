@@ -40,4 +40,4 @@ Entorno: backend en el contenedor Docker del puerto 3080; frontend con `npx vite
 - Slider arrastrado con el mouse de 25 a 42 °C: el monitor pasa a 42.00.
 - Encontrado y corregido: los agujeros bajo el recuadro de un componente (su margen y su nombre) no se podían cliquear; ahora solo el dibujo recibe el mouse (CSS de la página de alumno).
 - Corregido: los componentes nuevos caen en la esquina visible del lienzo (antes en una posición fija, que el panel de programa o el borde tapaban), y la resistencia de la paleta se dibuja con su elemento en vez de la miniatura oscura de Velxio.
-- Sigue sin compararse el dibujo con el módulo físico.
+- Dibujo comparado por Pablo con el módulo físico (11-11-2026): se ve igual.

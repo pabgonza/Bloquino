@@ -368,12 +368,12 @@ export const SENSOR_CONTROLS: Record<string, SensorControlDef> = {
 
   // ── HC-SR04 Ultrasonic Distance ───────────────────────────────────────────
   'hc-sr04': {
-    title: 'Ultrasonic Distance Sensor',
+    title: 'Sensor de distancia',
     controls: [
       {
         type: 'slider',
         key: 'distance',
-        label: 'Distance',
+        label: 'Distancia',
         min: 2,
         max: 400,
         step: 1,

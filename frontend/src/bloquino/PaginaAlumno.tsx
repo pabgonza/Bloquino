@@ -21,6 +21,7 @@ import {
   restaurar,
   type Guardado,
 } from './proyecto';
+import { resaltarTiras } from './tiras';
 import './alumno.css';
 
 const VELXIO = 'https://github.com/davidmonterocrespo24/velxio';
@@ -64,6 +65,8 @@ export function PaginaAlumno() {
   // Lo que el lienzo necesita de la página de Velxio: la simulación eléctrica
   // y deshacer / rehacer con el teclado.
   useEffect(() => startSimulation(), []);
+  const lienzo = useRef<HTMLElement>(null);
+  useEffect(() => resaltarTiras(lienzo.current!), []);
   useEffect(() => {
     document.title = textos.marca;
     const alTeclear = (e: KeyboardEvent) => {
@@ -171,7 +174,7 @@ export function PaginaAlumno() {
       </header>
 
       <div className="bq-cuerpo">
-        <main className="bq-lienzo">
+        <main className="bq-lienzo" ref={lienzo}>
           {ranura && cargas > 0 && <SimulatorCanvas key={cargas} headerSlot={ranura} />}
           <CompileProgressCard />
           {errores.length > 0 && erroresVistos !== logs && (
