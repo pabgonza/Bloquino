@@ -42,13 +42,18 @@ export function PaginaAlumno() {
   const [erroresVistos, setErroresVistos] = useState(logs);
   const [guardado, setGuardado] = useState<Guardado>('guardado');
   const selector = useRef<HTMLInputElement>(null);
+  // Proyectos cargados hasta ahora. El lienzo se monta cuando ya hay uno y se
+  // vuelve a montar al abrir un archivo: Velxio encuadra el circuito al montarse.
+  const [cargas, setCargas] = useState(0);
 
   // Proyecto guardado en el navegador: se restaura y, desde ahí, se guarda solo.
   useEffect(() => {
     let parar: (() => void) | undefined;
     let montada = true;
     void restaurar().then(() => {
-      if (montada) parar = autoguardar(setGuardado);
+      if (!montada) return;
+      parar = autoguardar(setGuardado);
+      setCargas(1);
     });
     return () => {
       montada = false;
@@ -128,7 +133,10 @@ export function PaginaAlumno() {
             const archivo = e.target.files?.[0];
             e.target.value = '';
             if (archivo && window.confirm(textos.avisoAbrir))
-              abrir(archivo).catch((error: Error) => window.alert(error.message));
+              abrir(archivo).then(
+                () => setCargas((n) => n + 1),
+                (error: Error) => window.alert(error.message),
+              );
           }}
         />
         <button
@@ -164,7 +172,7 @@ export function PaginaAlumno() {
 
       <div className="bq-cuerpo">
         <main className="bq-lienzo">
-          {ranura && <SimulatorCanvas headerSlot={ranura} />}
+          {ranura && cargas > 0 && <SimulatorCanvas key={cargas} headerSlot={ranura} />}
           <CompileProgressCard />
           {errores.length > 0 && erroresVistos !== logs && (
             <div className="bq-error" role="alert">
