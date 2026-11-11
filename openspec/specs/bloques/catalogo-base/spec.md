@@ -33,11 +33,15 @@ El catálogo SHALL incluir `encender LED en pin [p]`, `apagar LED en pin [p]`, `
 - **THEN** se generan tres `analogWrite`: 255 al pin 9 y 0 a los pines 10 y 11
 
 ### Requirement: Bloques de sonido
-El catálogo SHALL incluir `tocar nota [nota] por [n] segundos en pin [p]` y `silenciar pin [p]`. El desplegable de notas SHALL ofrecer al menos do, re, mi, fa, sol, la, si de dos octavas.
+El catálogo SHALL incluir `tocar nota [nota] por [n] segundos en pin [p]` y `silenciar pin [p]`. El desplegable de notas SHALL ofrecer al menos do, re, mi, fa, sol, la, si de dos octavas. En un programa de varios scripts, `tocar nota` SHALL ceder el turno mientras la nota suena.
 
 #### Scenario: Nota con duración
 - **WHEN** se usa `tocar nota la por 0.5 segundos en pin 8`
 - **THEN** se genera `tone(8, 440, 500);` seguido de `delay(500);`
+
+#### Scenario: Nota en un programa de varios scripts
+- **WHEN** un script usa `tocar nota la por 0.5 segundos en pin 8` y otro parpadea un LED cada 0.1 segundos
+- **THEN** se genera `tone(8, 440, 500);` seguido de una espera cooperativa de 500 ms, y el LED sigue parpadeando mientras la nota suena
 
 ### Requirement: Bloque de servo
 El catálogo SHALL incluir `mover servo en pin [p] a [n]°`, con el ángulo limitado entre 0 y 180.
@@ -47,7 +51,7 @@ El catálogo SHALL incluir `mover servo en pin [p] a [n]°`, con el ángulo limi
 - **THEN** el campo queda en 180
 
 ### Requirement: Bloques de sensores
-El catálogo SHALL incluir `¿botón en pin [p] presionado?` (verdadero cuando el pin está en nivel bajo con `INPUT_PULLUP`), `perilla en pin [a]` (0 a 100) y `distancia en cm (disparo [p] eco [p])`.
+El catálogo SHALL incluir `¿botón en pin [p] presionado?` (verdadero cuando el pin está en nivel bajo con `INPUT_PULLUP`), `perilla en pin [a]` (0 a 100) y `distancia en cm (disparo [p] eco [p])`. En un programa de varios scripts, `distancia en cm` SHALL retener el turno a lo más 25 ms por medición.
 
 #### Scenario: Botón con LED
 - **WHEN** el programa es `por siempre` [ `si ¿botón en pin 2 presionado?` → `encender LED en pin 13` / `si no` → `apagar LED en pin 13` ] y en el simulador se presiona el botón conectado entre el pin 2 y GND
@@ -60,6 +64,10 @@ El catálogo SHALL incluir `¿botón en pin [p] presionado?` (verdadero cuando e
 #### Scenario: Distancia sin eco
 - **WHEN** el sensor no recibe eco dentro del tiempo límite
 - **THEN** `distancia en cm` devuelve 400
+
+#### Scenario: Distancia en un programa de varios scripts
+- **WHEN** un script mide la distancia sin que haya eco y otro parpadea un LED
+- **THEN** la medición termina dentro de 25 ms y el parpadeo continúa
 
 ### Requirement: Operadores y variables
 El catálogo SHALL incluir suma, resta, multiplicación, división, comparaciones (`<`, `>`, `=`), `y`, `o`, `no`, `número al azar entre [a] y [b]`, `asignar [x] del rango [a]-[b] al rango [c]-[d]`, `restringir [x] entre [a] y [b]`, y variables numéricas con `crear variable`, `definir [v] en [n]` y `cambiar [v] por [n]`. Los tipos de C++ SHALL permanecer ocultos.

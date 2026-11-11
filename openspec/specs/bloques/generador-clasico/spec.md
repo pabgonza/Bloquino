@@ -7,7 +7,7 @@ Traduce un programa de bloques de un solo script al Arduino C++ que se enseña e
 ## Requirements
 
 ### Requirement: Estructura setup / loop
-El generador SHALL emitir un sketch con `setup()` y `loop()`. Los bloques que cuelgan de `al iniciar` antes de `por siempre` SHALL ir a `setup()`; el cuerpo de `por siempre` SHALL ir a `loop()`.
+Cuando el programa tiene un solo script y su sombrero es `al iniciar`, el generador SHALL emitir un sketch con `setup()` y `loop()`. Los bloques que cuelgan de `al iniciar` antes de `por siempre` SHALL ir a `setup()`; el cuerpo de `por siempre` SHALL ir a `loop()`. Con más de un script, o con un sombrero de evento de hardware, el programa SHALL generarse con corrutinas (ver `bloques/generador-corrutinas`).
 
 #### Scenario: Parpadeo
 - **WHEN** el programa es `al iniciar` → `por siempre` [ `encender LED en pin 13`, `esperar 1 segundos`, `apagar LED en pin 13`, `esperar 1 segundos` ]
@@ -20,6 +20,10 @@ El generador SHALL emitir un sketch con `setup()` y `loop()`. Los bloques que cu
 #### Scenario: Programa vacío
 - **WHEN** no hay ningún bloque
 - **THEN** el sketch tiene `setup()` y `loop()` vacíos y compila
+
+#### Scenario: Un solo script sigue siendo clásico
+- **WHEN** el programa tiene un único `al iniciar` y además bloques sueltos sin sombrero
+- **THEN** el sketch usa `delay()` y no contiene el planificador de corrutinas
 
 ### Requirement: Configuración automática de pines
 El generador SHALL emitir un `pinMode` por cada pin usado, según el bloque que lo usa, una sola vez y al comienzo de `setup()`.
