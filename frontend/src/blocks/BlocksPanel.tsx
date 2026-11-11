@@ -1,65 +1,70 @@
 /**
- * Prototipo del spike: panel de bloques (Blockly) que genera el sketch
- * Arduino y lo escribe en el archivo activo del editor. El botón Run
- * existente recompila porque setCode marca el código como cambiado.
+ * Panel de bloques: la interfaz de Blockly. Los bloques son la fuente de
+ * verdad del programa: cada cambio se guarda en `bloques.json` del grupo de
+ * archivos de la placa y regenera su sketch, que el botón Run compila.
  */
 import { useEffect, useRef } from 'react';
-import './amdOff';
-import * as Blockly from 'blockly';
-import * as Es from 'blockly/msg/es';
-import './amdOn';
+import { Blockly } from './blockly';
+import { CATEGORIAS, PALETA } from './catalogo';
+import { generar } from './generador';
+import { ARCHIVO_BLOQUES } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
 
-Blockly.setLocale(Es as unknown as Record<string, string>);
-
-Blockly.defineBlocksWithJsonArray([
-  { type: 'ab_al_iniciar', message0: 'al iniciar', nextStatement: null, style: 'evento' },
-  {
-    type: 'ab_por_siempre',
-    message0: 'por siempre %1 %2',
-    args0: [{ type: 'input_dummy' }, { type: 'input_statement', name: 'DO' }],
-    previousStatement: null,
-    style: 'control',
-  },
-  {
-    type: 'ab_esperar',
-    message0: 'esperar %1 segundos',
-    args0: [{ type: 'field_number', name: 'S', value: 1, min: 0 }],
-    previousStatement: null,
-    nextStatement: null,
-    style: 'control',
-  },
-  {
-    type: 'ab_pin',
-    message0: 'poner pin %1 en %2',
-    args0: [
-      { type: 'field_number', name: 'PIN', value: 13, min: 0, max: 19, precision: 1 },
-      { type: 'field_dropdown', name: 'V', options: [['encendido', 'HIGH'], ['apagado', 'LOW']] },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    style: 'salidas',
-  },
-]);
-
-const tema = Blockly.Theme.defineTheme('arduino_bloques', {
-  name: 'arduino_bloques',
+const tema = Blockly.Theme.defineTheme('bloquino', {
+  name: 'bloquino',
   base: Blockly.Themes.Zelos,
   blockStyles: {
-    evento: { colourPrimary: '#FFBF00', hat: 'cap' },
-    control: { colourPrimary: '#FFAB19' },
-    salidas: { colourPrimary: '#4C97FF' },
+    ...Object.fromEntries(
+      CATEGORIAS.map((c) => [
+        c.id,
+        { colourPrimary: c.color, hat: c.id === 'eventos' ? 'cap' : '' },
+      ]),
+    ),
+    // Bloques propios de Blockly que usa el catálogo: número, variables y texto.
+    math_blocks: { colourPrimary: '#59C059' },
+    variable_blocks: { colourPrimary: '#FF8C1A' },
+    text_blocks: { colourPrimary: '#7F8C8D' },
   },
+  // La página es oscura y la paleta clara: sin esto los nombres heredan el blanco.
+  componentStyles: { toolboxForegroundColour: '#333' },
 });
 
-const toolbox = {
-  kind: 'flyoutToolbox',
-  contents: ['ab_al_iniciar', 'ab_por_siempre', 'ab_esperar', 'ab_pin'].map((type) => ({
-    kind: 'block',
-    type,
-  })),
-};
+// Categoría de la paleta con un punto de color junto al nombre, en vez de la
+// barra lateral de Blockly.
+class CategoriaConPunto extends Blockly.ToolboxCategory {
+  protected override addColourBorder_(color: string) {
+    Object.assign((this.iconDom_ as HTMLElement).style, {
+      display: 'inline-block',
+      visibility: 'visible',
+      verticalAlign: 'middle',
+      width: '14px',
+      height: '14px',
+      margin: '0 6px',
+      borderRadius: '50%',
+      border: '1px solid #fff',
+      background: color,
+    });
+  }
+}
+Blockly.registry.register(
+  Blockly.registry.Type.TOOLBOX_ITEM,
+  Blockly.ToolboxCategory.registrationName,
+  CategoriaConPunto,
+  true,
+);
 
+// Programa con el que parte un proyecto sin bloques: el parpadeo del pin 13.
+const led = (ESTADO: string, next?: object) => ({
+  type: 'ab_led',
+  fields: { ESTADO, PIN: '13' },
+  next: {
+    block: {
+      type: 'ab_esperar',
+      inputs: { S: { shadow: { type: 'math_number', fields: { NUM: 1 } } } },
+      next,
+    },
+  },
+});
 const PARPADEO = {
   blocks: {
     blocks: [
@@ -70,27 +75,7 @@ const PARPADEO = {
         next: {
           block: {
             type: 'ab_por_siempre',
-            inputs: {
-              DO: {
-                block: {
-                  type: 'ab_pin',
-                  fields: { PIN: 13, V: 'HIGH' },
-                  next: {
-                    block: {
-                      type: 'ab_esperar',
-                      fields: { S: 1 },
-                      next: {
-                        block: {
-                          type: 'ab_pin',
-                          fields: { PIN: 13, V: 'LOW' },
-                          next: { block: { type: 'ab_esperar', fields: { S: 1 } } },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
+            inputs: { DO: { block: led('HIGH', { block: led('LOW') }) } },
           },
         },
       },
@@ -98,56 +83,69 @@ const PARPADEO = {
   },
 };
 
-// Generador clásico (un solo script): lo que cuelga de "al iniciar" va a
-// setup(); el cuerpo de "por siempre" va a loop().
-const gen = new Blockly.CodeGenerator('Arduino');
-let pines = new Set<number>();
-let cuerpoLoop = '';
-gen.scrub_ = (block, code, thisOnly) => {
-  const next = block.nextConnection?.targetBlock();
-  return code + (next && !thisOnly ? gen.blockToCode(next) : '');
-};
-gen.forBlock['ab_al_iniciar'] = () => '';
-gen.forBlock['ab_por_siempre'] = (b) => {
-  cuerpoLoop = gen.statementToCode(b, 'DO');
-  return '';
-};
-gen.forBlock['ab_esperar'] = (b) => `delay(${Math.round(Number(b.getFieldValue('S')) * 1000)});\n`;
-gen.forBlock['ab_pin'] = (b) => {
-  const pin = Number(b.getFieldValue('PIN'));
-  pines.add(pin);
-  return `digitalWrite(${pin}, ${b.getFieldValue('V')});\n`;
-};
-
-function generar(ws: Blockly.Workspace): string {
-  pines = new Set();
-  cuerpoLoop = '';
-  gen.init(ws);
-  const inicio = ws.getTopBlocks(true).find((b) => b.type === 'ab_al_iniciar');
-  const codigoSetup = inicio ? (gen.blockToCode(inicio) as string) : '';
-  const cuerpoSetup = codigoSetup && gen.prefixLines(codigoSetup, '  ');
-  const modos = [...pines].map((p) => `  pinMode(${p}, OUTPUT);\n`).join('');
-  return `// Generado desde bloques\nvoid setup() {\n${modos}${cuerpoSetup}}\n\nvoid loop() {\n${cuerpoLoop}}\n`;
-}
-
-let guardado: object = PARPADEO;
-
 export default function BlocksPanel() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ws = Blockly.inject(ref.current!, { toolbox, renderer: 'zelos', theme: tema, trashcan: true });
-    Blockly.serialization.workspaces.load(guardado, ws);
-    const volcar = () => useEditorStore.getState().setCode(generar(ws));
-    volcar();
+    const ws = Blockly.inject(ref.current!, {
+      toolbox: PALETA,
+      renderer: 'zelos',
+      theme: tema,
+      trashcan: true,
+      // Un solo script en este hito (h2 habilita más).
+      maxInstances: { ab_al_iniciar: 1 },
+    });
+    // Los bloques sin sombrero quedan deshabilitados: atenuados y fuera del código.
+    ws.addChangeListener(Blockly.Events.disableOrphans);
+
+    let grupo: string | undefined; // grupo de archivos que muestra el área de trabajo
+    let json = JSON.stringify(PARPADEO); // último bloques.json leído o escrito
+    const cargar = (contenido: string) => {
+      json = contenido;
+      Blockly.Events.disable();
+      Blockly.serialization.workspaces.load(JSON.parse(contenido), ws);
+      Blockly.Events.enable();
+    };
+    cargar(json);
+
+    // Área de trabajo → bloques.json y sketch del grupo activo.
+    const guardar = () => {
+      const editor = useEditorStore.getState();
+      const archivos = editor.fileGroups[editor.activeGroupId];
+      if (!archivos) return;
+      json = JSON.stringify(Blockly.serialization.workspaces.save(ws));
+      const propio = archivos.find((f) => f.name === ARCHIVO_BLOQUES);
+      if (!propio)
+        editor.addFileToGroup(editor.activeGroupId, { name: ARCHIVO_BLOQUES, content: json });
+      else if (propio.content !== json)
+        editor.setGroupFileContent(editor.activeGroupId, propio.id, json);
+      const sketch = archivos.find((f) => f.name.endsWith('.ino'));
+      const cpp = generar(ws);
+      if (sketch && sketch.content !== cpp) editor.setFileContent(sketch.id, cpp);
+    };
+
+    // Grupo activo → área de trabajo: al abrir el panel, al agregar o cambiar de
+    // placa y al cargar un proyecto. Un grupo sin bloques recibe los actuales.
+    const sincronizar = () => {
+      const editor = useEditorStore.getState();
+      const archivos = editor.fileGroups[editor.activeGroupId];
+      const actual = archivos && editor.activeGroupId; // sin placa todavía no hay grupo
+      const contenido = archivos?.find((f) => f.name === ARCHIVO_BLOQUES)?.content;
+      if (actual === grupo && (contenido ?? json) === json) return;
+      grupo = actual;
+      if (contenido !== undefined && contenido !== json) cargar(contenido);
+      guardar();
+    };
+    sincronizar();
+    const desuscribir = useEditorStore.subscribe(sincronizar);
+
     ws.addChangeListener((e) => {
-      if (e.isUiEvent) return;
-      guardado = Blockly.serialization.workspaces.save(ws);
-      volcar();
+      if (!e.isUiEvent) guardar();
     });
     const ro = new ResizeObserver(() => Blockly.svgResize(ws));
     ro.observe(ref.current!);
     return () => {
+      desuscribir();
       ro.disconnect();
       ws.dispose();
     };

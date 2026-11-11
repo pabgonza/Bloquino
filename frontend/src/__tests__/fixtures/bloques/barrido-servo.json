@@ -1,0 +1,142 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "ab_al_iniciar",
+        "x": 30,
+        "y": 30,
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_contar",
+                  "fields": {
+                    "VAR": {
+                      "id": "var-i"
+                    }
+                  },
+                  "inputs": {
+                    "DESDE": {
+                      "shadow": {
+                        "type": "math_number",
+                        "fields": {
+                          "NUM": 0
+                        }
+                      }
+                    },
+                    "HASTA": {
+                      "shadow": {
+                        "type": "math_number",
+                        "fields": {
+                          "NUM": 180
+                        }
+                      }
+                    },
+                    "DO": {
+                      "block": {
+                        "type": "ab_servo",
+                        "fields": {
+                          "PIN": "9"
+                        },
+                        "inputs": {
+                          "ANGULO": {
+                            "shadow": {
+                              "type": "ab_angulo",
+                              "fields": {
+                                "ANGULO": 90
+                              }
+                            },
+                            "block": {
+                              "type": "variables_get",
+                              "fields": {
+                                "VAR": {
+                                  "id": "var-i"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "next": {
+                          "block": {
+                            "type": "ab_esperar",
+                            "inputs": {
+                              "S": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "fields": {
+                                    "NUM": 0.02
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 1
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ab_servo",
+                          "fields": {
+                            "PIN": "9"
+                          },
+                          "inputs": {
+                            "ANGULO": {
+                              "shadow": {
+                                "type": "ab_angulo",
+                                "fields": {
+                                  "ANGULO": 0
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "ab_esperar",
+                              "inputs": {
+                                "S": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                      "NUM": 1
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "variables": [
+    {
+      "name": "i",
+      "id": "var-i"
+    }
+  ]
+}

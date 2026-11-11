@@ -1,0 +1,103 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "ab_al_iniciar",
+        "x": 30,
+        "y": 30,
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_servo",
+                  "fields": {
+                    "PIN": "9"
+                  },
+                  "inputs": {
+                    "ANGULO": {
+                      "shadow": {
+                        "type": "ab_angulo",
+                        "fields": {
+                          "ANGULO": 90
+                        }
+                      },
+                      "block": {
+                        "type": "ab_mapear",
+                        "inputs": {
+                          "X": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 50
+                              }
+                            },
+                            "block": {
+                              "type": "ab_perilla",
+                              "fields": {
+                                "PIN": "A0"
+                              }
+                            }
+                          },
+                          "A": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 0
+                              }
+                            }
+                          },
+                          "B": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 100
+                              }
+                            }
+                          },
+                          "C": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 0
+                              }
+                            }
+                          },
+                          "D": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 180
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 0.05
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

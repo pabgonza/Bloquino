@@ -1,0 +1,118 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "ab_al_iniciar",
+        "x": 30,
+        "y": 30,
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_led",
+                  "fields": {
+                    "ESTADO": "HIGH",
+                    "PIN": "12"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 3
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ab_led",
+                          "fields": {
+                            "ESTADO": "LOW",
+                            "PIN": "12"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "ab_led",
+                              "fields": {
+                                "ESTADO": "HIGH",
+                                "PIN": "10"
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "ab_esperar",
+                                  "inputs": {
+                                    "S": {
+                                      "shadow": {
+                                        "type": "math_number",
+                                        "fields": {
+                                          "NUM": 3
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "ab_led",
+                                      "fields": {
+                                        "ESTADO": "LOW",
+                                        "PIN": "10"
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "ab_led",
+                                          "fields": {
+                                            "ESTADO": "HIGH",
+                                            "PIN": "11"
+                                          },
+                                          "next": {
+                                            "block": {
+                                              "type": "ab_esperar",
+                                              "inputs": {
+                                                "S": {
+                                                  "shadow": {
+                                                    "type": "math_number",
+                                                    "fields": {
+                                                      "NUM": 1
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "next": {
+                                                "block": {
+                                                  "type": "ab_led",
+                                                  "fields": {
+                                                    "ESTADO": "LOW",
+                                                    "PIN": "11"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

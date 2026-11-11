@@ -1,0 +1,111 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "ab_al_iniciar",
+        "x": 30,
+        "y": 30,
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_si_sino",
+                  "inputs": {
+                    "COND": {
+                      "block": {
+                        "type": "ab_comparar",
+                        "fields": {
+                          "OP": "<"
+                        },
+                        "inputs": {
+                          "A": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 0
+                              }
+                            },
+                            "block": {
+                              "type": "ab_distancia",
+                              "fields": {
+                                "DISPARO": "7",
+                                "ECO": "6"
+                              }
+                            }
+                          },
+                          "B": {
+                            "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 20
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "DO": {
+                      "block": {
+                        "type": "ab_led",
+                        "fields": {
+                          "ESTADO": "HIGH",
+                          "PIN": "13"
+                        },
+                        "next": {
+                          "block": {
+                            "type": "ab_tocar_nota",
+                            "fields": {
+                              "NOTA": "440",
+                              "PIN": "8"
+                            },
+                            "inputs": {
+                              "S": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "fields": {
+                                    "NUM": 0.2
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "SINO": {
+                      "block": {
+                        "type": "ab_led",
+                        "fields": {
+                          "ESTADO": "LOW",
+                          "PIN": "13"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 0.1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

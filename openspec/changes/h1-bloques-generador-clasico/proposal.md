@@ -39,6 +39,6 @@ Fuera de este hito: scripts paralelos y el evento de botón (h2), temperatura y 
 - Código nuevo en `frontend/src/blocks/` (definiciones de bloques, generador, paleta, panel). Se reemplaza el prototipo `BlocksPanel.tsx`.
 - `frontend/src/pages/EditorPage.tsx`: se conservan las pestañas Bloques / Código del prototipo (unas 30 líneas).
 - `frontend/src/utils/vlxFile.ts` o `projectOnlyFiles.ts`: el JSON de bloques viaja como archivo del proyecto excluido de la compilación.
-- Dependencia: `blockly` 13.x (ya instalada). Librería Arduino `Servo` en el backend (viene con el core AVR).
+- Dependencia: `blockly` 13.x (ya instalada). Librería Arduino `Servo` en el backend (no viene con el core AVR de `arduino-cli`: se instala con `arduino-cli lib install Servo`).
 - Tests nuevos en `frontend/src/__tests__/` (vitest): generador con programas de referencia.
 - No toca el backend ni el simulador.

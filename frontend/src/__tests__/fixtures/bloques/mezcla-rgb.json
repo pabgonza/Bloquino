@@ -1,0 +1,201 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "ab_al_iniciar",
+        "x": 30,
+        "y": 30,
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_led_rgb",
+                  "fields": {
+                    "R": "9",
+                    "G": "10",
+                    "B": "11",
+                    "COLOR": "#ff0000"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 1
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ab_led_rgb",
+                          "fields": {
+                            "R": "9",
+                            "G": "10",
+                            "B": "11",
+                            "COLOR": "#00ff00"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "ab_esperar",
+                              "inputs": {
+                                "S": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                      "NUM": 1
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "ab_led_rgb",
+                                  "fields": {
+                                    "R": "9",
+                                    "G": "10",
+                                    "B": "11",
+                                    "COLOR": "#0000ff"
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "ab_esperar",
+                                      "inputs": {
+                                        "S": {
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "fields": {
+                                              "NUM": 1
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "ab_led_rgb",
+                                          "fields": {
+                                            "R": "9",
+                                            "G": "10",
+                                            "B": "11",
+                                            "COLOR": "#ffff00"
+                                          },
+                                          "next": {
+                                            "block": {
+                                              "type": "ab_esperar",
+                                              "inputs": {
+                                                "S": {
+                                                  "shadow": {
+                                                    "type": "math_number",
+                                                    "fields": {
+                                                      "NUM": 1
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "next": {
+                                                "block": {
+                                                  "type": "ab_led_rgb",
+                                                  "fields": {
+                                                    "R": "9",
+                                                    "G": "10",
+                                                    "B": "11",
+                                                    "COLOR": "#00ffff"
+                                                  },
+                                                  "next": {
+                                                    "block": {
+                                                      "type": "ab_esperar",
+                                                      "inputs": {
+                                                        "S": {
+                                                          "shadow": {
+                                                            "type": "math_number",
+                                                            "fields": {
+                                                              "NUM": 1
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                      "next": {
+                                                        "block": {
+                                                          "type": "ab_led_rgb",
+                                                          "fields": {
+                                                            "R": "9",
+                                                            "G": "10",
+                                                            "B": "11",
+                                                            "COLOR": "#ff00ff"
+                                                          },
+                                                          "next": {
+                                                            "block": {
+                                                              "type": "ab_esperar",
+                                                              "inputs": {
+                                                                "S": {
+                                                                  "shadow": {
+                                                                    "type": "math_number",
+                                                                    "fields": {
+                                                                      "NUM": 1
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                              "next": {
+                                                                "block": {
+                                                                  "type": "ab_led_rgb",
+                                                                  "fields": {
+                                                                    "R": "9",
+                                                                    "G": "10",
+                                                                    "B": "11",
+                                                                    "COLOR": "#ffffff"
+                                                                  },
+                                                                  "next": {
+                                                                    "block": {
+                                                                      "type": "ab_esperar",
+                                                                      "inputs": {
+                                                                        "S": {
+                                                                          "shadow": {
+                                                                            "type": "math_number",
+                                                                            "fields": {
+                                                                              "NUM": 1
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

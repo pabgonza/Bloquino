@@ -61,4 +61,5 @@ Todas numéricas, declaradas como `float` globales con el nombre saneado (`mi va
 
 ## Open Questions
 
-- ¿El LED RGB del kit (KY-016) es de cátodo común? Se asume que sí (nivel alto = encendido). Confirmar con el módulo real.
+- ~~¿El LED RGB del kit (KY-016) es de cátodo común?~~ Sí, según la hoja de datos de Joy-it (nivel alto = encendido). No se probó con el módulo físico.
+- ¿Cómo llegan las librerías del kit (`Servo` ahora; DHT, LCD e infrarrojo en h5 y h8) a un backend desplegado? En desarrollo `Servo` se instaló a mano en el contenedor y se pierde si se recrea.
