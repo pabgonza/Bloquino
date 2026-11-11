@@ -2,6 +2,7 @@
 // CATEGORIAS es el de la paleta.
 import type { Categoria } from './base';
 import eventos from './eventos';
+export { SOMBREROS, TOPE_SCRIPTS } from './eventos';
 import control from './control';
 import luces from './luces';
 import sonido from './sonido';

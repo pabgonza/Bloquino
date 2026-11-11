@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef } from 'react';
 import { Blockly } from './blockly';
-import { CATEGORIAS, PALETA } from './catalogo';
+import { CATEGORIAS, PALETA, SOMBREROS, TOPE_SCRIPTS } from './catalogo';
 import { generar } from './generador';
 import { ARCHIVO_BLOQUES } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
@@ -92,11 +92,16 @@ export default function BlocksPanel() {
       renderer: 'zelos',
       theme: tema,
       trashcan: true,
-      // Un solo script en este hito (h2 habilita más).
-      maxInstances: { ab_al_iniciar: 1 },
     });
     // Los bloques sin sombrero quedan deshabilitados: atenuados y fuera del código.
     ws.addChangeListener(Blockly.Events.disableOrphans);
+    // Tope de scripts: es de sombreros en total y Blockly limita por tipo, así
+    // que a cada tipo se le permite lo que ya tiene más los cupos que quedan.
+    const ajustarTope = () => {
+      const cuenta = (tipo: string) => ws.getBlocksByType(tipo, false).length;
+      const libres = Math.max(0, TOPE_SCRIPTS - SOMBREROS.reduce((n, t) => n + cuenta(t), 0));
+      ws.options.maxInstances = Object.fromEntries(SOMBREROS.map((t) => [t, cuenta(t) + libres]));
+    };
 
     let grupo: string | undefined; // grupo de archivos que muestra el área de trabajo
     let json = JSON.stringify(PARPADEO); // último bloques.json leído o escrito
@@ -105,6 +110,7 @@ export default function BlocksPanel() {
       Blockly.Events.disable();
       Blockly.serialization.workspaces.load(JSON.parse(contenido), ws);
       Blockly.Events.enable();
+      ajustarTope();
     };
     cargar(json);
 
@@ -140,7 +146,9 @@ export default function BlocksPanel() {
     const desuscribir = useEditorStore.subscribe(sincronizar);
 
     ws.addChangeListener((e) => {
-      if (!e.isUiEvent) guardar();
+      if (e.isUiEvent) return;
+      ajustarTope();
+      guardar();
     });
     const ro = new ResizeObserver(() => Blockly.svgResize(ws));
     ro.observe(ref.current!);

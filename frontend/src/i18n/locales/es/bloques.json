@@ -10,6 +10,7 @@
   "AB_CAT_AVANZADO": "Avanzado",
 
   "AB_AL_INICIAR": "al iniciar",
+  "AB_CUANDO_BOTON": "cuando se presiona botón en pin %1",
 
   "AB_POR_SIEMPRE": "por siempre %1 %2",
   "AB_ESPERAR": "esperar %1 segundos",

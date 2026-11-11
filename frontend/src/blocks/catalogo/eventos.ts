@@ -1,5 +1,14 @@
-import { categoria } from './base';
+import { categoria, pin } from './base';
 
-export default categoria('eventos', '#FFBF00', { ab_al_iniciar: { nextStatement: null } }, [
+// Los sombreros: cada uno encabeza un script. Hasta TOPE_SCRIPTS en total.
+const sombreros = {
+  ab_al_iniciar: { nextStatement: null },
+  ab_cuando_boton: { args: [pin()], nextStatement: null },
+};
+export const SOMBREROS = Object.keys(sombreros);
+export const TOPE_SCRIPTS = 8;
+
+export default categoria('eventos', '#FFBF00', sombreros, [
   'ab_al_iniciar',
+  { type: 'ab_cuando_boton', fields: { PIN: '2' } },
 ]);

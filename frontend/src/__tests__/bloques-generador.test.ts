@@ -5,44 +5,19 @@
  */
 import { describe, it, expect } from 'vitest';
 import { Blockly } from '../blocks/blockly';
-import { generar } from '../blocks/generador';
+import {
+  type B,
+  alIniciar,
+  boton,
+  cuerpo,
+  distancia,
+  esperar,
+  led,
+  num,
+  porSiempre,
+  sketch,
+} from './helpers/bloques';
 
-type B = Record<string, unknown>;
-
-/** Enlaza una lista de instrucciones con `next`. */
-const cadena = (bloques: B[]) =>
-  bloques.reduceRight<B | undefined>(
-    (sig, b) => ({ ...b, ...(sig && { next: { block: sig } }) }),
-    undefined,
-  );
-const alIniciar = (...bloques: B[]) => cadena([{ type: 'ab_al_iniciar' }, ...bloques])!;
-const porSiempre = (...bloques: B[]): B => ({
-  type: 'ab_por_siempre',
-  inputs: { DO: { block: cadena(bloques) } },
-});
-const num = (n: number) => ({ block: { type: 'math_number', fields: { NUM: n } } });
-const led = (estado: 'HIGH' | 'LOW', pin = 13): B => ({
-  type: 'ab_led',
-  fields: { ESTADO: estado, PIN: String(pin) },
-});
-const esperar = (s: number): B => ({ type: 'ab_esperar', inputs: { S: num(s) } });
-const boton = { block: { type: 'ab_boton', fields: { PIN: '2' } } };
-const distancia = { block: { type: 'ab_distancia', fields: { DISPARO: '7', ECO: '6' } } };
-
-function sketch(bloques: B[], variables: B[] = []) {
-  const ws = new Blockly.Workspace();
-  Blockly.serialization.workspaces.load({ blocks: { blocks: bloques }, variables }, ws);
-  const codigo = generar(ws);
-  ws.dispose();
-  return codigo;
-}
-/** Cuerpo de setup() o loop(), sin sangría. */
-const cuerpo = (codigo: string, funcion: 'setup' | 'loop') =>
-  codigo
-    .split(`void ${funcion}() {\n`)[1]
-    .split('\n}\n')[0]
-    .split('\n')
-    .map((l) => l.replace(/^ {2}/, ''));
 /** Código que genera una instrucción colgada de `al iniciar`. */
 const enSetup = (bloque: B, variables?: B[]) =>
   cuerpo(sketch([alIniciar(bloque)], variables), 'setup');

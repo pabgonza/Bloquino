@@ -10,30 +10,14 @@
 import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { CON_BACKEND, compilar } from './helpers/bloques';
 
-const BACKEND = process.env.BLOQUES_BACKEND_URL ?? 'http://localhost:3080';
 const DIR = path.resolve(__dirname, 'fixtures/bloques');
 const SKETCHES = readdirSync(DIR).filter((f) => f.endsWith('.ino'));
 
-describe.skipIf(process.env.RUN_BLOQUES_COMPILE !== '1')(
-  'los sketches de referencia compilan',
-  () => {
-    it.each(SKETCHES)('%s', { timeout: 120_000 }, async (archivo) => {
-      const inicio = await fetch(`${BACKEND}/api/compile/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          files: [{ name: 'sketch.ino', content: readFileSync(path.join(DIR, archivo), 'utf8') }],
-          board_fqbn: 'arduino:avr:uno',
-        }),
-      });
-      const { job_id } = await inicio.json();
-      let trabajo;
-      do {
-        await new Promise((r) => setTimeout(r, 500));
-        trabajo = await (await fetch(`${BACKEND}/api/compile/status/${job_id}`)).json();
-      } while (trabajo.state === 'pending' || trabajo.state === 'running');
-      expect(trabajo.result?.success, trabajo.result?.stderr ?? trabajo.error).toBe(true);
-    });
-  },
-);
+describe.skipIf(!CON_BACKEND)('los sketches de referencia compilan', () => {
+  it.each(SKETCHES)('%s', { timeout: 120_000 }, async (archivo) => {
+    const { hex } = await compilar(readFileSync(path.join(DIR, archivo), 'utf8'));
+    expect(hex).toMatch(/^:/);
+  });
+});

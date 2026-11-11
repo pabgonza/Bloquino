@@ -1,0 +1,127 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "ab_al_iniciar",
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_led",
+                  "fields": {
+                    "ESTADO": "HIGH",
+                    "PIN": "13"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 1
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ab_led",
+                          "fields": {
+                            "ESTADO": "LOW",
+                            "PIN": "13"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "ab_esperar",
+                              "inputs": {
+                                "S": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                      "NUM": 1
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x": 30,
+        "y": 30
+      },
+      {
+        "type": "ab_al_iniciar",
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_led",
+                  "fields": {
+                    "ESTADO": "HIGH",
+                    "PIN": "12"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_esperar",
+                      "inputs": {
+                        "S": {
+                          "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                              "NUM": 0.3
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ab_led",
+                          "fields": {
+                            "ESTADO": "LOW",
+                            "PIN": "12"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "ab_esperar",
+                              "inputs": {
+                                "S": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                      "NUM": 0.3
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x": 30,
+        "y": 330
+      }
+    ]
+  }
+}

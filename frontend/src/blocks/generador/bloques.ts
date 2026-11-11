@@ -77,23 +77,26 @@ const variable = (b: Bloque) => {
   return v;
 };
 
+/** Cesión de turno al final de cada vuelta de un bucle que puede no terminar (nada en modo clásico). */
+const finDeVuelta = () => gen.ctx.vuelta() && gen.INDENT + gen.ctx.vuelta();
+
 const G = gen.forBlock;
 
 // ── Eventos y control ───────────────────────────────────────────────────────
 G.ab_al_iniciar = () => '';
-// Solo el `por siempre` anidado llega aquí: el del script principal es loop() (ver index.ts).
-G.ab_por_siempre = (b) => `while (true) {\n${cuerpo(b)}}\n`;
+// En modo clásico solo llega aquí el `por siempre` anidado: el del script es loop() (ver index.ts).
+G.ab_por_siempre = (b) => `while (true) {\n${cuerpo(b)}${finDeVuelta()}}\n`;
 G.ab_esperar = (b) => gen.ctx.esperar(milis(b));
 G.ab_repetir = (b) => {
   let nivel = 1;
   for (let p = b.getSurroundParent(); p; p = p.getSurroundParent()) if (p.type === b.type) nivel++;
   const v = nivel > 1 ? `vez${nivel}` : 'vez';
-  return `for (int ${v} = 0; ${v} < ${valor(b, 'VECES', ORDEN.RELACION)}; ${v}++) {\n${cuerpo(b)}}\n`;
+  return `for (${gen.ctx.contador(v)} = 0; ${v} < ${valor(b, 'VECES', ORDEN.RELACION)}; ${v}++) {\n${cuerpo(b)}}\n`;
 };
-G.ab_mientras = (b) => `while (${condicion(b)}) {\n${cuerpo(b)}}\n`;
+G.ab_mientras = (b) => `while (${condicion(b)}) {\n${cuerpo(b)}${finDeVuelta()}}\n`;
 G.ab_contar = (b) => {
   const v = nombreVariable(b);
-  return `for (int ${v} = ${valor(b, 'DESDE')}; ${v} <= ${valor(b, 'HASTA', ORDEN.RELACION)}; ${v}++) {\n${cuerpo(b)}}\n`;
+  return `for (${gen.ctx.contador(v)} = ${valor(b, 'DESDE')}; ${v} <= ${valor(b, 'HASTA', ORDEN.RELACION)}; ${v}++) {\n${cuerpo(b)}}\n`;
 };
 G.ab_si = (b) => `if (${condicion(b)}) {\n${cuerpo(b)}}\n`;
 G.ab_si_sino = (b) => `if (${condicion(b)}) {\n${cuerpo(b)}} else {\n${cuerpo(b, 'SINO')}}\n`;
