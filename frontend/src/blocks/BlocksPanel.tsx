@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 import { Blockly } from './blockly';
 import { CATEGORIAS, PALETA, SOMBREROS, TOPE_SCRIPTS } from './catalogo';
 import { generar } from './generador';
-import { ARCHIVO_BLOQUES } from './archivo';
+import { ARCHIVO_BLOQUES, esTexto } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
 
 const tema = Blockly.Theme.defineTheme('bloquino', {
@@ -119,8 +119,10 @@ export default function BlocksPanel() {
       const editor = useEditorStore.getState();
       const archivos = editor.fileGroups[editor.activeGroupId];
       if (!archivos) return;
-      json = JSON.stringify(Blockly.serialization.workspaces.save(ws));
       const propio = archivos.find((f) => f.name === ARCHIVO_BLOQUES);
+      // En modo Texto manda el código escrito a mano: los bloques no lo pisan.
+      if (propio && esTexto(propio.content)) return;
+      json = JSON.stringify(Blockly.serialization.workspaces.save(ws));
       if (!propio)
         editor.addFileToGroup(editor.activeGroupId, { name: ARCHIVO_BLOQUES, content: json });
       else if (propio.content !== json)

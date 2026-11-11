@@ -196,6 +196,12 @@
         "rotate": "Rotar (R)",
         "copy": "Copiar placa (Ctrl+C)",
         "paste": "Pegar (Ctrl+V)"
+      },
+      "wire": "Cable",
+      "touch": {
+        "connectHint": "Toca un pin para conectar; toca el lienzo para marcar un punto de paso",
+        "connect": "Toca un pin para conectar",
+        "start": "Toca un pin para empezar un cable"
       }
     },
     "componentPicker": {
@@ -583,5 +589,8 @@
       "subtitle": "No requiere registro. Funciona 100% en tu navegador. Gratuito y de código abierto.",
       "openEditor": "Abrir editor"
     }
+  },
+  "serial": {
+    "baudRateTitle": "Velocidad a la que la placa envía por el puerto serie."
   }
 }

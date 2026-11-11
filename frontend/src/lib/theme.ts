@@ -77,7 +77,7 @@ export function readStoredMode(): ThemeMode {
   const blog = readKey(MIRROR_BLOG);
   if (blog === 'dark' || blog === 'light') return blog;
 
-  return 'dark';
+  return 'light'; // Bloquino: claro por defecto (Velxio usaba 'dark')
 }
 
 export function systemPrefers(): ResolvedTheme {

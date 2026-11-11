@@ -242,7 +242,10 @@ export const SerialMonitor: React.FC = () => {
             activeBoard.serialBaudRate > 0 &&
             activeBoard.serialLink?.source !== 'usb-cdc' &&
             !isMicroPython && (
-              <span style={styles.baudRate} title="The rate the board is clocking Serial at.">
+              <span
+                style={styles.baudRate}
+                title={t('serial.baudRateTitle', 'The rate the board is clocking Serial at.')}
+              >
                 {activeBoard.serialBaudRate.toLocaleString()} baud
               </span>
             )}

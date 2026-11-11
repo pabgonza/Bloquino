@@ -15,7 +15,7 @@ import {
   registerCodeFormatters,
   setFormatterMessages,
 } from './codeFormatters';
-import { ARCHIVO_BLOQUES } from '../../blocks/archivo';
+import { codigoSoloLectura } from '../../blocks/archivo';
 
 function getLanguage(filename: string): string {
   const ext = filename.split('.').pop()?.toLowerCase() ?? '';
@@ -149,7 +149,7 @@ export const CodeEditor = () => {
         }}
         options={{
           // Proyecto de bloques: el código se genera, no se edita.
-          readOnly: files.some((f) => f.name === ARCHIVO_BLOQUES),
+          readOnly: codigoSoloLectura(files),
           readOnlyMessage: { value: 'El código se genera desde los bloques.' },
           minimap: { enabled: true },
           fontSize,

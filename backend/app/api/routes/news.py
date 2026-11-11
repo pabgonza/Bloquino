@@ -44,7 +44,8 @@ _cache: dict = {"at": 0.0, "posts": None}
 
 
 def _news_enabled() -> bool:
-    return os.environ.get("VELXIO_NEWS", "on").strip().lower() not in (
+    # Bloquino: apagado por defecto; VELXIO_NEWS=on vuelve a pedir el feed de velxio.dev.
+    return os.environ.get("VELXIO_NEWS", "off").strip().lower() not in (
         "off", "0", "false", "disabled", "no",
     )
 

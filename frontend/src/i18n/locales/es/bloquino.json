@@ -1,0 +1,33 @@
+{
+  "marca": "Bloquino",
+  "credito": "Basado en Velxio (AGPLv3)",
+  "codigoFuente": "Código fuente",
+  "codigo": "Código",
+  "iniciar": "Iniciar simulación",
+  "detener": "Detener simulación",
+  "cargar": "Cargar a la placa",
+  "cargarPronto": "Disponible próximamente",
+  "errorCompilar": "El programa no se pudo compilar",
+  "cerrar": "Cerrar",
+  "componentes": "Componentes",
+  "buscar": "Buscar",
+  "sinResultados": "No hay componentes con ese nombre",
+  "detenParaAgregar": "Detén la simulación para agregar componentes",
+  "vistaBloques": "Bloques",
+  "vistaAmbos": "Bloques + Texto",
+  "vistaTexto": "Texto",
+  "avisoVolver": "Al volver a Bloques se pierden los cambios que hiciste en el texto. ¿Quieres continuar?",
+  "monitorSerie": "Monitor serie",
+  "kit": {
+    "led": "LED",
+    "rgb-led": "LED RGB",
+    "resistor": "Resistencia",
+    "pushbutton": "Botón",
+    "buzzer": "Buzzer",
+    "servo": "Servo",
+    "potentiometer": "Potenciómetro",
+    "hc-sr04": "Sensor de distancia",
+    "breadboard": "Protoboard",
+    "breadboard-mini": "Protoboard chica"
+  }
+}

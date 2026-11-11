@@ -3539,7 +3539,10 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
           {/* Wire creation mode banner — visible on both desktop and mobile */}
           {wireInProgress && (
             <WireModeBanner
-              message="Tap a pin to connect — tap canvas for waypoints"
+              message={t(
+                'editor.canvas.touch.connectHint',
+                'Tap a pin to connect — tap canvas for waypoints',
+              )}
               onCancel={() => cancelWireCreation()}
             />
           )}
@@ -3561,7 +3564,7 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
                 return (
                   <SelectionActionBar
                     kind="wire"
-                    label="Wire"
+                    label={t('editor.canvas.wire', 'Wire')}
                     currentColor={wire?.color}
                     onColorChange={(color) => {
                       if (!wire) return;
@@ -3685,7 +3688,9 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
             const meta = c ? registry.getById(c.metadataId) : null;
             if (meta) title = meta.name;
           }
-          const subtitle = wireInProgress ? 'Tap a pin to connect' : 'Tap a pin to start a wire';
+          const subtitle = wireInProgress
+            ? t('editor.canvas.touch.connect', 'Tap a pin to connect')
+            : t('editor.canvas.touch.start', 'Tap a pin to start a wire');
           // Rotate is only meaningful for components (boards have no rotation).
           const handlePickerRotate =
             pinPicker.kind === 'component'

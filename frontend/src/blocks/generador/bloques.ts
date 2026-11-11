@@ -64,7 +64,7 @@ const nombreVariable = (b: Bloque) =>
     .getField('VAR')!
     .getText()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/\p{M}/gu, '')
     .replace(/\W/g, '_')
     .replace(/^(\d)/, '_$1');
 

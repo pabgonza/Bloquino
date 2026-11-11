@@ -1,6 +1,6 @@
 import { useEffect, type ReactElement } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { EditorPage } from './pages/EditorPage';
+import { PaginaEditor } from './bloquino/PaginaEditor';
 import { ExamplesPage } from './pages/ExamplesPage';
 // Login, Register, ForgotPassword, ResetPassword, Admin, UserProfile,
 // Project, ProjectById — moved to the pro overlay in Phase 3 of the
@@ -47,7 +47,7 @@ const ROOT_ELEMENT: ReactElement = <RootRoute />;
 
 const ROUTES: { path: string; element: ReactElement; index?: boolean }[] = [
   { path: '/', element: ROOT_ELEMENT, index: true },
-  { path: 'editor', element: <EditorPage /> },
+  { path: 'editor', element: <PaginaEditor /> },
   { path: 'examples', element: <ExamplesPage /> },
   // /examples/<id> = SEO landing (preview, badges, "Open in Simulator" CTA).
   // /example/<id>  = live editor with the example pre-loaded; the URL

@@ -143,7 +143,7 @@ export function ElectricalOverlay({
       }}
     >
       {/* Summary pill with AC/DC badge */}
-      <g transform="translate(12, 12)">
+      <g className="bloquino-aviso-spice" transform="translate(12, 12)">
         <rect
           x={0}
           y={0}

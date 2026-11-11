@@ -1,0 +1,255 @@
+/* Página del alumno. Todo bajo .bq-pagina para no tocar el editor de Velxio. */
+.bq-pagina {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+  color: #1f2937;
+  background: #f3f5f8;
+}
+
+/* ── Barra superior ───────────────────────────────────────────────────────── */
+.bq-barra {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 12px;
+  color: #fff;
+  background: #1565c0;
+}
+.bq-marca {
+  font-size: 20px;
+  font-weight: 700;
+}
+.bq-credito {
+  font-size: 12px;
+  color: #dbeafe;
+}
+.bq-espacio {
+  flex: 1;
+}
+.bq-boton {
+  height: 34px;
+  padding: 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1565c0;
+  background: #fff;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.bq-boton:disabled {
+  color: #dbeafe;
+  background: transparent;
+  border-color: #90b8ea;
+  cursor: not-allowed;
+}
+.bq-boton-activo {
+  color: #fff;
+  background: #0d47a1;
+}
+.bq-boton-iniciar {
+  color: #fff;
+  background: #2e9e4f;
+  border-color: #2e9e4f;
+}
+.bq-boton-detener {
+  color: #fff;
+  background: #d93f3f;
+  border-color: #d93f3f;
+}
+
+/* ── Lienzo y panel lateral ───────────────────────────────────────────────── */
+.bq-cuerpo {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.bq-lienzo {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.bq-divisor {
+  flex: none;
+  width: 6px;
+  background: #d0d7de;
+  cursor: col-resize;
+}
+.bq-lateral {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #fff;
+  border-left: 1px solid #d0d7de;
+}
+.bq-fuera-de-vista {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+}
+/* Aviso de la simulación eléctrica de Velxio: no es para el alumno. */
+.bq-pagina .bloquino-aviso-spice {
+  display: none;
+}
+.bq-error {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 30;
+  padding: 10px 12px;
+  background: #fff4f4;
+  border: 2px solid #d93f3f;
+  border-radius: 8px;
+}
+.bq-error button {
+  float: right;
+}
+.bq-error pre {
+  max-height: 140px;
+  margin: 8px 0 0;
+  overflow: auto;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+/* ── Paleta de componentes ────────────────────────────────────────────────── */
+.bq-paleta {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 10px;
+}
+.bq-paleta-titulo {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.bq-buscador {
+  height: 32px;
+  padding: 0 8px;
+  font-size: 14px;
+  color: inherit;
+  background: #fff;
+  border: 1px solid #b6c0cc;
+  border-radius: 6px;
+}
+.bq-paleta-lista {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+.bq-componente {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  font-size: 13px;
+  color: inherit;
+  background: #f8fafc;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.bq-componente:hover:not(:disabled) {
+  background: #e3f0ff;
+  border-color: #1565c0;
+}
+.bq-componente:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bq-miniatura {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bq-miniatura > * {
+  flex: none;
+}
+.bq-miniatura > svg {
+  width: 56px;
+  height: 56px;
+}
+.bq-paleta-vacia {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ── Panel de programa ────────────────────────────────────────────────────── */
+.bq-programa {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.bq-vistas {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px 0;
+  border-bottom: 1px solid #d0d7de;
+}
+.bq-vista {
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #4b5563;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+}
+.bq-vista-activa {
+  font-weight: 700;
+  color: #1565c0;
+  background: #e3f0ff;
+  border-color: #d0d7de;
+}
+.bq-programa-cuerpo {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.bq-programa-bloques {
+  position: relative;
+  flex: 3;
+  min-width: 0;
+}
+.bq-programa-texto {
+  flex: 2;
+  min-width: 0;
+  border-left: 1px solid #d0d7de;
+}
+.bq-serie-titulo {
+  flex: none;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  color: inherit;
+  background: #f3f5f8;
+  border: none;
+  border-top: 1px solid #d0d7de;
+  cursor: pointer;
+}
+.bq-serie {
+  flex: none;
+  height: 180px;
+  min-height: 0;
+}
