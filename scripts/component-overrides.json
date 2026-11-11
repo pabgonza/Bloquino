@@ -2,6 +2,26 @@
   "$comment": "Custom property overrides applied AFTER auto-generation from wokwi-elements. Add entries here to customize controls, add new properties, or change defaults. These survive metadata regeneration. Use `_customComponents` to inject Velxio-only parts not defined in wokwi-elements.",
   "_customComponents": [
     {
+      "$comment": "Bloquino: módulo DHT11 del kit del curso (S, +, −). Elemento en frontend/src/bloquino/componentes/Dht11Element.ts.",
+      "id": "dht11",
+      "tagName": "bloquino-dht11",
+      "name": "DHT11",
+      "category": "sensors",
+      "thumbnail": "",
+      "properties": [],
+      "defaultValues": {},
+      "pinCount": 3,
+      "tags": [
+        "dht11",
+        "dht",
+        "temperature",
+        "humidity",
+        "temperatura",
+        "humedad",
+        "sensor"
+      ]
+    },
+    {
       "id": "a4988",
       "tagName": "velxio-a4988",
       "name": "A4988 Stepper Driver",

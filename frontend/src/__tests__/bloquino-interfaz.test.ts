@@ -57,6 +57,7 @@ describe('paleta del kit', () => {
       'Servo',
       'Potenciómetro',
       'Sensor de distancia',
+      'Temperatura y humedad',
       'Protoboard',
       'Protoboard chica',
     ]);

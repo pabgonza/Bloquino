@@ -168,6 +168,17 @@ G.ab_distancia = (b) => {
   gen.ctx.funciones.add(DISTANCIA);
   return [`distanciaCm(${pin(b, 'OUTPUT', 'DISPARO')}, ${pin(b, 'INPUT', 'ECO')})`, ORDEN.ATOMO];
 };
+// DHT11 con la librería del curso. La librería guarda la última lectura y la
+// renueva como máximo cada 2 s: leer seguido no frena los otros programas.
+const dht = (b: Blockly.Block) => {
+  const p = campo(b, 'PIN');
+  gen.ctx.includes.add('#include <DHT.h>');
+  gen.ctx.globales.add(`DHT dht${p}(${p}, DHT11);`);
+  gen.ctx.setup.add(`dht${p}.begin();`);
+  return `dht${p}`;
+};
+G.ab_temperatura = (b) => [`${dht(b)}.readTemperature()`, ORDEN.ATOMO];
+G.ab_humedad = (b) => [`${dht(b)}.readHumidity()`, ORDEN.ATOMO];
 
 // ── Operadores y variables ──────────────────────────────────────────────────
 G.ab_aritmetica =

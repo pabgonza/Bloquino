@@ -4696,6 +4696,26 @@
         "motion",
         "sensor"
       ]
+    },
+    {
+      "$comment": "Bloquino: módulo DHT11 del kit del curso (S, +, −). Elemento en frontend/src/bloquino/componentes/Dht11Element.ts.",
+      "id": "dht11",
+      "tagName": "bloquino-dht11",
+      "name": "DHT11",
+      "category": "sensors",
+      "thumbnail": "",
+      "properties": [],
+      "defaultValues": {},
+      "pinCount": 3,
+      "tags": [
+        "dht11",
+        "dht",
+        "temperature",
+        "humidity",
+        "temperatura",
+        "humedad",
+        "sensor"
+      ]
     }
   ]
 }

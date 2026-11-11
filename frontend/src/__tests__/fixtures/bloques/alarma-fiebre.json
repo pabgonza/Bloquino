@@ -1,0 +1,100 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "x": 30,
+        "y": 30,
+        "type": "ab_al_iniciar",
+        "next": {
+          "block": {
+            "type": "ab_por_siempre",
+            "inputs": {
+              "DO": {
+                "block": {
+                  "type": "ab_decir",
+                  "inputs": {
+                    "VALOR": {
+                      "block": {
+                        "type": "ab_temperatura",
+                        "fields": {
+                          "PIN": "2"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "ab_si_sino",
+                      "inputs": {
+                        "COND": {
+                          "block": {
+                            "type": "ab_comparar",
+                            "fields": {
+                              "OP": ">"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "ab_temperatura",
+                                  "fields": {
+                                    "PIN": "2"
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "math_number",
+                                  "fields": {
+                                    "NUM": 30
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "DO": {
+                          "block": {
+                            "type": "ab_led",
+                            "fields": {
+                              "ESTADO": "HIGH",
+                              "PIN": "13"
+                            }
+                          }
+                        },
+                        "SINO": {
+                          "block": {
+                            "type": "ab_led",
+                            "fields": {
+                              "ESTADO": "LOW",
+                              "PIN": "13"
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ab_esperar",
+                          "inputs": {
+                            "S": {
+                              "block": {
+                                "type": "math_number",
+                                "fields": {
+                                  "NUM": 1
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

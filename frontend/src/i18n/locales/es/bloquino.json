@@ -41,6 +41,7 @@
     "servo": "Servo",
     "potentiometer": "Potenciómetro",
     "hc-sr04": "Sensor de distancia",
+    "dht11": "Temperatura y humedad",
     "breadboard": "Protoboard",
     "breadboard-mini": "Protoboard chica"
   }

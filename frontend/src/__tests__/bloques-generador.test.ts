@@ -319,6 +319,31 @@ describe('sensores', () => {
     ]);
     expect(cuerpo(codigo, 'loop')[0]).toBe('Serial.println(distanciaCm(7, 6));');
   });
+
+  it('temperatura y humedad: un objeto DHT11 por pin, con la librería del curso', () => {
+    const dht = (tipo: string, PIN: string): B => ({
+      type: 'ab_decir',
+      inputs: { VALOR: { block: { type: tipo, fields: { PIN } } } },
+    });
+    const codigo = sketch([
+      alIniciar(dht('ab_temperatura', '2'), dht('ab_humedad', '2'), dht('ab_temperatura', '4')),
+    ]);
+    expect(codigo.split('\n').slice(1, 6)).toEqual([
+      '#include <DHT.h>',
+      '',
+      'DHT dht2(2, DHT11);',
+      'DHT dht4(4, DHT11);',
+      '',
+    ]);
+    expect(cuerpo(codigo, 'setup')).toEqual([
+      'Serial.begin(9600);',
+      'dht2.begin();',
+      'dht4.begin();',
+      'Serial.println(dht2.readTemperature());',
+      'Serial.println(dht2.readHumidity());',
+      'Serial.println(dht4.readTemperature());',
+    ]);
+  });
 });
 
 describe('operadores y variables', () => {

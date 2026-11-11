@@ -40,6 +40,8 @@
   "AB_BOTON": "¿botón en pin %1 presionado?",
   "AB_PERILLA": "perilla en pin %1",
   "AB_DISTANCIA": "distancia en cm (disparo %1 eco %2)",
+  "AB_TEMPERATURA": "temperatura en °C (DHT11 en pin %1)",
+  "AB_HUMEDAD": "humedad en % (DHT11 en pin %1)",
 
   "AB_ARITMETICA": "%1 %2 %3",
   "AB_COMPARAR": "%1 %2 %3",

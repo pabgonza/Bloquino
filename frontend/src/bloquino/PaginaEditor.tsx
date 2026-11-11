@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { EditorPage } from '../pages/EditorPage';
 import textos from '../i18n/locales/es/bloquino.json';
+import './componentes/Dht11Element';
+import './componentes/dht11';
 import { leerModo } from './modo';
 import { PaginaAlumno } from './PaginaAlumno';
 

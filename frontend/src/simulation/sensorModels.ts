@@ -57,6 +57,12 @@ export const SINGLE_WIRE_SENSOR_MODELS: Readonly<Record<string, SensorModelSpec>
     dataPinName: 'SDA',
     propertyKeys: ['temperature', 'humidity'],
   },
+  // Bloquino: DHT11 del kit (modelo en bloquino/componentes/dht11.ts).
+  dht11: {
+    sensorType: 'dht11',
+    dataPinName: 'S',
+    propertyKeys: ['temperature', 'humidity'],
+  },
   'hc-sr04': {
     sensorType: 'hc-sr04',
     dataPinName: 'TRIG',
