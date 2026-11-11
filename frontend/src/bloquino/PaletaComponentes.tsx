@@ -6,6 +6,7 @@ import { ComponentRegistry } from '../services/ComponentRegistry';
 import type { ComponentMetadata } from '../types/component-metadata';
 import { createComponentFromMetadata } from '../components/DynamicComponent';
 import { useSimulatorStore } from '../store/useSimulatorStore';
+import { isBreadboard } from '../utils/breadboardNets';
 import { pickDropSlot } from '../utils/dropSlot';
 import textos from '../i18n/locales/es/bloquino.json';
 import { filtrarKit } from './kit';
@@ -15,7 +16,12 @@ const LADO = 56; // px del cuadro de la miniatura
 /** El elemento web del componente, reducido para caber en el cuadro. */
 function Miniatura({ componente }: { componente: ComponentMetadata }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const svg = componente.thumbnail?.trim().startsWith('<svg') ? componente.thumbnail : undefined;
+  // La miniatura de los metadatos solo para las protoboard, cuyo elemento es
+  // enorme: las demás están hechas para el selector oscuro de Velxio.
+  const svg =
+    isBreadboard(componente.id) && componente.thumbnail?.trim().startsWith('<svg')
+      ? componente.thumbnail
+      : undefined;
   useEffect(() => {
     const elemento = ref.current?.firstElementChild as HTMLElement | null;
     if (!elemento || svg) return;
@@ -37,10 +43,16 @@ function Miniatura({ componente }: { componente: ComponentMetadata }) {
 
 function agregar(componente: ComponentMetadata) {
   const sim = useSimulatorStore.getState();
-  // Primer lugar libre a la derecha de la placa.
-  const { x, y } = pickDropSlot({ x: 420, y: 60 }, [...sim.components, ...sim.boards], {
-    step: 36,
-  });
+  // Primer lugar libre desde la esquina visible del lienzo, como el selector de
+  // Velxio: el paneo y el zoom salen de la transformación de su "mundo".
+  const mundo = document.querySelector('.canvas-world');
+  const { a: zoom, e: panX, f: panY } = new DOMMatrix(mundo ? getComputedStyle(mundo).transform : '');
+  const MARGEN = 60; // px de pantalla desde la esquina
+  const { x, y } = pickDropSlot(
+    { x: (MARGEN - panX) / zoom, y: (MARGEN - panY) / zoom },
+    [...sim.components, ...sim.boards],
+    { step: 36 / zoom },
+  );
   const nuevo = createComponentFromMetadata(componente, x, y);
   sim.recordAddComponent(nuevo as Parameters<typeof sim.recordAddComponent>[0]);
 }

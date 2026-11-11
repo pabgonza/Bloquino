@@ -32,3 +32,12 @@ Entorno: backend en el contenedor Docker del puerto 3080; frontend con `npx vite
 
 - [x] 4.1 `docs/bloquino-agregar-componente.md`.
 - [x] 4.2 `openspec validate h5-componente-dht11 --strict` y tests de bloques e interfaz en verde.
+
+## Verificación posterior (Playwright, mouse real, simulación a 58 fps)
+
+- Sobre la protoboard: al soltarlo con el mouse, el módulo calza exacto en tres columnas vecinas (26, 27 y 28) y Velxio lo marca como asentado.
+- Cableado con el mouse desde agujeros de esas columnas al pin 2, 5V y GND; el programa de bloques muestra 25.00 / 50.00 en el monitor serie.
+- Slider arrastrado con el mouse de 25 a 42 °C: el monitor pasa a 42.00.
+- Encontrado y corregido: los agujeros bajo el recuadro de un componente (su margen y su nombre) no se podían cliquear; ahora solo el dibujo recibe el mouse (CSS de la página de alumno).
+- Corregido: los componentes nuevos caen en la esquina visible del lienzo (antes en una posición fija, que el panel de programa o el borde tapaban), y la resistencia de la paleta se dibuja con su elemento en vez de la miniatura oscura de Velxio.
+- Sigue sin compararse el dibujo con el módulo físico.

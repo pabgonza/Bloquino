@@ -269,3 +269,14 @@
   height: 180px;
   min-height: 0;
 }
+
+/* ── Componentes del lienzo ───────────────────────────────────────────────── */
+/* Solo el dibujo del componente recibe el mouse. Su recuadro (margen y nombre)
+   lo deja pasar, para poder cablear en los agujeros de la protoboard que
+   quedan debajo. */
+.bq-pagina .dynamic-component-wrapper {
+  pointer-events: none !important;
+}
+.bq-pagina .dynamic-component-wrapper > .web-component-container {
+  pointer-events: auto;
+}

@@ -27,3 +27,10 @@ Entorno: frontend con `npx vite` desde `frontend/` (http://localhost:5173/editor
 ## 3. Cierre
 
 - [x] 3.1 `openspec validate h4-autosave --strict`, tests de bloques y de la interfaz en verde.
+
+## Verificación posterior (Playwright, mouse y archivos reales)
+
+- Recargar con la simulación corriendo: el proyecto vuelve completo y con la simulación detenida.
+- Descargar: el navegador guardó `estacion-clima.bloquino` (6,4 KB), un proyecto válido con protoboard, DHT11, 9 cables, sketch y bloques.
+- Abrir: tras Nuevo, el archivo se eligió con el selector del sistema y volvió el circuito completo.
+- Almacenamiento negado desde el arranque (`localStorage` lanza al accederlo): la página abre, se agregan componentes, la simulación corre y el indicador dice "Sin guardar: descarga tu proyecto".
