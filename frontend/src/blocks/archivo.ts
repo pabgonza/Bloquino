@@ -31,3 +31,33 @@ export function codigoSoloLectura(archivos: readonly { name: string; content: st
   const bloques = archivos.find((a) => a.name === ARCHIVO_BLOQUES);
   return !!bloques && !esTexto(bloques.content);
 }
+
+// Programa con el que parte un proyecto sin bloques: el parpadeo del pin 13.
+const led = (ESTADO: string, next?: object) => ({
+  type: 'ab_led',
+  fields: { ESTADO, PIN: '13' },
+  next: {
+    block: {
+      type: 'ab_esperar',
+      inputs: { S: { shadow: { type: 'math_number', fields: { NUM: 1 } } } },
+      next,
+    },
+  },
+});
+export const BLOQUES_INICIALES = JSON.stringify({
+  blocks: {
+    blocks: [
+      {
+        type: 'ab_al_iniciar',
+        x: 30,
+        y: 30,
+        next: {
+          block: {
+            type: 'ab_por_siempre',
+            inputs: { DO: { block: led('HIGH', { block: led('LOW') }) } },
+          },
+        },
+      },
+    ],
+  },
+});

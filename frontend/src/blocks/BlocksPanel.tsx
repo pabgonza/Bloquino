@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 import { Blockly } from './blockly';
 import { CATEGORIAS, PALETA, SOMBREROS, TOPE_SCRIPTS } from './catalogo';
 import { generar } from './generador';
-import { ARCHIVO_BLOQUES, esTexto } from './archivo';
+import { ARCHIVO_BLOQUES, BLOQUES_INICIALES, esTexto } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
 
 const tema = Blockly.Theme.defineTheme('bloquino', {
@@ -53,36 +53,6 @@ Blockly.registry.register(
   true,
 );
 
-// Programa con el que parte un proyecto sin bloques: el parpadeo del pin 13.
-const led = (ESTADO: string, next?: object) => ({
-  type: 'ab_led',
-  fields: { ESTADO, PIN: '13' },
-  next: {
-    block: {
-      type: 'ab_esperar',
-      inputs: { S: { shadow: { type: 'math_number', fields: { NUM: 1 } } } },
-      next,
-    },
-  },
-});
-const PARPADEO = {
-  blocks: {
-    blocks: [
-      {
-        type: 'ab_al_iniciar',
-        x: 30,
-        y: 30,
-        next: {
-          block: {
-            type: 'ab_por_siempre',
-            inputs: { DO: { block: led('HIGH', { block: led('LOW') }) } },
-          },
-        },
-      },
-    ],
-  },
-};
-
 export default function BlocksPanel() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -104,7 +74,7 @@ export default function BlocksPanel() {
     };
 
     let grupo: string | undefined; // grupo de archivos que muestra el área de trabajo
-    let json = JSON.stringify(PARPADEO); // último bloques.json leído o escrito
+    let json = BLOQUES_INICIALES; // último bloques.json leído o escrito
     const cargar = (contenido: string) => {
       json = contenido;
       Blockly.Events.disable();

@@ -12,6 +12,15 @@ import { useCompileLogsStore } from '../store/useCompileLogsStore';
 import textos from '../i18n/locales/es/bloquino.json';
 import { PaletaComponentes } from './PaletaComponentes';
 import { PanelPrograma } from './PanelPrograma';
+import {
+  abrir,
+  autoguardar,
+  descargar,
+  descartar,
+  nombreProyecto,
+  restaurar,
+  type Guardado,
+} from './proyecto';
 import './alumno.css';
 
 const VELXIO = 'https://github.com/davidmonterocrespo24/velxio';
@@ -31,6 +40,21 @@ export function PaginaAlumno() {
   const setLogs = useCompileLogsStore((s) => s.setLogs);
   const errores = logs.filter((l) => l.type === 'error');
   const [erroresVistos, setErroresVistos] = useState(logs);
+  const [guardado, setGuardado] = useState<Guardado>('guardado');
+  const selector = useRef<HTMLInputElement>(null);
+
+  // Proyecto guardado en el navegador: se restaura y, desde ahí, se guarda solo.
+  useEffect(() => {
+    let parar: (() => void) | undefined;
+    let montada = true;
+    void restaurar().then(() => {
+      if (montada) parar = autoguardar(setGuardado);
+    });
+    return () => {
+      montada = false;
+      parar?.();
+    };
+  }, []);
 
   // Lo que el lienzo necesita de la página de Velxio: la simulación eléctrica
   // y deshacer / rehacer con el teclado.
@@ -82,6 +106,43 @@ export function PaginaAlumno() {
         <a className="bq-credito" href={FUENTE} target="_blank" rel="noreferrer">
           {textos.codigoFuente}
         </a>
+        <button
+          className="bq-boton bq-boton-menor"
+          onClick={() => {
+            if (!window.confirm(textos.avisoNuevo)) return;
+            descartar();
+            window.location.reload();
+          }}
+        >
+          {textos.nuevo}
+        </button>
+        <button className="bq-boton bq-boton-menor" onClick={() => selector.current!.click()}>
+          {textos.abrir}
+        </button>
+        <input
+          ref={selector}
+          type="file"
+          accept=".bloquino,.vlx"
+          hidden
+          onChange={(e) => {
+            const archivo = e.target.files?.[0];
+            e.target.value = '';
+            if (archivo && window.confirm(textos.avisoAbrir))
+              abrir(archivo).catch((error: Error) => window.alert(error.message));
+          }}
+        />
+        <button
+          className="bq-boton bq-boton-menor"
+          onClick={() => {
+            const nombre = window.prompt(textos.nombreArchivo, nombreProyecto())?.trim();
+            if (nombre) descargar(nombre);
+          }}
+        >
+          {textos.descargar}
+        </button>
+        <span className={`bq-guardado bq-guardado-${guardado}`} role="status">
+          {textos.guardado[guardado]}
+        </span>
         <span className="bq-espacio" />
         <button
           className={codigoAbierto ? 'bq-boton bq-boton-activo' : 'bq-boton'}
