@@ -51,7 +51,7 @@ El catálogo SHALL incluir `mover servo en pin [p] a [n]°`, con el ángulo limi
 - **THEN** el campo queda en 180
 
 ### Requirement: Bloques de sensores
-El catálogo SHALL incluir `¿botón en pin [p] presionado?` (verdadero cuando el pin está en nivel bajo con `INPUT_PULLUP`), `perilla en pin [a]` (0 a 100) y `distancia en cm (disparo [p] eco [p])`. En un programa de varios scripts, `distancia en cm` SHALL retener el turno a lo más 25 ms por medición.
+El catálogo SHALL incluir `¿botón en pin [p] presionado?` (verdadero cuando el pin está en nivel bajo con `INPUT_PULLUP`), `perilla en pin [a]` (0 a 100), `distancia en cm (disparo [p] eco [p])`, `temperatura en °C (DHT11 en pin [p])` y `humedad en % (DHT11 en pin [p])`. En un programa de varios scripts, `distancia en cm` SHALL retener el turno a lo más 25 ms por medición.
 
 #### Scenario: Botón con LED
 - **WHEN** el programa es `por siempre` [ `si ¿botón en pin 2 presionado?` → `encender LED en pin 13` / `si no` → `apagar LED en pin 13` ] y en el simulador se presiona el botón conectado entre el pin 2 y GND
@@ -68,6 +68,10 @@ El catálogo SHALL incluir `¿botón en pin [p] presionado?` (verdadero cuando e
 #### Scenario: Distancia en un programa de varios scripts
 - **WHEN** un script mide la distancia sin que haya eco y otro parpadea un LED
 - **THEN** la medición termina dentro de 25 ms y el parpadeo continúa
+
+#### Scenario: Temperatura y humedad en la paleta
+- **WHEN** el usuario abre la categoría Sensores
+- **THEN** encuentra los bloques de temperatura y de humedad del DHT11, con el pin 2 por defecto
 
 ### Requirement: Operadores y variables
 El catálogo SHALL incluir suma, resta, multiplicación, división, comparaciones (`<`, `>`, `=`), `y`, `o`, `no`, `número al azar entre [a] y [b]`, `asignar [x] del rango [a]-[b] al rango [c]-[d]`, `restringir [x] entre [a] y [b]`, y variables numéricas con `crear variable`, `definir [v] en [n]` y `cambiar [v] por [n]`. Los tipos de C++ SHALL permanecer ocultos.
