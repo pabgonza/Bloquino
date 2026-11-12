@@ -7,9 +7,12 @@ el programa de bloques, que se carga como JSON.
 
 - `lib.js`: ayudas (`nuevo`, `agregar`, `asentar`, `cable`, `programar`,
   `simular`, `prop`, `deslizar` para el panel de un sensor, `espiarAudio` y
-  `notasOidas` para el buzzer, constructores de bloques).
+  `notasOidas` para el buzzer, `forma`, `arrastrar` y `campoDe` para mover
+  bloques con el mouse, constructores de bloques).
 - `sN.js`: cuerpo de la sesión N. Deja sus resultados en `R`.
 - `bloques.js`: programar con el mouse (arrastrar, menú, número, papelera).
+- `canciones.js`: canciones de BuzzerMusic (h6): bloques arrastrados, canción
+  de fondo con parpadeo, detener con el botón y canción sola.
 - `conv.mjs`: arma los scripts en `frontend/.recorrido/`.
 
 ## Cómo correrlo
@@ -17,7 +20,7 @@ el programa de bloques, que se carga como JSON.
 Con el frontend (`npx vite`, puerto 5173) y el backend (puerto 3080) arriba:
 
 ```
-node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques
+node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones
 ```
 
 En el MCP de Playwright, una vez por sesión de trabajo (`browser_run_code_unsafe`):

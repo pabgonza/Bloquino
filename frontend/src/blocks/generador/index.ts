@@ -27,10 +27,11 @@ const seccion = (lineas: Set<string>, separador = '\n') =>
 const lineas = (xs: Iterable<string>) => [...xs].map((l) => `  ${l}\n`).join('');
 const sangrar = (codigo: string) => codigo && gen.prefixLines(codigo, '  ');
 
-export function generar(ws: Blockly.Workspace): string {
+export function generar(ws: Blockly.Workspace, paralelo = false): string {
   const scripts = ws.getTopBlocks(true).filter((b) => SOMBREROS.includes(b.type) && b.isEnabled());
   const clasico =
-    scripts.length === 0 || (scripts.length === 1 && scripts[0].type === 'ab_al_iniciar');
+    !paralelo &&
+    (scripts.length === 0 || (scripts.length === 1 && scripts[0].type === 'ab_al_iniciar'));
   const ctx = (gen.ctx = clasico ? contextoClasico() : contextoCorrutinas());
   gen.init(ws);
   let setup = '';
@@ -44,6 +45,9 @@ export function generar(ws: Blockly.Workspace): string {
       }
       setup += gen.blockToCode(b, true);
     }
+    // Un bloque que trabaja de fondo (una canción que sigue sonando) pide
+    // código en cada vuelta y no convive con delay(): se arma con corrutinas.
+    if (ctx.tick.size) return generar(ws, true);
   } else {
     scripts.forEach((script, i) => {
       ctx.locales.clear();

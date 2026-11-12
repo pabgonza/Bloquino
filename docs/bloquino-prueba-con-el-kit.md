@@ -35,6 +35,8 @@ Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques.
 - Armar un LED sin resistencia y simular: aparece «Revisa tu circuito», en
   español y sin códigos raros.
 - Arrastrar bloques, cambiar un menú, escribir un número, botar un bloque.
+- Canciones (Sonido): `empezar canción` con un parpadeo debajo suena y parpadea
+  a la vez; comparar la melodía con el buzzer real y la misma librería.
 - Recargar la página a mitad de un armado: vuelve todo, encuadrado.
 
 ## Decisiones que siguen abiertas

@@ -27,6 +27,7 @@ Fuera de este hito: interfaz para armar bloques o subir librerías (fase 2), com
 
 ### Modified Capabilities
 - `bloques/catalogo-base`: la categoría Sonido gana los bloques de canciones.
+- `bloques/generador-clasico` y `bloques/generador-corrutinas`: un bloque que trabaja de fondo pasa el programa a corrutinas.
 
 ## Impact
 

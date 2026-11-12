@@ -6,20 +6,6 @@ await limpiar();
 await page.getByRole('button', { name: 'Código', exact: true }).click();
 await espera(3000);
 const sketch = async () => { await espera(2500); return resumen(await page.evaluate(() => window.__e.useEditorStore.getState().files.find((f) => f.name.endsWith('.ino')).content), 20); };
-// Caja del dibujo propio de un bloque (sin sus hijos): en el área de trabajo o en la paleta abierta.
-const forma = (clase, n = 0, enPaleta = false) => page.evaluate(({ clase, n, enPaleta }) => {
-  const e = [...document.querySelectorAll('.blocklyDraggable.' + clase)].filter((b) => !!b.closest('.blocklyFlyout') === enPaleta)[n];
-  const r = e.querySelector(':scope > .blocklyPath').getBoundingClientRect();
-  return { x: r.left, y: r.top, w: r.width, h: r.height };
-}, { clase, n, enPaleta });
-const arrastrar = async (desde, hasta) => {
-  await page.mouse.move(desde.x, desde.y);
-  await page.mouse.down();
-  await page.mouse.move(desde.x + 40, desde.y + 30, { steps: 5 });
-  await page.mouse.move(hasta.x, hasta.y, { steps: 15 });
-  await espera(300);
-  await page.mouse.up();
-};
 
 // 1. «tocar nota» de la paleta Sonido al final del «por siempre».
 await page.locator('.blocklyToolboxCategory').filter({ hasText: 'Sonido' }).first().click();

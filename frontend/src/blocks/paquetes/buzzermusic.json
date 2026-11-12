@@ -1,0 +1,52 @@
+{
+  "libreria": {
+    "nombre": "BuzzerMusic",
+    "version": "1.1.0",
+    "origen": "https://github.com/pabgonza/BuzzerMusic.git",
+    "commit": "7742b6c5ae98efbe638d852e875cbe742ccb5dd0"
+  },
+  "categoria": "sonido",
+  "include": "#include <BuzzerMusic.h>",
+  "global": "BuzzerMusic musica{PIN}({PIN});",
+  "tick": "musica{PIN}.update();",
+  "porDefecto": { "PIN": "8" },
+  "menus": {
+    "CANCION": [
+      { "texto": "Mario Bros", "valor": "MARIO_BROS", "metodo": "marioBros" },
+      { "texto": "Marcha Imperial", "valor": "IMPERIAL_MARCH", "metodo": "imperialMarch" },
+      { "texto": "Cumpleaños feliz", "valor": "HAPPY_BIRTHDAY", "metodo": "happyBirthday" },
+      { "texto": "Himno de la Alegría", "valor": "ODE_TO_JOY", "metodo": "odeToJoy" }
+    ]
+  },
+  "bloques": [
+    {
+      "tipo": "ab_tocar_cancion",
+      "texto": "tocar canción %1 en pin %2",
+      "campos": ["CANCION", "PIN"],
+      "codigo": "musica{PIN}.start(BuzzerMusic::{CANCION});",
+      "tick": true,
+      "esperarHasta": "!musica{PIN}.isPlaying()",
+      "bloqueante": "musica{PIN}.{CANCION.metodo}();"
+    },
+    {
+      "tipo": "ab_empezar_cancion",
+      "texto": "empezar canción %1 en pin %2",
+      "campos": ["CANCION", "PIN"],
+      "codigo": "musica{PIN}.start(BuzzerMusic::{CANCION});",
+      "tick": true
+    },
+    {
+      "tipo": "ab_detener_cancion",
+      "texto": "detener canción en pin %1",
+      "campos": ["PIN"],
+      "codigo": "musica{PIN}.stop();"
+    },
+    {
+      "tipo": "ab_cancion_sonando",
+      "texto": "¿canción sonando en pin %1?",
+      "campos": ["PIN"],
+      "forma": "logico",
+      "codigo": "musica{PIN}.isPlaying()"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import movimiento from './movimiento';
 import sensores from './sensores';
 import operadores from './operadores';
 import avanzado from './avanzado';
+import { PAQUETES } from '../paquetes';
 
 export const CATEGORIAS: Categoria[] = [
   eventos,
@@ -23,6 +24,18 @@ export const CATEGORIAS: Categoria[] = [
   { id: 'variables', color: '#FF8C1A' },
   avanzado,
 ];
+
+// Los bloques de cada paquete van al final de su categoría.
+for (const p of PAQUETES)
+  CATEGORIAS.find((c) => c.id === p.categoria)!.paleta!.push(
+    ...p.bloques.map((b) => ({
+      kind: 'block',
+      type: b.tipo,
+      fields: Object.fromEntries(
+        b.campos.filter((c) => p.porDefecto?.[c]).map((c) => [c, p.porDefecto![c]]),
+      ),
+    })),
+  );
 
 export const PALETA = {
   kind: 'categoryToolbox',

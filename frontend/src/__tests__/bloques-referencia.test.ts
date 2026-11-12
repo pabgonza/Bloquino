@@ -18,14 +18,16 @@ const PROGRAMAS = readdirSync(DIR)
   .sort();
 
 describe('programas de referencia', () => {
-  it('están los de h1, los de h2 y el de h5', () => {
+  it('están los de h1, h2, h5 y h6', () => {
     expect(PROGRAMAS).toEqual([
       'alarma-distancia',
       'alarma-fiebre',
       'barrido-servo',
       'boton-led',
+      'cancion',
       'dos-parpadeos',
       'mezcla-rgb',
+      'musica-de-fondo',
       'ocho-scripts',
       'parpadeo',
       'parpadeo-boton',

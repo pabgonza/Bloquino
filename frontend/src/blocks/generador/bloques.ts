@@ -2,6 +2,7 @@
 // sus contribuciones en `gen.ctx`.
 import { Blockly } from '../blockly';
 import '../catalogo';
+import { PAQUETES, llenar } from '../paquetes';
 import { contextoClasico } from './contexto';
 
 export const gen = Object.assign(new Blockly.CodeGenerator('Arduino'), { ctx: contextoClasico() });
@@ -221,3 +222,19 @@ G.ab_decir = (b) => {
 };
 G.text = (b) => [JSON.stringify(b.getFieldValue('TEXT')), ORDEN.ATOMO];
 G.ab_comentario = (b) => `// ${campo(b, 'TEXTO')}\n`;
+
+// ── Paquetes de librerías ───────────────────────────────────────────────────
+// Cada bloque aporta el include y el objeto global de su librería y devuelve
+// su plantilla con los campos elegidos. En un programa simple un bloque puede
+// tener una variante bloqueante, que no necesita avanzar en cada vuelta.
+for (const p of PAQUETES)
+  for (const d of p.bloques)
+    G[d.tipo] = (b) => {
+      const t = (plantilla: string) => llenar(p, b, plantilla);
+      gen.ctx.includes.add(p.include);
+      gen.ctx.globales.add(t(p.global));
+      if (d.forma === 'logico') return [t(d.codigo), ORDEN.ATOMO];
+      if (d.bloqueante && !gen.ctx.paralelo) return t(d.bloqueante) + '\n';
+      if (d.tick) gen.ctx.tick.add(t(p.tick!));
+      return `${t(d.codigo)}\n${d.esperarHasta ? gen.ctx.esperarHasta(t(d.esperarHasta)) : ''}`;
+    };

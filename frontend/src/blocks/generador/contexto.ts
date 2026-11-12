@@ -15,6 +15,8 @@ export interface Contexto {
   funciones: Set<string>;
   /** Declaraciones del script en curso que deben sobrevivir a una cesión de turno */
   locales: Set<string>;
+  /** El programa se genera con corrutinas: las esperas ceden el turno */
+  paralelo: boolean;
   esperar(ms: string): string;
   esperarHasta(condicion: string): string;
   /** Lo que va en el `for` para declarar el contador de un bucle */
@@ -31,6 +33,7 @@ export const contextoClasico = (): Contexto => ({
   tick: new Set(),
   funciones: new Set(),
   locales: new Set(),
+  paralelo: false,
   esperar: (ms) => `delay(${ms});\n`,
   esperarHasta: (condicion) => `while (!(${condicion})) {}\n`,
   contador: (nombre) => `int ${nombre}`,
@@ -45,6 +48,7 @@ export const contextoClasico = (): Contexto => ({
 export function contextoCorrutinas(): Contexto {
   const ctx: Contexto = {
     ...contextoClasico(),
+    paralelo: true,
     esperar: (ms) => `ESPERAR(${ms});\n`,
     esperarHasta: (condicion) => `ESPERAR_HASTA(${condicion});\n`,
     contador: (nombre) => {
