@@ -15,6 +15,8 @@ el programa de bloques, que se carga como JSON.
   de fondo con parpadeo, detener con el botón y canción sola.
 - `variables.js`: crear una variable, `definir` con su número y usarla donde
   C++ espera un entero.
+- `textos.js`: variable de texto creada con el mouse y órdenes por el monitor
+  serie (h8).
 - `conv.mjs`: arma los scripts en `frontend/.recorrido/`.
 
 ## Cómo correrlo
@@ -22,7 +24,7 @@ el programa de bloques, que se carga como JSON.
 Con el frontend (`npx vite`, puerto 5173) y el backend (puerto 3080) arriba:
 
 ```
-node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables
+node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos
 ```
 
 En el MCP de Playwright, una vez por sesión de trabajo (`browser_run_code_unsafe`):

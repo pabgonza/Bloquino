@@ -28,7 +28,6 @@ export default categoria(
     // Sin tipo de salida: sirve como número (0 / 1) y como condición.
     ab_leer_digital: { args: [pin()], output: null },
     ab_leer_analogico: { args: [pinAnalogico()], ...NUMERO },
-    ab_decir: { args: [valor('VALOR')], ...INSTRUCCION },
     ab_comentario: { args: [{ type: 'field_input', name: 'TEXTO', text: '' }], ...INSTRUCCION },
   },
   [
@@ -36,7 +35,6 @@ export default categoria(
     { type: 'ab_pin_pwm', fields: { PIN: '9' }, inputs: { VALOR: num(255) } },
     'ab_leer_digital',
     'ab_leer_analogico',
-    { type: 'ab_decir', inputs: { VALOR: { shadow: { type: 'text', fields: { TEXT: 'hola' } } } } },
     'ab_comentario',
   ],
 );

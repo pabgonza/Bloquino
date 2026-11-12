@@ -5,12 +5,14 @@
   "AB_CAT_SONIDO": "Sonido",
   "AB_CAT_MOVIMIENTO": "Movimiento",
   "AB_CAT_SENSORES": "Sensores",
+  "AB_CAT_SERIE": "Puerto serie",
   "AB_CAT_OPERADORES": "Operadores",
   "AB_CAT_VARIABLES": "Variables",
   "AB_CAT_AVANZADO": "Avanzado",
 
   "AB_AL_INICIAR": "al iniciar",
   "AB_CUANDO_BOTON": "cuando se presiona botón en pin %1",
+  "AB_CUANDO_SERIE": "cuando llega un dato por el puerto serie",
 
   "AB_POR_SIEMPRE": "por siempre %1 %2",
   "AB_ESPERAR": "esperar %1 segundos",
@@ -52,8 +54,11 @@
   "AB_AZAR": "número al azar entre %1 y %2",
   "AB_MAPEAR": "asignar %1 del rango %2 - %3 al rango %4 - %5",
   "AB_RESTRINGIR": "restringir %1 entre %2 y %3",
+  "AB_UNIR": "unir %1 %2",
+  "AB_TEXTO_IGUAL": "texto %1 = %2",
 
-  "NEW_VARIABLE": "Crear variable...",
+  "NEW_VARIABLE": "Crear variable de número...",
+  "AB_CREAR_TEXTO": "Crear variable de texto...",
   "VARIABLES_SET": "definir %1 en %2",
   "MATH_CHANGE_TITLE": "cambiar %1 por %2",
 
@@ -64,5 +69,9 @@
   "AB_LEER_DIGITAL": "leer pin digital %1",
   "AB_LEER_ANALOGICO": "leer pin analógico %1",
   "AB_DECIR": "decir %1",
+  "AB_DECIR_SEGUIDO": "decir %1 sin saltar de línea",
+  "AB_SERIE_HAY": "¿hay datos en el puerto serie?",
+  "AB_SERIE_NUMERO": "leer número del puerto serie",
+  "AB_SERIE_TEXTO": "leer texto del puerto serie",
   "AB_COMENTARIO": "comentario %1"
 }

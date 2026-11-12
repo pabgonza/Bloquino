@@ -38,6 +38,7 @@ export function categoria(
 export const INSTRUCCION = { previousStatement: null, nextStatement: null };
 export const NUMERO = { output: 'Number' };
 export const LOGICO = { output: 'Boolean' };
+export const TEXTO = { output: 'String' };
 
 // Entradas
 export const valor = (name: string, check?: string) => ({ type: 'input_value', name, check });
@@ -60,5 +61,7 @@ export const pin = (name = 'PIN') => lista(name, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 export const pinPwm = (name = 'PIN') => lista(name, [3, 5, 6, 9, 10, 11]);
 export const pinAnalogico = () => lista('PIN', ['A0', 'A1', 'A2', 'A3', 'A4', 'A5']);
 
+/** Texto por defecto (bloque sombra) de una entrada de la paleta. */
+export const txt = (t: string) => ({ shadow: { type: 'text', fields: { TEXT: t } } });
 /** Número por defecto (bloque sombra) de una entrada de la paleta. */
 export const num = (n: number) => ({ shadow: { type: 'math_number', fields: { NUM: n } } });

@@ -66,6 +66,17 @@ export function generar(ws: Blockly.Workspace, paralelo = false): string {
           '  ESPERAR(20);\n' +
           '}\n';
       }
+      if (script.type === 'ab_cuando_serie') {
+        // Se repite mientras haya datos; cede el turno en cada vuelta por si
+        // el script no los lee.
+        ctx.setup.add('Serial.begin(9600);');
+        cuerpo =
+          'while (true) {\n' +
+          '  ESPERAR_HASTA(Serial.available() > 0);\n' +
+          sangrar(cuerpo) +
+          '  CEDER();\n' +
+          '}\n';
+      }
       programas += `void programa${i + 1}() {\n${lineas(ctx.locales)}  EMPEZAR();\n${sangrar(cuerpo)}  TERMINAR();\n}\n\n`;
       loop += `  programa${i + 1}();\n`;
     });

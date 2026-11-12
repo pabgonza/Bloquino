@@ -5,8 +5,8 @@
  */
 import { useEffect, useRef } from 'react';
 import { Blockly } from './blockly';
-import { CATEGORIAS, PALETA, SOMBREROS, TOPE_SCRIPTS } from './catalogo';
-import { num } from './catalogo/base';
+import { CATEGORIAS, PALETA, SOMBREROS, TEXTO, TOPE_SCRIPTS } from './catalogo';
+import { num, txt } from './catalogo/base';
 import { generar } from './generador';
 import { ARCHIVO_BLOQUES, BLOQUES_INICIALES, esTexto } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
@@ -65,13 +65,38 @@ export default function BlocksPanel() {
       theme: tema,
       trashcan: true,
     });
-    // Blockly ofrece «definir» con el hueco vacío, y sin un número que editar el
-    // alumno no tiene cómo darle un valor: aquí sale con un 0, como «cambiar».
-    ws.registerToolboxCategoryCallback('VARIABLE', (w) =>
-      Blockly.Variables.flyoutCategory(w).map((b) =>
-        (b as { type?: string }).type === 'variables_set' ? { ...b, inputs: { VALUE: num(0) } } : b,
-      ),
+    // Paleta de Variables: los dos botones de crear, los bloques de número de
+    // Blockly y los de texto. Blockly ofrece «definir» con el hueco vacío, y sin
+    // un valor que editar el alumno no tiene cómo dárselo: aquí sale con un 0.
+    ws.registerButtonCallback('CREAR_TEXTO', (boton) =>
+      Blockly.Variables.createVariableButtonHandler(boton.getTargetWorkspace(), undefined, TEXTO),
     );
+    ws.registerToolboxCategoryCallback('VARIABLE', (w) => {
+      const [crear, ...numeros] = Blockly.Variables.flyoutCategory(w);
+      const textos = w.getVariableMap().getVariablesOfType(TEXTO);
+      const campo = (v: (typeof textos)[number]) => ({ VAR: { name: v.getName(), type: TEXTO } });
+      return [
+        crear,
+        { kind: 'button', text: '%{BKY_AB_CREAR_TEXTO}', callbackkey: 'CREAR_TEXTO' },
+        ...numeros.map((b) =>
+          (b as { type?: string }).type === 'variables_set'
+            ? { ...b, inputs: { VALUE: num(0) } }
+            : b,
+        ),
+        ...(textos.length
+          ? [
+              {
+                kind: 'block',
+                type: 'ab_definir_texto',
+                gap: 20,
+                fields: campo(textos.at(-1)!),
+                inputs: { VALUE: txt('hola') },
+              },
+            ]
+          : []),
+        ...textos.map((v) => ({ kind: 'block', type: 'ab_variable_texto', gap: 8, fields: campo(v) })),
+      ];
+    });
     // Los bloques sin sombrero quedan deshabilitados: atenuados y fuera del código.
     ws.addChangeListener(Blockly.Events.disableOrphans);
     // Tope de scripts: es de sombreros en total y Blockly limita por tipo, así

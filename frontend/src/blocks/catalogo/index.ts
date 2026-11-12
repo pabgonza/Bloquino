@@ -8,8 +8,11 @@ import luces from './luces';
 import sonido from './sonido';
 import movimiento from './movimiento';
 import sensores from './sensores';
+import serie from './serie';
 import operadores from './operadores';
 import avanzado from './avanzado';
+import './variables';
+export { TEXTO } from './variables';
 import { PAQUETES } from '../paquetes';
 
 export const CATEGORIAS: Categoria[] = [
@@ -19,8 +22,9 @@ export const CATEGORIAS: Categoria[] = [
   sonido,
   movimiento,
   sensores,
+  serie,
   operadores,
-  // Sin paleta propia: Blockly arma "crear variable", definir, cambiar y una por variable.
+  // Sin paleta propia: depende de las variables que existan (ver BlocksPanel).
   { id: 'variables', color: '#FF8C1A' },
   avanzado,
 ];

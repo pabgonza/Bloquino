@@ -1,4 +1,5 @@
 import { categoria, cuerpo, INSTRUCCION, NUMERO, num, SALTO, valor } from './base';
+import { campoVariable } from './variables';
 
 export default categoria(
   'control',
@@ -10,7 +11,7 @@ export default categoria(
     ab_mientras: { args: [valor('COND', 'Boolean'), SALTO, cuerpo('DO')], ...INSTRUCCION },
     ab_contar: {
       args: [
-        { type: 'field_variable', name: 'VAR', variable: 'i' },
+        campoVariable('', 'i'),
         valor('DESDE', 'Number'),
         valor('HASTA', 'Number'),
         SALTO,

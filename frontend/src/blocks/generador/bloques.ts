@@ -209,18 +209,74 @@ G.math_number = (b) => {
   return [String(n), n < 0 ? ORDEN.UNARIO : ORDEN.ATOMO];
 };
 G.variables_get = (b) => [variable(b), ORDEN.ATOMO];
-G.variables_set = (b) => `${variable(b)} = ${valor(b, 'VALUE')};\n`;
+// Un texto en una variable de número se convierte ("12" → 12; "hola" → 0).
+G.variables_set = (b) =>
+  `${variable(b)} = ${esTexto(b, 'VALUE') ? `String(${valor(b, 'VALUE')}).toFloat()` : valor(b, 'VALUE')};\n`;
 G.math_change = (b) => `${variable(b)} += ${valor(b, 'DELTA')};\n`;
 
 // ── Avanzado ────────────────────────────────────────────────────────────────
 G.ab_pin_pwm = (b) => `analogWrite(${pin(b, 'OUTPUT')}, ${valor(b, 'VALOR')});\n`;
 G.ab_leer_digital = (b) => [`digitalRead(${pin(b, 'INPUT')})`, ORDEN.ATOMO];
 G.ab_leer_analogico = (b) => [`analogRead(${campo(b, 'PIN')})`, ORDEN.ATOMO];
-G.ab_decir = (b) => {
-  gen.ctx.setup.add('Serial.begin(9600);');
-  return `Serial.println(${valor(b, 'VALOR', ORDEN.NADA, '""')});\n`;
+// ── Texto ───────────────────────────────────────────────────────────────────
+// Un número pasa a texto sin decimales si es entero: "3" y no "3.00".
+const A_TEXTO = `String aTexto(float n) {
+  return n == (long)n ? String((long)n) : String(n);
+}`;
+function esTexto(b: Bloque, nombre: string) {
+  return !!b.getInputTargetBlock(nombre)?.outputConnection?.getCheck()?.includes('String');
+}
+/** Entrada como texto de C++: tal cual si ya es un texto, convertida si es un número. */
+const texto = (b: Bloque, nombre: string, orden = ORDEN.NADA) => {
+  if (!b.getInputTargetBlock(nombre)) return '""';
+  if (esTexto(b, nombre)) return valor(b, nombre, orden);
+  gen.ctx.funciones.add(A_TEXTO);
+  return `aTexto(${valor(b, nombre)})`;
+};
+/** Un literal ("hola") no se puede unir ni comparar en C++: se envuelve en String. */
+const objeto = (t: string) => (t.startsWith('"') ? `String(${t})` : t);
+const variableTexto = (b: Bloque) => {
+  const v = nombreVariable(b);
+  gen.ctx.globales.add(`String ${v} = "";`);
+  return v;
 };
 G.text = (b) => [JSON.stringify(b.getFieldValue('TEXT')), ORDEN.ATOMO];
+G.ab_unir = (b) => [
+  `${objeto(texto(b, 'A', ORDEN.SUMA))} + ${texto(b, 'B', ORDEN.SUMA)}`,
+  ORDEN.SUMA,
+];
+G.ab_texto_igual = (b) => [
+  `${objeto(texto(b, 'A', ORDEN.IGUAL))} == ${texto(b, 'B', ORDEN.IGUAL)}`,
+  ORDEN.IGUAL,
+];
+G.ab_variable_texto = (b) => [variableTexto(b), ORDEN.ATOMO];
+G.ab_definir_texto = (b) => `${variableTexto(b)} = ${texto(b, 'VALUE')};\n`;
+
+// ── Puerto serie ────────────────────────────────────────────────────────────
+// Se lee por líneas: el número es la línea convertida, así no queda un fin de
+// línea suelto que la lectura siguiente tomaría por un 0. Sin fin de línea, la
+// lectura espera a lo más 50 ms.
+const LEER_TEXTO = `String leerTexto() {
+  String linea = Serial.readStringUntil('\\n');
+  linea.trim();
+  return linea;
+}`;
+const leerTexto = () => {
+  gen.ctx.setup.add('Serial.begin(9600);');
+  gen.ctx.setup.add('Serial.setTimeout(50);');
+  gen.ctx.funciones.add(LEER_TEXTO);
+  return 'leerTexto()';
+};
+G.ab_decir = G.ab_decir_seguido = (b) => {
+  gen.ctx.setup.add('Serial.begin(9600);');
+  return `Serial.${b.type === 'ab_decir' ? 'println' : 'print'}(${valor(b, 'VALOR', ORDEN.NADA, '""')});\n`;
+};
+G.ab_serie_hay = () => {
+  gen.ctx.setup.add('Serial.begin(9600);');
+  return ['Serial.available() > 0', ORDEN.RELACION];
+};
+G.ab_serie_numero = () => [`${leerTexto()}.toFloat()`, ORDEN.ATOMO];
+G.ab_serie_texto = () => [leerTexto(), ORDEN.ATOMO];
 G.ab_comentario = (b) => `// ${campo(b, 'TEXTO')}\n`;
 
 // ── Paquetes de librerías ───────────────────────────────────────────────────
