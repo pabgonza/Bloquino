@@ -19,6 +19,8 @@ el programa de bloques, que se carga como JSON.
   serie (h8).
 - `lcd.js`, `control.js`, `display.js`: pantalla LCD, control remoto y displays
   de 7 segmentos (h8), cableados directo a la placa.
+- `ejemplos.js`: abre cada proyecto de `frontend/public/ejemplos/`, lo simula e
+  interactúa; deja las capturas de `docs/ejemplos/`.
 - `sala.js` y `sala.bloquino`: prueba de la imagen de la sala (h9) sobre la
   página ya compilada. No usa `lib.js` ni `conv.mjs`: se corre directo con
   `browser_run_code_unsafe` (parámetro `filename`), tras poner en `DIRECCION`
