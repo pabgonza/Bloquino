@@ -203,7 +203,10 @@
         "connect": "Toca un pin para conectar",
         "start": "Toca un pin para empezar un cable",
         "cancel": "Cancelar"
-      }
+      },
+      "addNodeHere": "Agregar una unión aquí",
+      "probeWire": "Ver en el osciloscopio",
+      "probeNothing": "Este cable todavía no lleva una señal que el osciloscopio pueda leer. Conéctalo a un pin de la placa o inicia la simulación."
     },
     "componentPicker": {
       "title": "Añadir componente",
@@ -214,7 +217,11 @@
       "boards": "Placas",
       "loading": "Cargando componentes...",
       "noResults": "No se encontraron componentes",
-      "clearFilters": "Limpiar filtros"
+      "clearFilters": "Limpiar filtros",
+      "categoriesTree": "Categorías de componentes",
+      "recentlyUsed": "Usados hace poco",
+      "searchResults": "Resultados de la búsqueda",
+      "searchChip": "Búsqueda"
     },
     "libraryManager": {
       "title": "ADMINISTRADOR DE LIBRERÍAS",
@@ -539,6 +546,26 @@
         "unsupported-sensor": "Este sensor todavía no se puede simular.",
         "bus-off-pins": "Este módulo está conectado a pines que no son los de su bus de comunicación."
       }
+    },
+    "compileProgress": {
+      "compiling": "Compilando {{board}}...",
+      "compilingBoards_one": "Compilando {{count}} placa...",
+      "compilingBoards_other": "Compilando {{count}} placas...",
+      "queued": "Esperando turno para compilar...",
+      "queuedHint": "Tu programa está en la fila. Empieza solo y no se cancela.",
+      "preparing": "Preparando la compilación...",
+      "done": "Compilado sin errores",
+      "failed": "No se pudo compilar",
+      "serverLoad": "Carga del compilador",
+      "load": {
+        "low": "Tranquilo",
+        "moderate": "Moderado",
+        "high": "Ocupado",
+        "peak": "Muy ocupado"
+      },
+      "priority": "Compilación con prioridad",
+      "showOutput": "Ver la salida",
+      "hide": "Ocultar (la compilación sigue)"
     }
   },
   "about": {

@@ -434,14 +434,15 @@ export const SENSOR_CONTROLS: Record<string, SensorControlDef> = {
   // transmits into simulation/ir/irAir rather than straight onto this part's
   // pin, so a second receiver in the project hears it too — which is the whole
   // point of there being an air at all.
+  // Bloquino: textos en español, como el panel del sensor de distancia.
   'ir-receiver': {
-    title: 'IR remote',
+    title: 'Control infrarrojo',
     controls: [
       {
         type: 'slider',
         key: 'address',
         propertyKey: 'irAddress',
-        label: 'Address',
+        label: 'Dirección',
         min: 0,
         max: 255,
         step: 1,
@@ -453,7 +454,7 @@ export const SENSOR_CONTROLS: Record<string, SensorControlDef> = {
         type: 'slider',
         key: 'command',
         propertyKey: 'irCommand',
-        label: 'Command',
+        label: 'Código',
         min: 0,
         max: 255,
         step: 1,
@@ -461,7 +462,7 @@ export const SENSOR_CONTROLS: Record<string, SensorControlDef> = {
         defaultValue: 0x45,
         formatValue: hex8,
       },
-      { type: 'button', key: 'send', label: 'Send' },
+      { type: 'button', key: 'send', label: 'Enviar' },
     ],
     defaultValues: { address: 0, command: 0x45 },
   },
