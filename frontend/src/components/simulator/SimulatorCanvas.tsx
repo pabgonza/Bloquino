@@ -1669,15 +1669,23 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
           return;
         }
       }
+      // Bloquino: con el foco en el panel de programa, las teclas son de los
+      // bloques. Se mira el camino del evento: al borrar un bloque, su elemento
+      // ya no está en el documento cuando la tecla llega aquí.
+      if (e.composedPath().some((n) => (n as HTMLElement).classList?.contains('bq-programa'))) return;
       // Canvas edit keys act on what was explicitly selected: the selected
       // component, else the selected board (selectedBoardId — a board the user
       // clicked, never merely the active one). R turns it, Ctrl+C copies it,
       // Ctrl+V pastes the last copy (with the pointer over the canvas, so a
       // paste meant for another panel never drops a part), Delete removes it.
       const sim = useSimulatorStore.getState();
-      const boardId = selectedBoardId && sim.boards.some((b) => b.id === selectedBoardId)
-        ? selectedBoardId
-        : null;
+      // Bloquino: en la página de alumno la placa es fija (ni R, ni copiar, ni Supr).
+      const boardId =
+        selectedBoardId &&
+        !document.querySelector('.bq-pagina') &&
+        sim.boards.some((b) => b.id === selectedBoardId)
+          ? selectedBoardId
+          : null;
       const editable = !interactionRunningRef.current;
       const mod = e.ctrlKey || e.metaKey;
       if (!editable) return;
@@ -2527,6 +2535,10 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
           return;
         }
       }
+      // Bloquino: con el foco en el panel de programa, las teclas son de los
+      // bloques. Se mira el camino del evento: al borrar un bloque, su elemento
+      // ya no está en el documento cuando la tecla llega aquí.
+      if (e.composedPath().some((n) => (n as HTMLElement).classList?.contains('bq-programa'))) return;
       // Delete / Backspace → remove selected wire (recorded for undo).
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedWireId) {
         recordRemoveWire(selectedWireId);
@@ -4102,8 +4114,10 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
                 {/* Put this wire on the scope. Sits beside "Add node here"
                     because both answer "do something to this wire", which is
                     what a right-click on it means. */}
+                {/* Bloquino: la clase deja ocultarlo en modo alumno, que no tiene osciloscopio. */}
                 <button
                   type="button"
+                  className="bloquino-al-osciloscopio"
                   onClick={() => {
                     probeWire(wireContextMenu.wireId);
                     setWireContextMenu(null);

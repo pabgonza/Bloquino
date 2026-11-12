@@ -86,6 +86,8 @@ export function PaginaAlumno() {
         (/^(INPUT|TEXTAREA|SELECT)$/.test(destino.tagName) || destino.isContentEditable)
       )
         return;
+      // En el panel de programa, Ctrl+Z deshace bloques, no el circuito.
+      if (e.composedPath().some((n) => (n as HTMLElement).classList?.contains('bq-programa'))) return;
       if (!(e.ctrlKey || e.metaKey)) return;
       const tecla = e.key.toLowerCase();
       const sim = useSimulatorStore.getState();
@@ -184,7 +186,12 @@ export function PaginaAlumno() {
       </header>
 
       <div className="bq-cuerpo">
-        <main className="bq-lienzo" ref={lienzo}>
+        <main
+          className="bq-lienzo"
+          ref={lienzo}
+          // Al volver al circuito, el teclado deja de ser de los bloques.
+          onPointerDownCapture={() => (document.activeElement as HTMLElement | null)?.blur?.()}
+        >
           {ranura && cargas > 0 && <SimulatorCanvas key={cargas} headerSlot={ranura} />}
           <CompileProgressCard />
           {errores.length > 0 && erroresVistos !== logs && (

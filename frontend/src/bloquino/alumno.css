@@ -318,7 +318,12 @@ body:has(.bq-pagina) .pid-tabs,
 body:has(.bq-pagina) .pid-defaults {
   display: none;
 }
+/* Menú de clic derecho del cable: el alumno no tiene osciloscopio. */
+.bq-pagina .bloquino-al-osciloscopio {
+  display: none !important;
+}
 /* La placa del curso es una y fija: sin copiar, girar ni eliminar. */
+body:has(.bq-pagina) .part-inspector-dialog:has([board-kind]) .pid-action-button,
 .bq-pagina .board-dock-group--edit {
   display: none;
 }
