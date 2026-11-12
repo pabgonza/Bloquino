@@ -1,0 +1,31 @@
+/* Diálogo de Blockly (nombre de una variable): el CSS de Velxio le quita el
+   margen y el relleno, y quedaba pegado a la esquina de la página. */
+.blocklyDialog {
+  margin: auto;
+  padding: 20px;
+  font-size: 15px;
+}
+.blocklyDialogInput {
+  display: block;
+  width: 260px;
+  margin: 10px 0 16px;
+  padding: 6px 8px;
+  font-size: 15px;
+}
+.blocklyDialogButtonRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.blocklyDialogButtonRow button {
+  padding: 6px 14px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+.blocklyDialogButtonRow .blocklyDialogConfirmButton {
+  border-color: #1565c0;
+  background: #1565c0;
+  color: #fff;
+}

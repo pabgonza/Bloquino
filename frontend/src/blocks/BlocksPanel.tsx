@@ -6,9 +6,11 @@
 import { useEffect, useRef } from 'react';
 import { Blockly } from './blockly';
 import { CATEGORIAS, PALETA, SOMBREROS, TOPE_SCRIPTS } from './catalogo';
+import { num } from './catalogo/base';
 import { generar } from './generador';
 import { ARCHIVO_BLOQUES, BLOQUES_INICIALES, esTexto } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
+import './bloques.css';
 
 const tema = Blockly.Theme.defineTheme('bloquino', {
   name: 'bloquino',
@@ -63,6 +65,13 @@ export default function BlocksPanel() {
       theme: tema,
       trashcan: true,
     });
+    // Blockly ofrece «definir» con el hueco vacío, y sin un número que editar el
+    // alumno no tiene cómo darle un valor: aquí sale con un 0, como «cambiar».
+    ws.registerToolboxCategoryCallback('VARIABLE', (w) =>
+      Blockly.Variables.flyoutCategory(w).map((b) =>
+        (b as { type?: string }).type === 'variables_set' ? { ...b, inputs: { VALUE: num(0) } } : b,
+      ),
+    );
     // Los bloques sin sombrero quedan deshabilitados: atenuados y fuera del código.
     ws.addChangeListener(Blockly.Events.disableOrphans);
     // Tope de scripts: es de sombreros en total y Blockly limita por tipo, así
