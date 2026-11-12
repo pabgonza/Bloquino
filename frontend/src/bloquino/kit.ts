@@ -29,6 +29,10 @@ export function adaptarKit(componentes: readonly ComponentMetadata[]) {
   for (const c of componentes) {
     if (!NOMBRES[c.id]) continue;
     c.name = NOMBRES[c.id];
+    // Propiedades que agrega Bloquino y Velxio no tiene (el tipo del display).
+    for (const [name, { opciones }] of Object.entries(PROPIEDADES[c.id] ?? {}))
+      if (!c.properties.some((p) => p.name === name))
+        c.properties.push({ name, type: 'string', defaultValue: Object.keys(opciones ?? {})[0] ?? '' });
     for (const p of c.properties) {
       const propia = PROPIEDADES[c.id]?.[p.name];
       p.control = propia ? (propia.opciones ? 'select' : 'text') : undefined;

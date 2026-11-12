@@ -54,6 +54,12 @@
   "AB_LCD_ESCRIBIR": "escribir %1 en la pantalla",
   "AB_LCD_CURSOR": "mover cursor a columna %1 fila %2",
   "AB_LCD_BORRAR": "borrar pantalla",
+  "AB_DISPLAY_PREPARAR": "preparar display de 1 dígito de %1 (A %2 B %3 C %4 D %5 E %6 F %7 G %8)",
+  "AB_DISPLAY4_PREPARAR": "preparar display de 4 dígitos de %1 (A %2 B %3 C %4 D %5 E %6 F %7 G %8) %9 dígitos (1.º %10 2.º %11 3.º %12 4.º %13)",
+  "AB_CATODO": "cátodo común",
+  "AB_ANODO": "ánodo común",
+  "AB_DISPLAY_MOSTRAR": "mostrar número %1 en el display",
+  "AB_DISPLAY_APAGAR": "apagar display",
 
   "AB_ARITMETICA": "%1 %2 %3",
   "AB_COMPARAR": "%1 %2 %3",

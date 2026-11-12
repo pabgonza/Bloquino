@@ -43,6 +43,8 @@
     "hc-sr04": "Sensor de distancia",
     "dht11": "Temperatura y humedad",
     "lcd1602": "Pantalla LCD",
+    "7segment": "Display de 1 dígito",
+    "display-4": "Display de 4 dígitos",
     "ir-receiver": "Receptor infrarrojo",
     "control-remoto": "Control remoto",
     "breadboard": "Protoboard",
@@ -61,6 +63,12 @@
         "opciones": { "red": "Rojo", "green": "Verde", "blue": "Azul", "yellow": "Amarillo", "black": "Negro", "grey": "Gris" }
       }
     },
-    "resistor": { "value": { "nombre": "Resistencia (Ω)" } }
+    "resistor": { "value": { "nombre": "Resistencia (Ω)" } },
+    "7segment": {
+      "common": { "nombre": "Tipo", "opciones": { "cathode": "Cátodo común", "anode": "Ánodo común" } }
+    },
+    "display-4": {
+      "common": { "nombre": "Tipo", "opciones": { "cathode": "Cátodo común", "anode": "Ánodo común" } }
+    }
   }
 }

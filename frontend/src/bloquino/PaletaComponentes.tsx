@@ -14,11 +14,14 @@ import { adaptarKit, filtrarKit } from './kit';
 const LADO = 56; // px del cuadro de la miniatura
 // Cómo sale cada componente del kit cuando difiere de Velxio: la resistencia
 // del curso es de 220 Ω (Velxio: 1 kΩ) y el botón sale girado, que es como
-// calza a caballo del canal de la protoboard. La pantalla del kit es azul.
+// calza a caballo del canal de la protoboard. La pantalla del kit es azul. El
+// display sale como pieza suelta de cátodo común (ver ChipParts, «common»).
 const AJUSTES: Record<string, object> = {
   resistor: { value: '220' },
   pushbutton: { rotation: 90 },
   lcd1602: { background: 'blue', color: 'white' },
+  '7segment': { common: 'cathode' },
+  'display-4': { common: 'cathode' },
 };
 
 /** El elemento web del componente, reducido para caber en el cuadro. */

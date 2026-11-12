@@ -8,6 +8,7 @@ import textos from '../i18n/locales/es/bloquino.json';
 import './componentes/Dht11Element';
 import './componentes/dht11';
 import './componentes/control';
+import './componentes/display';
 import { leerModo } from './modo';
 import { PaginaAlumno } from './PaginaAlumno';
 

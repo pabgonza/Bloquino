@@ -374,6 +374,14 @@ PartSimulationRegistry.register('7segment', {
     // for harnesses or builds without Phase 0.
     const useResolver = typeof getPinResolver === 'function';
 
+    // Bloquino: con la propiedad `common` el display se comporta como la pieza
+    // suelta del kit, sin transistores. Cátodo común: el dígito se activa con
+    // su común en bajo y el segmento enciende en alto; ánodo común, al revés.
+    // Sin la propiedad vale la convención de Velxio (todo activo en alto).
+    const comun = () => (element as unknown as { common?: string }).common;
+    const digitoActivo = (estado: string) => estado === (comun() === 'cathode' ? 'LOW' : 'HIGH');
+    const segmentoPrendido = (estado: string) => estado === (comun() === 'anode' ? 'LOW' : 'HIGH');
+
     // Figure out which digit-select pins this display exposes and subscribe
     // to whichever ones are actually wired. Polarity: HIGH = digit enabled.
     const digitPinNames: string[] = s.digits === 1
@@ -389,10 +397,10 @@ PartSimulationRegistry.register('7segment', {
         digitPinsWired++;
         // Seed initial state — important when the wire is already
         // settled at sim start (e.g. examples that hard-wire a COM to GND).
-        handle7SegDigit(element, digitIdx, resolver.getCurrentState() === 'HIGH');
+        handle7SegDigit(element, digitIdx, digitoActivo(resolver.getCurrentState()));
         unsubscribers.push(
           resolver.onChange((state) => {
-            handle7SegDigit(element, digitIdx, state === 'HIGH');
+            handle7SegDigit(element, digitIdx, digitoActivo(state));
           }),
         );
       } else {
@@ -401,7 +409,7 @@ PartSimulationRegistry.register('7segment', {
         digitPinsWired++;
         unsubscribers.push(
           pinManager.onPinChange(pin, (_: number, state: boolean) => {
-            handle7SegDigit(element, digitIdx, state);
+            handle7SegDigit(element, digitIdx, digitoActivo(state ? 'HIGH' : 'LOW'));
           }),
         );
       }
@@ -419,10 +427,10 @@ PartSimulationRegistry.register('7segment', {
       if (useResolver) {
         const resolver = getPinResolver!(seg);
         if (!resolver) continue;
-        handle7SegSegment(element, i, resolver.getCurrentState() === 'HIGH');
+        handle7SegSegment(element, i, segmentoPrendido(resolver.getCurrentState()));
         unsubscribers.push(
           resolver.onChange((state) => {
-            handle7SegSegment(element, i, state === 'HIGH');
+            handle7SegSegment(element, i, segmentoPrendido(state));
           }),
         );
       } else {
@@ -430,7 +438,7 @@ PartSimulationRegistry.register('7segment', {
         if (arduinoPin === null) continue;
         unsubscribers.push(
           pinManager.onPinChange(arduinoPin, (_: number, state: boolean) => {
-            handle7SegSegment(element, i, state);
+            handle7SegSegment(element, i, segmentoPrendido(state ? 'HIGH' : 'LOW'));
           }),
         );
       }
@@ -469,6 +477,10 @@ PartSimulationRegistry.register('7segment', {
   onPinStateChange: (pinName: string, state: boolean, element: HTMLElement) => {
     const upper = pinName.toUpperCase();
     const segIdx = SEGMENT_INDEX[upper];
+    // Bloquino: un display con `common` vive en una placa local y recibe todo
+    // por attachEvents, en orden. El lienzo también avisa por aquí, tarde y con
+    // la polaridad de Velxio, y pisaba los dígitos multiplexados.
+    if ((element as unknown as { common?: string }).common) return;
     if (segIdx !== undefined) {
       // For the QEMU path we don't see the digit-select pins, so fall back
       // to legacy direct-drive: ensure digit 0 is enabled.

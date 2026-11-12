@@ -60,6 +60,8 @@ describe('paleta del kit', () => {
       'Sensor de distancia',
       'Temperatura y humedad',
       'Pantalla LCD',
+      'Display de 1 dígito',
+      'Display de 4 dígitos',
       'Receptor infrarrojo',
       'Control remoto',
       'Protoboard',

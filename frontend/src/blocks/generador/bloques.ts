@@ -3,7 +3,7 @@
 import { Blockly } from '../blockly';
 import { SOMBREROS } from '../catalogo';
 import { TECLAS } from '../../bloquino/componentes/teclas';
-import { LCD_PINES } from '../catalogo/pantallas';
+import { DISPLAY_DIGITOS, DISPLAY_SEGMENTOS, LCD_PINES } from '../catalogo/pantallas';
 import { PAQUETES, llenar } from '../paquetes';
 import { contextoClasico } from './contexto';
 
@@ -311,6 +311,72 @@ G.ab_lcd_escribir = (b) => `${lcd(b)}.print(${texto(b, 'VALOR')});\n`;
 G.ab_lcd_cursor = (b) =>
   `${lcd(b)}.setCursor(${desdeCero(b, 'COLUMNA')}, ${desdeCero(b, 'FILA')});\n`;
 G.ab_lcd_borrar = (b) => `${lcd(b)}.clear();\n`;
+
+// Display de 7 segmentos conectado directo a los pines, sin librería. Los
+// pines y el tipo salen de su bloque «preparar display»; sin él, un dígito de
+// cátodo común en los pines 2 a 8. El de 4 dígitos se multiplexa: en cada
+// vuelta de loop() se enciende un dígito distinto, 2 ms cada uno.
+const CIFRAS = `// Segmentos de cada cifra: el bit 0 es el segmento A y el 6, el G.
+const byte CIFRAS[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};`;
+const mostrarCifra = (prendido: string, apagado: string) => `// Enciende los segmentos de una cifra; con -1 los apaga todos.
+void mostrarCifra(int cifra) {
+  for (byte i = 0; i < 7; i++) {
+    bool prendido = cifra >= 0 && bitRead(CIFRAS[cifra], i);
+    digitalWrite(DISPLAY_SEGMENTOS[i], prendido ? ${prendido} : ${apagado});
+  }
+}`;
+const refrescarDisplay = (activo: string, inactivo: string) => `// Muestra un dígito a la vez, tan rápido que se ven los cuatro encendidos.
+void refrescarDisplay() {
+  static byte turno = 0;
+  static unsigned long ultimo = 0;
+  if (micros() - ultimo < 2000) {
+    return;
+  }
+  ultimo = micros();
+  digitalWrite(DISPLAY_DIGITOS[turno], ${inactivo});
+  turno = (turno + 1) % 4;
+  int divisor = 1;
+  for (byte i = turno; i < 3; i++) {
+    divisor *= 10;
+  }
+  bool visible = displayNumero >= divisor || (turno == 3 && displayNumero >= 0);
+  mostrarCifra(visible ? displayNumero / divisor % 10 : -1);
+  digitalWrite(DISPLAY_DIGITOS[turno], ${activo});
+}`;
+/** Declara el display del programa y dice si es el de 4 dígitos. */
+const display = (b: Bloque) => {
+  const preparar = ['ab_display4_preparar', 'ab_display_preparar']
+    .flatMap((tipo) => b.workspace.getBlocksByType(tipo, false))
+    .find((p) => p.isEnabled() && SOMBREROS.includes(p.getRootBlock().type));
+  const pines = (porDefecto: Record<string, string>) =>
+    Object.entries(porDefecto)
+      .map(([c, p]) => (preparar ? campo(preparar, c) : p))
+      .join(', ');
+  // Cátodo común: segmento encendido en alto y dígito activo en bajo. Ánodo común, al revés.
+  const [alto, bajo] = preparar && campo(preparar, 'COMUN') === 'anodo' ? ['LOW', 'HIGH'] : ['HIGH', 'LOW'];
+  const ctx = gen.ctx;
+  ctx.globales.add(`const byte DISPLAY_SEGMENTOS[] = {${pines(DISPLAY_SEGMENTOS)}};`);
+  ctx.globales.add(CIFRAS);
+  ctx.funciones.add(mostrarCifra(alto, bajo));
+  ctx.setup.add(
+    `for (byte i = 0; i < 7; i++) {\n    pinMode(DISPLAY_SEGMENTOS[i], OUTPUT);\n    digitalWrite(DISPLAY_SEGMENTOS[i], ${bajo});\n  }`,
+  );
+  if (preparar?.type !== 'ab_display4_preparar') return false;
+  ctx.globales.add(`const byte DISPLAY_DIGITOS[] = {${pines(DISPLAY_DIGITOS)}};`);
+  ctx.globales.add('int displayNumero = -1;');
+  ctx.funciones.add(refrescarDisplay(bajo, alto));
+  ctx.setup.add(
+    `for (byte i = 0; i < 4; i++) {\n    pinMode(DISPLAY_DIGITOS[i], OUTPUT);\n    digitalWrite(DISPLAY_DIGITOS[i], ${alto});\n  }`,
+  );
+  ctx.tick.add('refrescarDisplay();');
+  return true;
+};
+G.ab_display_preparar = G.ab_display4_preparar = (b) => (display(b), '');
+G.ab_display_mostrar = (b) =>
+  display(b)
+    ? `displayNumero = constrain(${valor(b, 'NUMERO')}, 0, 9999);\n`
+    : `mostrarCifra(abs((int)(${valor(b, 'NUMERO')})) % 10);\n`;
+G.ab_display_apagar = (b) => (display(b) ? 'displayNumero = -1;\n' : 'mostrarCifra(-1);\n');
 
 // ── Puerto serie ────────────────────────────────────────────────────────────
 // Se lee por líneas: el número es la línea convertida, así no queda un fin de

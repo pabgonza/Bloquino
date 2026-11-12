@@ -22,6 +22,27 @@
       ]
     },
     {
+      "$comment": "Bloquino: display de 7 segmentos de 4 dígitos del kit (wokwi-7segment con digits=4). Simulación en frontend/src/bloquino/componentes/display.ts.",
+      "id": "display-4",
+      "tagName": "wokwi-7segment",
+      "name": "Display de 4 dígitos",
+      "category": "displays",
+      "thumbnail": "",
+      "properties": [],
+      "defaultValues": {
+        "digits": 4
+      },
+      "pinCount": 14,
+      "tags": [
+        "display",
+        "7 segmentos",
+        "segmentos",
+        "digitos",
+        "numero",
+        "7segment"
+      ]
+    },
+    {
       "$comment": "Bloquino: control remoto infrarrojo del kit (17 teclas, NEC). Elemento en frontend/src/bloquino/componentes/control.ts.",
       "id": "control-remoto",
       "tagName": "bloquino-control",
