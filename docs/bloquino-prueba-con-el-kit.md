@@ -8,8 +8,9 @@ verdad. Media hora, con la página de alumno (`/editor?alumno`) y el kit al lado
 
 - Frontend y backend arriba; página en 100 % de zoom.
 - En la simulación, **clic derecho** sobre un componente abre su ficha (color
-  del LED, ohmios de la resistencia, Rotar, Eliminar). Con la simulación
-  corriendo, **clic** sobre un sensor abre su panel de valores.
+  del LED, ohmios de la resistencia, Rotar, Eliminar); **clic** lo selecciona,
+  y Supr lo elimina. Con la simulación corriendo, **clic** sobre un sensor abre
+  su panel de valores.
 
 ## Por sesión
 
@@ -48,13 +49,17 @@ Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques.
   a la vez; comparar la melodía con el buzzer real y la misma librería.
 - Recargar la página a mitad de un armado: vuelve todo, encuadrado.
 
+## Decisiones tomadas (2026-11-12)
+
+- **Botón de la sesión 4**: el curso pasa a armarlo como Bloquino, entre el pin
+  y GND con la resistencia interna del pin (apretado = LOW). Se cambia en las
+  slides del curso.
+- **Slide de la sesión 8**: el curso pasa a dibujar el DHT11 «S / + / −», como
+  el módulo del kit y el de la pantalla.
+- **Ficha del componente**: se queda con clic derecho. Un clic selecciona;
+  Supr elimina lo seleccionado y R lo gira.
+
 ## Decisiones que siguen abiertas
 
-- **Botón de la sesión 4**: el curso lo arma con resistencia de 10 kΩ a GND
-  (apretado = HIGH); el bloque «botón apretado» usa la resistencia interna del
-  pin (botón entre el pin y GND). En Bloquino funciona lo segundo.
-- **Slide de la sesión 8**: dibuja el DHT11 «+ / datos / −»; el módulo del kit
-  y el de la pantalla son «S / + / −».
 - **Proyecto nuevo**: hoy parte con el LED y la resistencia de ejemplo de
   Velxio junto a la placa. ¿Mejor solo la placa?
-- **Ficha del componente con clic derecho**: Tinkercad la abre con un clic.
