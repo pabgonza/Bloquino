@@ -2,6 +2,7 @@
 // sus contribuciones en `gen.ctx`.
 import { Blockly } from '../blockly';
 import { SOMBREROS } from '../catalogo';
+import { TECLAS } from '../../bloquino/componentes/teclas';
 import { LCD_PINES } from '../catalogo/pantallas';
 import { PAQUETES, llenar } from '../paquetes';
 import { contextoClasico } from './contexto';
@@ -252,6 +253,40 @@ G.ab_texto_igual = (b) => [
 ];
 G.ab_variable_texto = (b) => [variableTexto(b), ORDEN.ATOMO];
 G.ab_definir_texto = (b) => `${variableTexto(b)} = ${texto(b, 'VALUE')};\n`;
+
+// ── Control remoto ──────────────────────────────────────────────────────────
+// Receptor infrarrojo con TinyIRReceiver (viene en IRremote): decodifica NEC
+// con la interrupción de cambio del pin, sin temporizador, así convive con
+// tone() y con Servo. En cada vuelta se anota la tecla nueva; mantenerla
+// apretada no cuenta como otra. El receptor es uno: vale el primer pin. Sin
+// NO_LED_FEEDBACK_CODE la librería usa el LED del pin 13 como aviso de señal
+// y pisa lo que el programa escriba en ese pin.
+const NOMBRE_TECLA = `String nombreTecla(int codigo) {
+  switch (codigo) {
+${TECLAS.map(([nombre, comando]) => `    case ${comando}: return "${nombre}";\n`).join('')}  }
+  return "";
+}`;
+export const control = (b: Bloque) => {
+  if (![...gen.ctx.includes].some((i) => i.includes('TinyIRReceiver')))
+    gen.ctx.includes.add(
+      `#define IR_RECEIVE_PIN ${campo(b, 'PIN')}\n#define NO_LED_FEEDBACK_CODE\n#include <TinyIRReceiver.hpp>`,
+    );
+  gen.ctx.globales.add('int teclaControl = -1;');
+  gen.ctx.globales.add('unsigned int teclasRecibidas = 0;');
+  gen.ctx.setup.add('initPCIInterruptForTinyReceiver();');
+  gen.ctx.tick.add(
+    'if (TinyReceiverDecode() && TinyIRReceiverData.Flags != IRDATA_FLAGS_IS_REPEAT) {\n' +
+      '    teclaControl = TinyIRReceiverData.Command;\n' +
+      '    teclasRecibidas++;\n' +
+      '  }',
+  );
+};
+G.ab_tecla_codigo = (b) => (control(b), ['teclaControl', ORDEN.ATOMO]);
+G.ab_tecla_ultima = (b) => {
+  control(b);
+  gen.ctx.funciones.add(NOMBRE_TECLA);
+  return ['nombreTecla(teclaControl)', ORDEN.ATOMO];
+};
 
 // ── Pantallas ───────────────────────────────────────────────────────────────
 // LCD 16x2 en paralelo (4 bits) con LiquidCrystal. Los pines salen del bloque

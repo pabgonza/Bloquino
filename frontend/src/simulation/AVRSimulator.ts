@@ -982,6 +982,7 @@ export class AVRSimulator implements LineCapable, BusCapableSimulator {
   /** 'uno' for ATmega328P boards (Uno, Nano); 'mega' for ATmega2560; 'tiny85' for ATtiny85 */
   private boardVariant: 'uno' | 'mega' | 'tiny85';
 
+  private utf8 = new TextDecoder();
   /** Cycle-accurate pin change queue, flushed after every instruction. */
   private scheduledPinChanges: Array<{ cycle: number; pin: number; state: boolean }> = [];
   /** Line-owning sensor models hosted on this CPU (simulation/line). Built lazily: it closes over the port below. */
@@ -1328,7 +1329,12 @@ export class AVRSimulator implements LineCapable, BusCapableSimulator {
    * pin of whichever USART it was.
    */
   private usartTransmitted(unit: number, def: UsartDef, byte: number): void {
-    if (unit === 0 && this.onSerialData) this.onSerialData(String.fromCharCode(byte));
+    // Bloquino: el sketch manda UTF-8 (un texto con tilde son dos bytes por
+    // letra); byte a byte, "función" llegaba al monitor como "funciÃ³n".
+    if (unit === 0 && this.onSerialData) {
+      const texto = this.utf8.decode(Uint8Array.of(byte), { stream: true });
+      if (texto) this.onSerialData(texto);
+    }
     this.emitUartTxFrame(this.uartPorts[unit].engine, def.txPin, byte);
   }
 
@@ -1717,6 +1723,10 @@ export class AVRSimulator implements LineCapable, BusCapableSimulator {
       // The same chip a firmware load builds, variant and all. EEPROM cells
       // survive (attachEeprom reuses the backend), as on real hardware.
       this.buildMcu();
+      // Bloquino: el nivel de reposo de las líneas (DHT11, receptor infrarrojo)
+      // se fijó arriba sobre el procesador anterior; el nuevo parte con todos
+      // los pines en bajo y la primera trama tras reiniciar se perdía.
+      this.lines?.reset();
       this.announceMcuReset();
       console.log('AVR CPU reset complete');
     }

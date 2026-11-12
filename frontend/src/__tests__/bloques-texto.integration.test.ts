@@ -79,6 +79,12 @@ describe.skipIf(!CON_BACKEND)('textos y puerto serie en el simulador', { timeout
     expect(p.lineas()).toEqual(['Vueltas: 3', 'van 2.50 litros']);
   });
 
+  it('los textos con tilde llegan bien al monitor', async () => {
+    const p = await placa([alIniciar(decir(txt('¡Función número 1!')))]);
+    p.correr(200);
+    expect(p.lineas()).toEqual(['¡Función número 1!']);
+  });
+
   it('una orden de texto por el puerto serie prende y apaga el LED, sin frenar un parpadeo', async () => {
     const igual = { block: { type: 'ab_texto_igual', inputs: { A: orden, B: txt('encender') } } };
     const p = await placa([

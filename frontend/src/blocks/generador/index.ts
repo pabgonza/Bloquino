@@ -6,7 +6,8 @@
 //    una función que avanza hasta su próxima espera y devuelve el control.
 import type { Blockly } from '../blockly';
 import { SOMBREROS } from '../catalogo';
-import { gen } from './bloques';
+import { TECLAS } from '../../bloquino/componentes/teclas';
+import { control, gen } from './bloques';
 import { contextoClasico, contextoCorrutinas } from './contexto';
 
 // Corrutinas sin pila, al estilo protothreads: cada punto de espera guarda su
@@ -75,6 +76,21 @@ export function generar(ws: Blockly.Workspace, paralelo = false): string {
           '  ESPERAR_HASTA(Serial.available() > 0);\n' +
           sangrar(cuerpo) +
           '  CEDER();\n' +
+          '}\n';
+      }
+      if (script.type === 'ab_cuando_tecla') {
+        // Corre una vez por tecla nueva; las que llegan mientras corre se ignoran.
+        control(script);
+        ctx.locales.add('static unsigned int vistas = 0;');
+        const comando = TECLAS.find(([nombre]) => nombre === script.getFieldValue('TECLA'))?.[1];
+        cuerpo += 'vistas = teclasRecibidas;\n';
+        cuerpo =
+          'while (true) {\n' +
+          '  ESPERAR_HASTA(teclasRecibidas != vistas);\n' +
+          '  vistas = teclasRecibidas;\n' +
+          sangrar(
+            comando === undefined ? cuerpo : `if (teclaControl == ${comando}) {\n${sangrar(cuerpo)}}\n`,
+          ) +
           '}\n';
       }
       programas += `void programa${i + 1}() {\n${lineas(ctx.locales)}  EMPEZAR();\n${sangrar(cuerpo)}  TERMINAR();\n}\n\n`;

@@ -7,6 +7,7 @@ import { EditorPage } from '../pages/EditorPage';
 import textos from '../i18n/locales/es/bloquino.json';
 import './componentes/Dht11Element';
 import './componentes/dht11';
+import './componentes/control';
 import { leerModo } from './modo';
 import { PaginaAlumno } from './PaginaAlumno';
 

@@ -14,6 +14,8 @@
   "AB_AL_INICIAR": "al iniciar",
   "AB_CUANDO_BOTON": "cuando se presiona botón en pin %1",
   "AB_CUANDO_SERIE": "cuando llega un dato por el puerto serie",
+  "AB_CUANDO_TECLA": "cuando llega la tecla %1 del control (receptor en pin %2)",
+  "AB_TECLA_CUALQUIERA": "cualquiera",
 
   "AB_POR_SIEMPRE": "por siempre %1 %2",
   "AB_ESPERAR": "esperar %1 segundos",
@@ -45,6 +47,8 @@
   "AB_DISTANCIA": "distancia en cm (disparo %1 eco %2)",
   "AB_TEMPERATURA": "temperatura en °C (DHT11 en pin %1)",
   "AB_HUMEDAD": "humedad en % (DHT11 en pin %1)",
+  "AB_TECLA_ULTIMA": "última tecla del control (receptor en pin %1)",
+  "AB_TECLA_CODIGO": "código de la última tecla (receptor en pin %1)",
 
   "AB_LCD_PREPARAR": "preparar pantalla LCD (RS %1 E %2 D4 %3 D5 %4 D6 %5 D7 %6)",
   "AB_LCD_ESCRIBIR": "escribir %1 en la pantalla",

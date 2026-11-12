@@ -4716,6 +4716,25 @@
         "humedad",
         "sensor"
       ]
+    },
+    {
+      "$comment": "Bloquino: control remoto infrarrojo del kit (17 teclas, NEC). Elemento en frontend/src/bloquino/componentes/control.ts.",
+      "id": "control-remoto",
+      "tagName": "bloquino-control",
+      "name": "Control remoto",
+      "category": "input",
+      "thumbnail": "",
+      "properties": [],
+      "defaultValues": {},
+      "pinCount": 0,
+      "tags": [
+        "control",
+        "remoto",
+        "infrarrojo",
+        "ir",
+        "remote",
+        "nec"
+      ]
     }
   ]
 }

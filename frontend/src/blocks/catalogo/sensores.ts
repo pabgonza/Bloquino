@@ -1,4 +1,4 @@
-import { categoria, LOGICO, NUMERO, pin, pinAnalogico } from './base';
+import { categoria, LOGICO, NUMERO, pin, pinAnalogico, TEXTO } from './base';
 
 export default categoria(
   'sensores',
@@ -9,6 +9,8 @@ export default categoria(
     ab_distancia: { args: [pin('DISPARO'), pin('ECO')], ...NUMERO },
     ab_temperatura: { args: [pin()], ...NUMERO },
     ab_humedad: { args: [pin()], ...NUMERO },
+    ab_tecla_ultima: { args: [pin()], ...TEXTO },
+    ab_tecla_codigo: { args: [pin()], ...NUMERO },
   },
   [
     { type: 'ab_boton', fields: { PIN: '2' } },
@@ -16,5 +18,7 @@ export default categoria(
     { type: 'ab_distancia', fields: { DISPARO: '7', ECO: '6' } },
     { type: 'ab_temperatura', fields: { PIN: '2' } },
     { type: 'ab_humedad', fields: { PIN: '2' } },
+    { type: 'ab_tecla_ultima', fields: { PIN: '10' } },
+    { type: 'ab_tecla_codigo', fields: { PIN: '10' } },
   ],
 );
