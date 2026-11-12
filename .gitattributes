@@ -2,3 +2,4 @@
 scripts/instalar-librerias.sh text eol=lf
 scripts/librerias-kit.txt text eol=lf
 docker/bloquino-entrypoint.sh text eol=lf
+docker/bloquino-nginx.conf text eol=lf
