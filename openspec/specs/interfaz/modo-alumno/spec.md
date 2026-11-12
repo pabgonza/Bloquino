@@ -67,3 +67,10 @@ En la página de alumno, las teclas del lienzo (Supr, R, colores de cable, copia
 
 #### Scenario: Deshacer en los bloques
 - **WHEN** el alumno tiende un cable, borra un bloque y presiona Ctrl+
+
+### Requirement: Selección en el lienzo
+Un clic sobre un componente SHALL dejarlo seleccionado; con un componente seleccionado, Supr SHALL eliminarlo y R SHALL girarlo. Un clic en el fondo del lienzo SHALL quitar la selección. El lienzo SHALL tener seleccionado a lo más un componente o un cable, nunca los dos.
+
+#### Scenario: Eliminar con clic y Supr
+- **WHEN** el alumno hace clic en un buzzer y presiona Supr
+- **THEN** el buzzer desaparece, y Ctrl+
