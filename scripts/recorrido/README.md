@@ -17,6 +17,8 @@ el programa de bloques, que se carga como JSON.
   C++ espera un entero.
 - `textos.js`: variable de texto creada con el mouse y órdenes por el monitor
   serie (h8).
+- `lcd.js`, `control.js`, `display.js`: pantalla LCD, control remoto y displays
+  de 7 segmentos (h8), cableados directo a la placa.
 - `conv.mjs`: arma los scripts en `frontend/.recorrido/`.
 
 ## Cómo correrlo
@@ -24,7 +26,7 @@ el programa de bloques, que se carga como JSON.
 Con el frontend (`npx vite`, puerto 5173) y el backend (puerto 3080) arriba:
 
 ```
-node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos
+node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos lcd control display
 ```
 
 En el MCP de Playwright, una vez por sesión de trabajo (`browser_run_code_unsafe`):

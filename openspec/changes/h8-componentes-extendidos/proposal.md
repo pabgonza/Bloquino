@@ -35,6 +35,7 @@ Fuera de este hito: LCD con módulo I2C, matriz de LEDs 8×8, teclado 4×4, RFID
 - `bloques/siete-segmentos`: bloques del display de 7 segmentos de 1 y 4 dígitos.
 - `bloques/infrarrojo`: evento y lectura del control remoto.
 - `bloques/puerto-serie`: escritura, lectura y evento del puerto serie.
+- `bloques/texto`: variables de texto, unir y comparar, y conversión entre número y texto.
 
 ### Modified Capabilities
 - `bloques/catalogo-base`: `decir` se mueve de Avanzado a la categoría nueva de puerto serie.

@@ -27,6 +27,15 @@ Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques.
 | 9 LED RGB | Los colores mezclados (amarillo, violeta) se parecen a los del LED real. ¿El del kit es de cátodo común? |
 | 10 Integración | Todo junto, sin que la simulación se ponga lenta en un notebook de la sala. |
 
+## Componentes de h8
+
+| Componente | Qué mirar |
+| --- | --- |
+| Control remoto | **Los códigos de las teclas están supuestos.** Programa: `cuando llega la tecla cualquiera` → `decir código de la última tecla`; cargar a la placa, apretar cada tecla y anotar su número. Si difieren, se corrigen en `frontend/src/bloquino/componentes/teclas.ts`. Mirar también el orden de las patitas del receptor. |
+| Pantalla LCD | Cableado real: además de RS, E y D4 a D7, lleva alimentación, RW a GND, luz de fondo y el potenciómetro de contraste. Las letras con tilde no existen en la pantalla real. |
+| Displays | Ver si son de cátodo o de ánodo común (terminan en AS o BS) y elegirlo en el bloque `preparar display`. El de 4 dígitos directo a los pines va con resistencias de 1 kΩ por segmento, no de 220 Ω. |
+| Puerto serie | Con la placa real, el monitor debe mandar «Nueva línea»; sin fin de línea las lecturas igual llegan, 50 ms después. |
+
 ## En cualquier momento
 
 - Pasar el mouse por un agujero de la protoboard marca en verde su tira; por
