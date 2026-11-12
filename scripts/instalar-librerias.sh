@@ -5,7 +5,8 @@
 #   docker exec velxio-spike sh /tmp/instalar-librerias.sh
 set -e
 
-arduino-cli lib install "Servo@1.3.0" "DHT sensor library@1.4.7" "Adafruit Unified Sensor@1.1.15"
+arduino-cli lib install "Servo@1.3.0" "DHT sensor library@1.4.7" "Adafruit Unified Sensor@1.1.15" \
+  "LiquidCrystal@1.0.7" "IRremote@4.7.1"
 
 # BuzzerMusic no está en el índice de Arduino: se trae de su repositorio, en el
 # commit que declara frontend/src/blocks/paquetes/buzzermusic.json.

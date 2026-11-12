@@ -5,6 +5,7 @@
   "AB_CAT_SONIDO": "Sonido",
   "AB_CAT_MOVIMIENTO": "Movimiento",
   "AB_CAT_SENSORES": "Sensores",
+  "AB_CAT_PANTALLAS": "Pantallas",
   "AB_CAT_SERIE": "Puerto serie",
   "AB_CAT_OPERADORES": "Operadores",
   "AB_CAT_VARIABLES": "Variables",
@@ -44,6 +45,11 @@
   "AB_DISTANCIA": "distancia en cm (disparo %1 eco %2)",
   "AB_TEMPERATURA": "temperatura en °C (DHT11 en pin %1)",
   "AB_HUMEDAD": "humedad en % (DHT11 en pin %1)",
+
+  "AB_LCD_PREPARAR": "preparar pantalla LCD (RS %1 E %2 D4 %3 D5 %4 D6 %5 D7 %6)",
+  "AB_LCD_ESCRIBIR": "escribir %1 en la pantalla",
+  "AB_LCD_CURSOR": "mover cursor a columna %1 fila %2",
+  "AB_LCD_BORRAR": "borrar pantalla",
 
   "AB_ARITMETICA": "%1 %2 %3",
   "AB_COMPARAR": "%1 %2 %3",

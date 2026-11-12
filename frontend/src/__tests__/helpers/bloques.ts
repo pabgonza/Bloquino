@@ -32,6 +32,18 @@ export const boton = { block: { type: 'ab_boton', fields: { PIN: '2' } } };
 export const distancia = {
   block: { type: 'ab_distancia', fields: { DISPARO: '7', ECO: '6' } },
 };
+export const txt = (TEXT: string) => ({ block: { type: 'text', fields: { TEXT } } });
+
+// Pantalla LCD
+export const escribir = (VALOR: object): B => ({ type: 'ab_lcd_escribir', inputs: { VALOR } });
+export const cursor = (columna: number, fila: number): B => ({
+  type: 'ab_lcd_cursor',
+  inputs: { COLUMNA: num(columna), FILA: num(fila) },
+});
+export const preparar = (...pines: number[]): B => ({
+  type: 'ab_lcd_preparar',
+  fields: Object.fromEntries(['RS', 'E', 'D4', 'D5', 'D6', 'D7'].map((c, i) => [c, String(pines[i])])),
+});
 
 /** Sketch de un programa. Los scripts quedan en el orden dado, de arriba hacia abajo. */
 export function sketch(bloques: B[], variables: B[] = []) {

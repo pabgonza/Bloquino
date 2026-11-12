@@ -1,7 +1,8 @@
 // Generador de cada bloque del catálogo: devuelve su código Arduino y declara
 // sus contribuciones en `gen.ctx`.
 import { Blockly } from '../blockly';
-import '../catalogo';
+import { SOMBREROS } from '../catalogo';
+import { LCD_PINES } from '../catalogo/pantallas';
 import { PAQUETES, llenar } from '../paquetes';
 import { contextoClasico } from './contexto';
 
@@ -251,6 +252,30 @@ G.ab_texto_igual = (b) => [
 ];
 G.ab_variable_texto = (b) => [variableTexto(b), ORDEN.ATOMO];
 G.ab_definir_texto = (b) => `${variableTexto(b)} = ${texto(b, 'VALUE')};\n`;
+
+// ── Pantallas ───────────────────────────────────────────────────────────────
+// LCD 16x2 en paralelo (4 bits) con LiquidCrystal. Los pines salen del bloque
+// «preparar pantalla» del programa; sin él, los del ejemplo de la librería.
+const lcd = (b: Bloque) => {
+  const preparar = b.workspace
+    .getBlocksByType('ab_lcd_preparar', false)
+    .find((p) => p.isEnabled() && SOMBREROS.includes(p.getRootBlock().type));
+  const pines = Object.entries(LCD_PINES).map(([c, p]) => (preparar ? campo(preparar, c) : p));
+  gen.ctx.includes.add('#include <LiquidCrystal.h>');
+  gen.ctx.globales.add(`LiquidCrystal lcd(${pines.join(', ')});`);
+  gen.ctx.setup.add('lcd.begin(16, 2);');
+  return 'lcd';
+};
+/** Posición que el alumno cuenta desde 1 → índice desde 0. */
+const desdeCero = (b: Bloque, nombre: string) => {
+  const n = valor(b, nombre, ORDEN.SUMA);
+  return esNumero(n) ? String(Number(n) - 1) : `${n} - 1`;
+};
+G.ab_lcd_preparar = (b) => (lcd(b), '');
+G.ab_lcd_escribir = (b) => `${lcd(b)}.print(${texto(b, 'VALOR')});\n`;
+G.ab_lcd_cursor = (b) =>
+  `${lcd(b)}.setCursor(${desdeCero(b, 'COLUMNA')}, ${desdeCero(b, 'FILA')});\n`;
+G.ab_lcd_borrar = (b) => `${lcd(b)}.clear();\n`;
 
 // ── Puerto serie ────────────────────────────────────────────────────────────
 // Se lee por líneas: el número es la línea convertida, así no queda un fin de

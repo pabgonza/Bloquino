@@ -59,6 +59,7 @@ describe('paleta del kit', () => {
       'Potenciómetro',
       'Sensor de distancia',
       'Temperatura y humedad',
+      'Pantalla LCD',
       'Protoboard',
       'Protoboard chica',
     ]);
@@ -92,7 +93,7 @@ describe('paleta del kit', () => {
     expect(color.options).toContain('green');
     expect(color.optionLabels?.green).toBe('Verde');
     // Lo que no es del kit queda como estaba.
-    expect(de('lcd1602').name).toBe(metadatos.components.find((c) => c.id === 'lcd1602')!.name);
+    expect(de('lcd2004').name).toBe(metadatos.components.find((c) => c.id === 'lcd2004')!.name);
   });
 });
 

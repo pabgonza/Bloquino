@@ -8,6 +8,7 @@ import luces from './luces';
 import sonido from './sonido';
 import movimiento from './movimiento';
 import sensores from './sensores';
+import pantallas from './pantallas';
 import serie from './serie';
 import operadores from './operadores';
 import avanzado from './avanzado';
@@ -22,6 +23,7 @@ export const CATEGORIAS: Categoria[] = [
   sonido,
   movimiento,
   sensores,
+  pantallas,
   serie,
   operadores,
   // Sin paleta propia: depende de las variables que existan (ver BlocksPanel).
