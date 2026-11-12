@@ -1,0 +1,433 @@
+{
+ "format": "velxio-project",
+ "version": 1,
+ "exportedAt": "",
+ "name": "04-rockola",
+ "boards": [
+  {
+   "id": "arduino-uno",
+   "boardKind": "arduino-uno",
+   "x": 50,
+   "y": 50,
+   "activeFileGroupId": "group-arduino-uno",
+   "languageMode": "arduino",
+   "serialBaudRate": 0
+  }
+ ],
+ "fileGroups": {
+  "group-arduino-uno": [
+   {
+    "name": "sketch.ino",
+    "content": "// Generado desde bloques (avanzado: varios programas a la vez)\n#include <BuzzerMusic.h>\n\n// Cada programa es una función que avanza hasta su próxima espera y devuelve\n// el control; \"paso\" recuerda por dónde iba. Así ninguno frena a los demás.\n#define EMPEZAR() static int paso = 0; static unsigned long despierta = 0; switch (paso) { case 0:\n#define TERMINAR() } paso = -1\n#define CEDER() do { paso = __LINE__; return; case __LINE__:; } while (0)\n#define ESPERAR(ms) do { despierta = millis() + (unsigned long)(ms); paso = __LINE__; return; case __LINE__: if ((long)(millis() - despierta) < 0) return; } while (0)\n#define ESPERAR_HASTA(condicion) do { paso = __LINE__; case __LINE__: if (!(condicion)) return; } while (0)\n\nBuzzerMusic musica8(8);\n\nvoid programa1() {\n  EMPEZAR();\n  // Saludo de tres notas\n  tone(8, 262, 200);\n  ESPERAR(200);\n  tone(8, 330, 200);\n  ESPERAR(200);\n  tone(8, 392, 400);\n  ESPERAR(400);\n  noTone(8);\n  TERMINAR();\n}\n\nvoid programa2() {\n  EMPEZAR();\n  while (true) {\n    ESPERAR_HASTA(digitalRead(2) == LOW);\n    ESPERAR(20);\n    musica8.start(BuzzerMusic::ODE_TO_JOY);\n    while (musica8.isPlaying()) {\n      digitalWrite(13, HIGH);\n      ESPERAR(200);\n      digitalWrite(13, LOW);\n      ESPERAR(200);\n      CEDER();\n    }\n    ESPERAR_HASTA(digitalRead(2) == HIGH);\n    ESPERAR(20);\n  }\n  TERMINAR();\n}\n\nvoid programa3() {\n  EMPEZAR();\n  while (true) {\n    ESPERAR_HASTA(digitalRead(3) == LOW);\n    ESPERAR(20);\n    if (musica8.isPlaying()) {\n      musica8.stop();\n    } else {\n      musica8.start(BuzzerMusic::HAPPY_BIRTHDAY);\n      ESPERAR_HASTA(!musica8.isPlaying());\n    }\n    ESPERAR_HASTA(digitalRead(3) == HIGH);\n    ESPERAR(20);\n  }\n  TERMINAR();\n}\n\nvoid setup() {\n  pinMode(8, OUTPUT);\n  pinMode(2, INPUT_PULLUP);\n  pinMode(13, OUTPUT);\n  pinMode(3, INPUT_PULLUP);\n}\n\nvoid loop() {\n  musica8.update();\n  programa1();\n  programa2();\n  programa3();\n}\n"
+   },
+   {
+    "name": "bloques.json",
+    "content": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"ab_al_iniciar\",\"id\":\"6c9)!PNSzoCAItK)O:12\",\"x\":30,\"y\":30,\"next\":{\"block\":{\"type\":\"ab_comentario\",\"id\":\"$2)e=M[C,/}QPjj,oMRS\",\"fields\":{\"TEXTO\":\"Saludo de tres notas\"},\"next\":{\"block\":{\"type\":\"ab_tocar_nota\",\"id\":\"#;j8iFWnr.n_T18U=/@E\",\"fields\":{\"NOTA\":\"262\",\"PIN\":\"8\"},\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"@@9?T+M0!aD}d)GxL!89\",\"fields\":{\"NUM\":0.2}}}},\"next\":{\"block\":{\"type\":\"ab_tocar_nota\",\"id\":\"?{8n2]BJ%IZ)w.7/GH-y\",\"fields\":{\"NOTA\":\"330\",\"PIN\":\"8\"},\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"iP4Sk^Brfp9v#UVou^_j\",\"fields\":{\"NUM\":0.2}}}},\"next\":{\"block\":{\"type\":\"ab_tocar_nota\",\"id\":\"|.?rAK:`|{G]Bl1J_f.#\",\"fields\":{\"NOTA\":\"392\",\"PIN\":\"8\"},\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"ziw+e2+Ze[A}f|^$A$Rq\",\"fields\":{\"NUM\":0.4}}}},\"next\":{\"block\":{\"type\":\"ab_silenciar\",\"id\":\":9Tca,RSq~|!.(p#n]Hl\",\"fields\":{\"PIN\":\"8\"}}}}}}}}}}}},{\"type\":\"ab_cuando_boton\",\"id\":\"#ngV0@Bb,mU]SMdjOxpP\",\"x\":30,\"y\":290,\"fields\":{\"PIN\":\"2\"},\"next\":{\"block\":{\"type\":\"ab_empezar_cancion\",\"id\":\"h@0U?6%g7`hp3.*YO`4m\",\"fields\":{\"CANCION\":\"ODE_TO_JOY\",\"PIN\":\"8\"},\"next\":{\"block\":{\"type\":\"ab_mientras\",\"id\":\"dPw)`N-uU[b48Wwiu)EG\",\"inputs\":{\"COND\":{\"block\":{\"type\":\"ab_cancion_sonando\",\"id\":\"VruZZHC!zgo:}:@+JidR\",\"fields\":{\"PIN\":\"8\"}}},\"DO\":{\"block\":{\"type\":\"ab_led\",\"id\":\"U^UM@!br5e**ZQ7lx@(s\",\"fields\":{\"ESTADO\":\"HIGH\",\"PIN\":\"13\"},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"{{n]dB$CrtR(H#ROOj3{\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"%*ki0_c^}hQ;2sOd~%+q\",\"fields\":{\"NUM\":0.2}}}},\"next\":{\"block\":{\"type\":\"ab_led\",\"id\":\"L$}`V)`/NO(X0Q)Eo/EJ\",\"fields\":{\"ESTADO\":\"LOW\",\"PIN\":\"13\"},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"g?K?PgjmkqHJsy4,t)G9\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"zt$EGC{d|P7A9K!{Y_J^\",\"fields\":{\"NUM\":0.2}}}}}}}}}}}}}}}}}},{\"type\":\"ab_cuando_boton\",\"id\":\"Aoq~$UQ}Cw)YF/e`.3JI\",\"x\":30,\"y\":550,\"fields\":{\"PIN\":\"3\"},\"next\":{\"block\":{\"type\":\"ab_si_sino\",\"id\":\",qcI`F4$kxB)[2LpLqWQ\",\"inputs\":{\"COND\":{\"block\":{\"type\":\"ab_cancion_sonando\",\"id\":\"$TBo-M^VO/p?IA-+Jq@3\",\"fields\":{\"PIN\":\"8\"}}},\"DO\":{\"block\":{\"type\":\"ab_detener_cancion\",\"id\":\"$LsC@el:X5|:E_M6}wV[\",\"fields\":{\"PIN\":\"8\"}}},\"SINO\":{\"block\":{\"type\":\"ab_tocar_cancion\",\"id\":\"0O`.z.vZK`wKQL{L]:}O\",\"fields\":{\"CANCION\":\"HAPPY_BIRTHDAY\",\"PIN\":\"8\"}}}}}}}]}}"
+   }
+  ]
+ },
+ "components": [
+  {
+   "id": "breadboard_1794511826343_s35tq91ug",
+   "metadataId": "breadboard",
+   "x": -110,
+   "y": -230,
+   "properties": {}
+  },
+  {
+   "id": "buzzer_1794511827344_j4a72a0ye",
+   "metadataId": "buzzer",
+   "x": 194.15999999999997,
+   "y": -198.8,
+   "properties": {
+    "hasSignal": false
+   }
+  },
+  {
+   "id": "pushbutton_1794511833839_586a614je",
+   "metadataId": "pushbutton",
+   "x": 261.66,
+   "y": -154.70000000000002,
+   "properties": {
+    "color": "blue",
+    "pressed": false,
+    "label": "",
+    "xray": false,
+    "rotation": 90
+   }
+  },
+  {
+   "id": "pushbutton_1794511840095_wdzk2rf7x",
+   "metadataId": "pushbutton",
+   "x": 319.26,
+   "y": -154.70000000000002,
+   "properties": {
+    "color": "green",
+    "pressed": false,
+    "label": "",
+    "xray": false,
+    "rotation": 90
+   }
+  }
+ ],
+ "wires": [
+  {
+   "id": "bbwire-buzzer_1794511827344_j4a72a0ye-0-34b.f",
+   "start": {
+    "componentId": "buzzer_1794511827344_j4a72a0ye",
+    "pinName": "1",
+    "x": 227.15999999999997,
+    "y": -108.80000000000001
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "34b.f",
+    "x": 227.35999999999996,
+    "y": -108.8
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-buzzer_1794511827344_j4a72a0ye-1-35b.f",
+   "start": {
+    "componentId": "buzzer_1794511827344_j4a72a0ye",
+    "pinName": "2",
+    "x": 237.15999999999997,
+    "y": -108.80000000000001
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "35b.f",
+    "x": 236.95999999999998,
+    "y": -108.8
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "wire-1794511831109",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "34b.j",
+    "x": 227.35999999999996,
+    "y": -70.4
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "8",
+    "x": 223,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 227.35999999999996,
+     "y": 36
+    },
+    {
+     "x": 223,
+     "y": 36
+    }
+   ],
+   "color": "#8B00FF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794511833056",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "35b.j",
+    "x": 236.95999999999998,
+    "y": -70.4
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "bn.28",
+    "x": 236.97333333333336,
+    "y": -41.599999999999994
+   },
+   "waypoints": [
+    {
+     "x": 236.95999999999998,
+     "y": -41.599999999999994
+    }
+   ],
+   "color": "#000000",
+   "autoRouted": false
+  },
+  {
+   "id": "bbwire-pushbutton_1794511833839_586a614je-0-43t.c",
+   "start": {
+    "componentId": "pushbutton_1794511833839_586a614je",
+    "pinName": "1.l",
+    "x": 313.66,
+    "y": -156.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "43t.c",
+    "x": 313.76000000000005,
+    "y": -156.8
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-pushbutton_1794511833839_586a614je-1-41t.c",
+   "start": {
+    "componentId": "pushbutton_1794511833839_586a614je",
+    "pinName": "2.l",
+    "x": 294.66,
+    "y": -156.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "41t.c",
+    "x": 294.56,
+    "y": -156.8
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-pushbutton_1794511833839_586a614je-2-43b.h",
+   "start": {
+    "componentId": "pushbutton_1794511833839_586a614je",
+    "pinName": "1.r",
+    "x": 313.66,
+    "y": -89.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "43b.h",
+    "x": 313.76000000000005,
+    "y": -89.60000000000002
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-pushbutton_1794511833839_586a614je-3-41b.h",
+   "start": {
+    "componentId": "pushbutton_1794511833839_586a614je",
+    "pinName": "2.r",
+    "x": 294.66,
+    "y": -89.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "41b.h",
+    "x": 294.56,
+    "y": -89.60000000000002
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "wire-1794511837619",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "43b.j",
+    "x": 313.76000000000005,
+    "y": -70.4
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "3",
+    "x": 277,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 313.76000000000005,
+     "y": 27
+    },
+    {
+     "x": 277,
+     "y": 27
+    }
+   ],
+   "color": "#0000cc",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794511839414",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "41b.j",
+    "x": 294.56,
+    "y": -70.4
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "bn.33",
+    "x": 294.5733333333333,
+    "y": -41.599999999999994
+   },
+   "waypoints": [
+    {
+     "x": 294.56,
+     "y": -41.599999999999994
+    }
+   ],
+   "color": "#000000",
+   "autoRouted": false
+  },
+  {
+   "id": "bbwire-pushbutton_1794511840095_wdzk2rf7x-0-49t.c",
+   "start": {
+    "componentId": "pushbutton_1794511840095_wdzk2rf7x",
+    "pinName": "1.l",
+    "x": 371.26,
+    "y": -156.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "49t.c",
+    "x": 371.36,
+    "y": -156.8
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-pushbutton_1794511840095_wdzk2rf7x-1-47t.c",
+   "start": {
+    "componentId": "pushbutton_1794511840095_wdzk2rf7x",
+    "pinName": "2.l",
+    "x": 352.26,
+    "y": -156.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "47t.c",
+    "x": 352.15999999999997,
+    "y": -156.8
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-pushbutton_1794511840095_wdzk2rf7x-2-49b.h",
+   "start": {
+    "componentId": "pushbutton_1794511840095_wdzk2rf7x",
+    "pinName": "1.r",
+    "x": 371.26,
+    "y": -89.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "49b.h",
+    "x": 371.36,
+    "y": -89.60000000000002
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "bbwire-pushbutton_1794511840095_wdzk2rf7x-3-47b.h",
+   "start": {
+    "componentId": "pushbutton_1794511840095_wdzk2rf7x",
+    "pinName": "2.r",
+    "x": 352.26,
+    "y": -89.70000000000002
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "47b.h",
+    "x": 352.15999999999997,
+    "y": -89.60000000000002
+   },
+   "waypoints": [],
+   "color": "#000000",
+   "bb": true
+  },
+  {
+   "id": "wire-1794511844016",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "49b.j",
+    "x": 371.36,
+    "y": -70.4
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "2",
+    "x": 286.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 371.36,
+     "y": 36
+    },
+    {
+     "x": 286.5,
+     "y": 36
+    }
+   ],
+   "color": "#22c55e",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794511845976",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "47b.j",
+    "x": 352.15999999999997,
+    "y": -70.4
+   },
+   "end": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "bn.38",
+    "x": 352.1733333333333,
+    "y": -41.599999999999994
+   },
+   "waypoints": [
+    {
+     "x": 352.15999999999997,
+     "y": -41.599999999999994
+    }
+   ],
+   "color": "#000000",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794511848041",
+   "start": {
+    "componentId": "breadboard_1794511826343_s35tq91ug",
+    "pinName": "bn.21",
+    "x": 160.1733333333333,
+    "y": -41.599999999999994
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "GND.1",
+    "x": 165.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 160.1733333333333,
+     "y": 36
+    },
+    {
+     "x": 165.5,
+     "y": 36
+    }
+   ],
+   "color": "#000000",
+   "autoRouted": false
+  }
+ ],
+ "activeBoardId": "arduino-uno"
+}

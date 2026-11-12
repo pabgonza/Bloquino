@@ -1,0 +1,474 @@
+{
+ "format": "velxio-project",
+ "version": 1,
+ "exportedAt": "",
+ "name": "10-marcador",
+ "boards": [
+  {
+   "id": "arduino-uno",
+   "boardKind": "arduino-uno",
+   "x": 50,
+   "y": 50,
+   "activeFileGroupId": "group-arduino-uno",
+   "languageMode": "arduino",
+   "serialBaudRate": 9600
+  }
+ ],
+ "fileGroups": {
+  "group-arduino-uno": [
+   {
+    "name": "sketch.ino",
+    "content": "// Generado desde bloques (avanzado: varios programas a la vez)\n// Cada programa es una función que avanza hasta su próxima espera y devuelve\n// el control; \"paso\" recuerda por dónde iba. Así ninguno frena a los demás.\n#define EMPEZAR() static int paso = 0; static unsigned long despierta = 0; switch (paso) { case 0:\n#define TERMINAR() } paso = -1\n#define CEDER() do { paso = __LINE__; return; case __LINE__:; } while (0)\n#define ESPERAR(ms) do { despierta = millis() + (unsigned long)(ms); paso = __LINE__; return; case __LINE__: if ((long)(millis() - despierta) < 0) return; } while (0)\n#define ESPERAR_HASTA(condicion) do { paso = __LINE__; case __LINE__: if (!(condicion)) return; } while (0)\n\nconst byte DISPLAY_SEGMENTOS[] = {11, 4, 7, 8, 9, 12, 6};\n// Segmentos de cada cifra: el bit 0 es el segmento A y el 6, el G.\nconst byte CIFRAS[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};\nconst byte DISPLAY_DIGITOS[] = {10, 2, 3, 5};\nint displayNumero = -1;\nfloat numero = 0;\n\n// Enciende los segmentos de una cifra; con -1 los apaga todos.\nvoid mostrarCifra(int cifra) {\n  for (byte i = 0; i < 7; i++) {\n    bool prendido = cifra >= 0 && bitRead(CIFRAS[cifra], i);\n    digitalWrite(DISPLAY_SEGMENTOS[i], prendido ? HIGH : LOW);\n  }\n}\n\n// Muestra un dígito a la vez, tan rápido que se ven los cuatro encendidos.\nvoid refrescarDisplay() {\n  static byte turno = 0;\n  static unsigned long ultimo = 0;\n  if (micros() - ultimo < 2000) {\n    return;\n  }\n  ultimo = micros();\n  digitalWrite(DISPLAY_DIGITOS[turno], HIGH);\n  turno = (turno + 1) % 4;\n  int divisor = 1;\n  for (byte i = turno; i < 3; i++) {\n    divisor *= 10;\n  }\n  bool visible = displayNumero >= divisor || (turno == 3 && displayNumero >= 0);\n  mostrarCifra(visible ? displayNumero / divisor % 10 : -1);\n  digitalWrite(DISPLAY_DIGITOS[turno], LOW);\n}\n\nString leerTexto() {\n  String linea = Serial.readStringUntil('\\n');\n  linea.trim();\n  return linea;\n}\n\nvoid programa1() {\n  EMPEZAR();\n  displayNumero = constrain(1234, 0, 9999);\n  ESPERAR(2000);\n  while (true) {\n    if (Serial.available() > 0) {\n      numero = leerTexto().toFloat();\n      displayNumero = constrain(numero, 0, 9999);\n      Serial.print(\"Recibí el número \");\n      Serial.println(numero);\n      ESPERAR(3000);\n    } else {\n      displayNumero = constrain(map(map(analogRead(A0), 0, 1023, 0, 100), 0, 100, 0, 9999), 0, 9999);\n    }\n    CEDER();\n  }\n  TERMINAR();\n}\n\nvoid setup() {\n  for (byte i = 0; i < 7; i++) {\n    pinMode(DISPLAY_SEGMENTOS[i], OUTPUT);\n    digitalWrite(DISPLAY_SEGMENTOS[i], LOW);\n  }\n  for (byte i = 0; i < 4; i++) {\n    pinMode(DISPLAY_DIGITOS[i], OUTPUT);\n    digitalWrite(DISPLAY_DIGITOS[i], HIGH);\n  }\n  Serial.begin(9600);\n  Serial.setTimeout(50);\n}\n\nvoid loop() {\n  refrescarDisplay();\n  programa1();\n}\n"
+   },
+   {
+    "name": "bloques.json",
+    "content": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"ab_al_iniciar\",\"id\":\"426F]iYsJN~%_{5,g,8i\",\"x\":30,\"y\":30,\"next\":{\"block\":{\"type\":\"ab_display4_preparar\",\"id\":\"/Xzjjf8s(z%IH|s_DghV\",\"fields\":{\"COMUN\":\"catodo\",\"A\":\"11\",\"B\":\"4\",\"C\":\"7\",\"D\":\"8\",\"E\":\"9\",\"F\":\"12\",\"G\":\"6\",\"D1\":\"10\",\"D2\":\"2\",\"D3\":\"3\",\"D4\":\"5\"},\"next\":{\"block\":{\"type\":\"ab_display_mostrar\",\"id\":\"Az7,zZvVV${x-(P?gjwm\",\"inputs\":{\"NUMERO\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"H-^}dcepQ#ffkO/fUdnu\",\"fields\":{\"NUM\":1234}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"2u=Ca8m~UQ`D:2m/LfxK\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"jWJm5E1y7B%/ahT,Ev7h\",\"fields\":{\"NUM\":2}}}},\"next\":{\"block\":{\"type\":\"ab_por_siempre\",\"id\":\"mMbfgrMn(iuqAB%)Ic5`\",\"inputs\":{\"DO\":{\"block\":{\"type\":\"ab_si_sino\",\"id\":\"DC@IhVPmQ4w.-ZYUEYJQ\",\"inputs\":{\"COND\":{\"block\":{\"type\":\"ab_serie_hay\",\"id\":\"0ZHCsLwaGn7JAz4N`ct]\"}},\"DO\":{\"block\":{\"type\":\"variables_set\",\"id\":\";yLB_!}vCH/5b,5s*:/)\",\"fields\":{\"VAR\":{\"id\":\"n\"}},\"inputs\":{\"VALUE\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"8!foyd!4rgwj,BugHvlj\",\"fields\":{\"NUM\":0}},\"block\":{\"type\":\"ab_serie_numero\",\"id\":\"LH(,pWlE=2w*.L,@GxAj\"}}},\"next\":{\"block\":{\"type\":\"ab_display_mostrar\",\"id\":\"|mm20+];d%{}_dnYVu.C\",\"inputs\":{\"NUMERO\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"*AX_U8=x)XDNlf)@UllS\",\"fields\":{\"NUM\":7}},\"block\":{\"type\":\"variables_get\",\"id\":\"nS+=mdw!Vc7tYGI,0tOB\",\"fields\":{\"VAR\":{\"id\":\"n\"}}}}},\"next\":{\"block\":{\"type\":\"ab_decir_seguido\",\"id\":\"i9(JeAe[b;c(LNNZj1=U\",\"inputs\":{\"VALOR\":{\"shadow\":{\"type\":\"text\",\"id\":\"fGSUOud`w9u.3rpCYSGY\",\"fields\":{\"TEXT\":\"Recibí el número \"}}}},\"next\":{\"block\":{\"type\":\"ab_decir\",\"id\":\"w!kex4!P;jC`ui7]LR[}\",\"inputs\":{\"VALOR\":{\"shadow\":{\"type\":\"text\",\"id\":\"Sl}^MrpV227?968?6q]@\",\"fields\":{\"TEXT\":\"\"}},\"block\":{\"type\":\"variables_get\",\"id\":\"[/uc]Ed~nZ0V;pWCUv)o\",\"fields\":{\"VAR\":{\"id\":\"n\"}}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"i~WBr+2P3Bjy$wT?sywD\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"u@-^gDM0UVK_F8^5PP)o\",\"fields\":{\"NUM\":3}}}}}}}}}}}}}},\"SINO\":{\"block\":{\"type\":\"ab_display_mostrar\",\"id\":\"XltmM{WT5}H+RE%j*dJy\",\"inputs\":{\"NUMERO\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"i=8DU3V|MMXh{(Y/Hlum\",\"fields\":{\"NUM\":7}},\"block\":{\"type\":\"ab_mapear\",\"id\":\"F}=hlqyj,Eux#Nz(8.i0\",\"inputs\":{\"X\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"mK[mE~6:~TD0nq^ti5Rj\",\"fields\":{\"NUM\":50}},\"block\":{\"type\":\"ab_perilla\",\"id\":\"T^-*RY|;yT_.-nAM@HjF\",\"fields\":{\"PIN\":\"A0\"}}},\"A\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"4]eFvjCTjMATG#N5A(+=\",\"fields\":{\"NUM\":0}}},\"B\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"3Ta^[F=8I/y:9#10q~C(\",\"fields\":{\"NUM\":100}}},\"C\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"N!mI!z9(Q_+ho{0$+BA~\",\"fields\":{\"NUM\":0}}},\"D\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"XfUjxTmN{^Q|h=LU!s(K\",\"fields\":{\"NUM\":9999}}}}}}}}}}}}}}}}}}}}}}]},\"variables\":[{\"name\":\"número\",\"id\":\"n\"}]}"
+   }
+  ]
+ },
+ "components": [
+  {
+   "id": "display_4_1794512998867_urpiiyqr5",
+   "metadataId": "display-4",
+   "x": 141,
+   "y": -102,
+   "properties": {
+    "digits": 4,
+    "common": "cathode"
+   }
+  },
+  {
+   "id": "potentiometer_1794512999514_ep6jm21ku",
+   "metadataId": "potentiometer",
+   "x": -120,
+   "y": 120,
+   "properties": {
+    "min": 0,
+    "max": 1023,
+    "value": 0,
+    "step": 1,
+    "startDegree": -135,
+    "endDegree": 135
+   }
+  }
+ ],
+ "wires": [
+  {
+   "id": "wire-1794513001434",
+   "start": {
+    "componentId": "potentiometer_1794512999514_ep6jm21ku",
+    "pinName": "GND",
+    "x": -85,
+    "y": 194.5
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "GND.1",
+    "x": 165.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": -85,
+     "y": 204.5
+    },
+    {
+     "x": -140,
+     "y": 204.5
+    },
+    {
+     "x": -140,
+     "y": 36
+    },
+    {
+     "x": 165.5,
+     "y": 36
+    }
+   ],
+   "color": "#000000",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513002730",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "F",
+    "x": 232.2768,
+    "y": -92.22
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "12",
+    "x": 184.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 232.2768,
+     "y": -116.22
+    },
+    {
+     "x": 117,
+     "y": -116.22
+    },
+    {
+     "x": 117,
+     "y": 27
+    },
+    {
+     "x": 184.5,
+     "y": 27
+    }
+   ],
+   "color": "#8B00FF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513004091",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "A",
+    "x": 222.67559999999997,
+    "y": -92.22
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "11",
+    "x": 194,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 222.67559999999997,
+     "y": -108.22
+    },
+    {
+     "x": 125,
+     "y": -108.22
+    },
+    {
+     "x": 125,
+     "y": 18
+    },
+    {
+     "x": 194,
+     "y": 18
+    }
+   ],
+   "color": "#0000cc",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513005401",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "DIG1",
+    "x": 213.0744,
+    "y": -92.22
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "10",
+    "x": 203.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 213.0744,
+     "y": -100.22
+    },
+    {
+     "x": 133,
+     "y": -100.22
+    },
+    {
+     "x": 133,
+     "y": 9
+    },
+    {
+     "x": 203.5,
+     "y": 9
+    }
+   ],
+   "color": "#8B4513",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513006742",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "E",
+    "x": 213.0744,
+    "y": -24.180000000000007
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "9",
+    "x": 213,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#00FFFF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513008269",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "D",
+    "x": 222.67559999999997,
+    "y": -24.180000000000007
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "8",
+    "x": 223,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#22c55e",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513009826",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "C",
+    "x": 241.878,
+    "y": -24.180000000000007
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "7",
+    "x": 239,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 241.878,
+     "y": 36
+    },
+    {
+     "x": 239,
+     "y": 36
+    }
+   ],
+   "color": "#FF8C00",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513011373",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "G",
+    "x": 251.4792,
+    "y": -24.180000000000007
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "6",
+    "x": 248.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 251.4792,
+     "y": 36
+    },
+    {
+     "x": 248.5,
+     "y": 36
+    }
+   ],
+   "color": "#808080",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513012851",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "DIG4",
+    "x": 261.0804,
+    "y": -24.180000000000007
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "5",
+    "x": 258,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 261.0804,
+     "y": 36
+    },
+    {
+     "x": 258,
+     "y": 36
+    }
+   ],
+   "color": "#FFD700",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513014340",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "B",
+    "x": 261.0804,
+    "y": -92.22
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "4",
+    "x": 267.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 261.0804,
+     "y": -100.22
+    },
+    {
+     "x": 345,
+     "y": -100.22
+    },
+    {
+     "x": 345,
+     "y": 18
+    },
+    {
+     "x": 267.5,
+     "y": 18
+    }
+   ],
+   "color": "#FF00FF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513015644",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "DIG3",
+    "x": 251.4792,
+    "y": -92.22
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "3",
+    "x": 277,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 251.4792,
+     "y": -108.22
+    },
+    {
+     "x": 353,
+     "y": -108.22
+    },
+    {
+     "x": 353,
+     "y": 27
+    },
+    {
+     "x": 277,
+     "y": 27
+    }
+   ],
+   "color": "#FFFFFF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513016939",
+   "start": {
+    "componentId": "display_4_1794512998867_urpiiyqr5",
+    "pinName": "DIG2",
+    "x": 241.878,
+    "y": -92.22
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "2",
+    "x": 286.5,
+    "y": 59
+   },
+   "waypoints": [
+    {
+     "x": 241.878,
+     "y": -116.22
+    },
+    {
+     "x": 361,
+     "y": -116.22
+    },
+    {
+     "x": 361,
+     "y": 36
+    },
+    {
+     "x": 286.5,
+     "y": 36
+    }
+   ],
+   "color": "#8B4513",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513018305",
+   "start": {
+    "componentId": "potentiometer_1794512999514_ep6jm21ku",
+    "pinName": "VCC",
+    "x": -65,
+    "y": 194.5
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "5V",
+    "x": 210,
+    "y": 241.5
+   },
+   "waypoints": [
+    {
+     "x": -65,
+     "y": 269
+    },
+    {
+     "x": 210,
+     "y": 269
+    }
+   ],
+   "color": "#cc0000",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794513019809",
+   "start": {
+    "componentId": "potentiometer_1794512999514_ep6jm21ku",
+    "pinName": "SIG",
+    "x": -75,
+    "y": 194.5
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "A0",
+    "x": 258,
+    "y": 241.5
+   },
+   "waypoints": [
+    {
+     "x": -75,
+     "y": 278
+    },
+    {
+     "x": 258,
+     "y": 278
+    }
+   ],
+   "color": "#22c55e",
+   "autoRouted": false
+  }
+ ],
+ "activeBoardId": "arduino-uno"
+}
