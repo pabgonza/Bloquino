@@ -1,0 +1,16 @@
+# Bloquino en la sala: un contenedor con la página y el backend de compilación.
+#   docker compose -f docker-compose.bloquino.yml up -d --build
+# Los alumnos entran a http://<IP del notebook del profesor>.
+# Otro puerto: definir BLOQUINO_PUERTO antes (los alumnos agregan :puerto).
+# Guía: docs/bloquino-dia-de-clase.md
+name: bloquino
+services:
+  bloquino:
+    build:
+      context: .
+      dockerfile: Dockerfile.bloquino
+    image: bloquino:sala
+    container_name: bloquino
+    restart: unless-stopped
+    ports:
+      - "${BLOQUINO_PUERTO:-80}:80"
