@@ -56,3 +56,18 @@ Cuando la revisión previa a simular encuentra un problema en el circuito, el av
 #### Scenario: LED sin resistencia
 - **WHEN** el alumno conecta un LED entre el pin 13 y GND sin resistencia e inicia la simulación
 - **THEN** aparece "Revisa tu circuito" con un texto que dice que el LED está sin resistencia y que le ponga una de 220 Ω, y no aparece el aviso de que el programa no se pudo compilar
+
+### Requirement: Menús y avisos del lienzo en español
+En la página de alumno, el menú de clic derecho de un cable, la tarjeta de progreso de la compilación y el panel del receptor infrarrojo SHALL estar en español. El menú del cable SHALL NOT ofrecer el osciloscopio, que el alumno no tiene.
+
+#### Scenario: Menú de un cable
+- **WHEN** el alumno hace clic derecho en un cable
+- **THEN** ve «Agregar una unión aquí», los colores y «Eliminar cable», y no ve la opción del osciloscopio
+
+#### Scenario: Compilación en fila
+- **WHEN** varios alumnos compilan a la vez y a uno le toca esperar
+- **THEN** su tarjeta dice en español que espera turno y que empieza sola
+
+#### Scenario: Panel del receptor infrarrojo
+- **WHEN** el alumno hace clic en el receptor infrarrojo durante la simulación
+- **THEN** el panel muestra «Dirección», «Código» y «Enviar»

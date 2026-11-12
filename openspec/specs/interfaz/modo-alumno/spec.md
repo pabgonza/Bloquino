@@ -44,7 +44,7 @@ Abrir el editor con el parámetro `profe` en la URL SHALL activar el modo profe,
 - **THEN** el editor queda en modo alumno, también en las visitas siguientes
 
 ### Requirement: Una sola placa, fija
-En la página de alumno el circuito SHALL tener siempre una sola placa Arduino UNO. La placa SHALL NOT ofrecer acciones para copiarla, girarla o eliminarla, y pegar una placa copiada SHALL NOT dejar una segunda placa en el lienzo.
+En la página de alumno el circuito SHALL tener siempre una sola placa Arduino UNO. La placa SHALL NOT ofrecer acciones para copiarla, girarla o eliminarla, ni con botones, ni con el teclado, ni en su ficha, y pegar una placa copiada SHALL NOT dejar una segunda placa en el lienzo.
 
 #### Scenario: Barra de la placa
 - **WHEN** el alumno hace clic en la placa
@@ -53,3 +53,17 @@ En la página de alumno el circuito SHALL tener siempre una sola placa Arduino U
 #### Scenario: Copiar y pegar con el teclado
 - **WHEN** el alumno hace clic en la placa y presiona Ctrl+C y Ctrl+V
 - **THEN** el lienzo sigue con una sola placa
+
+#### Scenario: Girar y eliminar con el teclado
+- **WHEN** el alumno hace clic en la placa y presiona R y después Supr
+- **THEN** la placa no gira y no aparece la pregunta de eliminarla
+
+#### Scenario: Ficha de la placa
+- **WHEN** el alumno hace clic derecho en la placa
+- **THEN** su ficha no ofrece rotarla ni eliminarla
+
+### Requirement: Teclado según el foco
+En la página de alumno, las teclas del lienzo (Supr, R, colores de cable, copiar, pegar, deshacer y rehacer) SHALL actuar solo cuando el foco no está en el panel de programa. Un clic en el lienzo SHALL devolverle el foco.
+
+#### Scenario: Deshacer en los bloques
+- **WHEN** el alumno tiende un cable, borra un bloque y presiona Ctrl+
