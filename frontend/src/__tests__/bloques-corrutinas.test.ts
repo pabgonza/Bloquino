@@ -10,6 +10,7 @@ import {
   alIniciar,
   boton,
   cuandoBoton,
+  cuandoSuelta,
   cuerpo,
   esperar,
   led,
@@ -190,6 +191,22 @@ describe('sombrero de botón', () => {
       '  digitalWrite(12, HIGH);',
       '  ESPERAR_HASTA(digitalRead(2) == HIGH);',
       '  ESPERAR(20);',
+      '}',
+      'TERMINAR();',
+    ]);
+  });
+
+  it('el de soltar corre después de que el botón sube, con el mismo antirrebote', () => {
+    const codigo = sketch([cuandoSuelta(2, led('LOW', 12))]);
+    expect(cuerpo(codigo, 'setup')).toEqual(['pinMode(2, INPUT_PULLUP);', 'pinMode(12, OUTPUT);']);
+    expect(cuerpo(codigo, 'programa1')).toEqual([
+      'EMPEZAR();',
+      'while (true) {',
+      '  ESPERAR_HASTA(digitalRead(2) == LOW);',
+      '  ESPERAR(20);',
+      '  ESPERAR_HASTA(digitalRead(2) == HIGH);',
+      '  ESPERAR(20);',
+      '  digitalWrite(12, LOW);',
       '}',
       'TERMINAR();',
     ]);

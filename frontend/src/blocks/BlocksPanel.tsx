@@ -69,7 +69,7 @@ export default function BlocksPanel() {
       media: '/blockly-media/',
     });
     // Paleta de Variables: los dos botones de crear, los bloques de número de
-    // Blockly y los de texto. Blockly ofrece «definir» con el hueco vacío, y sin
+    // Blockly y los de texto. Blockly ofrece «fijar» con el hueco vacío, y sin
     // un valor que editar el alumno no tiene cómo dárselo: aquí sale con un 0.
     ws.registerButtonCallback('CREAR_TEXTO', (boton) =>
       Blockly.Variables.createVariableButtonHandler(boton.getTargetWorkspace(), undefined, TEXTO),

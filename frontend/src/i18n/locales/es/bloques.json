@@ -13,6 +13,7 @@
 
   "AB_AL_INICIAR": "al iniciar",
   "AB_CUANDO_BOTON": "cuando se presiona botón en pin %1",
+  "AB_CUANDO_SUELTA": "cuando se suelta botón en pin %1",
   "AB_CUANDO_SERIE": "cuando llega un dato por el puerto serie",
   "AB_CUANDO_TECLA": "cuando llega la tecla %1 del control (receptor en pin %2)",
   "AB_TECLA_CUALQUIERA": "cualquiera",
@@ -75,13 +76,13 @@
 
   "NEW_VARIABLE": "Crear variable de número...",
   "AB_CREAR_TEXTO": "Crear variable de texto...",
-  "VARIABLES_SET": "definir %1 en %2",
+  "VARIABLES_SET": "fijar %1 en %2",
   "MATH_CHANGE_TITLE": "cambiar %1 por %2",
 
-  "AB_PIN_DIGITAL": "definir pin %1 en %2",
+  "AB_PIN_DIGITAL": "fijar pin %1 en %2",
   "AB_ALTA": "ALTA",
   "AB_BAJA": "BAJA",
-  "AB_PIN_PWM": "definir pin %1 en %2",
+  "AB_PIN_PWM": "fijar pin %1 en %2",
   "AB_LEER_DIGITAL": "leer pin digital %1",
   "AB_LEER_ANALOGICO": "leer pin analógico %1",
   "AB_DECIR": "decir %1",

@@ -18,6 +18,7 @@ import {
   cadena,
   compilar,
   cuandoBoton,
+  cuandoSuelta,
   distancia,
   esperar,
   led,
@@ -141,6 +142,20 @@ describe.skipIf(!CON_BACKEND)('scripts paralelos en un AVR emulado', { timeout: 
     pulsar(p); // ya terminó: corre de nuevo
     p.correr(700);
     expect(encendidos()).toBe(2);
+  });
+
+  it('presionar enciende y soltar apaga, cada uno con su programa', async () => {
+    const p = await placa([cuandoBoton(2, led('HIGH', 12)), cuandoSuelta(2, led('LOW', 12))]);
+    p.correr(50);
+    p.boton(true);
+    p.correr(500);
+    expect(p.cambios(12)).toHaveLength(1); // encendido y sigue así mientras se mantiene
+    p.boton(false);
+    p.correr(100);
+    expect(p.cambios(12)).toHaveLength(2); // se apaga al soltar
+    expect(p.cambios(12)[1] - 550).toBeLessThan(25); // tras el antirrebote de 20 ms
+    pulsar(p);
+    expect(p.cambios(12)).toHaveLength(4);
   });
 
   it('repetir 3 veces con esperas enciende exactamente 3 veces', async () => {

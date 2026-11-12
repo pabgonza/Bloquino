@@ -13,7 +13,7 @@ el programa de bloques, que se carga como JSON.
 - `bloques.js`: programar con el mouse (arrastrar, menú, número, papelera).
 - `canciones.js`: canciones de BuzzerMusic (h6): bloques arrastrados, canción
   de fondo con parpadeo, detener con el botón y canción sola.
-- `variables.js`: crear una variable, `definir` con su número y usarla donde
+- `variables.js`: crear una variable, `fijar` con su número y usarla donde
   C++ espera un entero.
 - `textos.js`: variable de texto creada con el mouse y órdenes por el monitor
   serie (h8).

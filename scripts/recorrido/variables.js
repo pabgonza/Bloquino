@@ -1,4 +1,4 @@
-// Variables con el mouse: crear una, sacar «definir» (que trae su número),
+// Variables con el mouse: crear una, sacar «fijar» (que trae su número),
 // escribirle un valor y usar la variable donde C++ espera un entero.
 await nuevo();
 await limpiar();
@@ -19,7 +19,7 @@ await espera(800);
 if (!(await page.locator('.blocklyFlyout .blocklyDraggable.variables_set').count())) await abrirVariables();
 R['1 definir trae número'] = await page.evaluate(() => !!document.querySelector('.blocklyFlyout .blocklyDraggable.variables_set .blocklyDraggable.math_number'));
 
-// 2. «definir veces en 0» bajo «al iniciar» y escribirle un 3.
+// 2. «fijar veces en 0» bajo «al iniciar» y escribirle un 3.
 const def = await forma('variables_set', 0, true);
 const ini = await forma('ab_al_iniciar');
 await arrastrar({ x: def.x + 14, y: def.y + 30 }, { x: ini.x + 14, y: ini.y + ini.h + 26 });

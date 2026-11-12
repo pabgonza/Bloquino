@@ -5,6 +5,7 @@ import { categoria, menu, pin } from './base';
 const sombreros = {
   ab_al_iniciar: { nextStatement: null },
   ab_cuando_boton: { args: [pin()], nextStatement: null },
+  ab_cuando_suelta: { args: [pin()], nextStatement: null },
   ab_cuando_serie: { nextStatement: null },
   ab_cuando_tecla: {
     args: [
@@ -20,6 +21,7 @@ export const TOPE_SCRIPTS = 8;
 export default categoria('eventos', '#FFBF00', sombreros, [
   'ab_al_iniciar',
   { type: 'ab_cuando_boton', fields: { PIN: '2' } },
+  { type: 'ab_cuando_suelta', fields: { PIN: '2' } },
   'ab_cuando_serie',
   { type: 'ab_cuando_tecla', fields: { TECLA: 'OK', PIN: '10' } },
 ]);

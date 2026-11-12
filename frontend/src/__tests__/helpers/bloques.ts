@@ -16,6 +16,8 @@ export const cadena = (bloques: B[]) =>
 export const alIniciar = (...bloques: B[]) => cadena([{ type: 'ab_al_iniciar' }, ...bloques])!;
 export const cuandoBoton = (pin: number, ...bloques: B[]) =>
   cadena([{ type: 'ab_cuando_boton', fields: { PIN: String(pin) } }, ...bloques])!;
+export const cuandoSuelta = (pin: number, ...bloques: B[]) =>
+  cadena([{ type: 'ab_cuando_suelta', fields: { PIN: String(pin) } }, ...bloques])!;
 export const porSiempre = (...bloques: B[]): B => ({
   type: 'ab_por_siempre',
   inputs: { DO: { block: cadena(bloques) } },

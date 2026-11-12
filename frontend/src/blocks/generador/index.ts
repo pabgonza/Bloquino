@@ -53,18 +53,20 @@ export function generar(ws: Blockly.Workspace, paralelo = false): string {
     scripts.forEach((script, i) => {
       ctx.locales.clear();
       const pin = script.getFieldValue('PIN');
-      if (script.type === 'ab_cuando_boton') ctx.setup.add(`pinMode(${pin}, INPUT_PULLUP);`);
+      const alSoltar = script.type === 'ab_cuando_suelta';
+      const deBoton = alSoltar || script.type === 'ab_cuando_boton';
+      if (deBoton) ctx.setup.add(`pinMode(${pin}, INPUT_PULLUP);`);
       let cuerpo = gen.blockToCode(script.getNextBlock()) as string;
-      if (script.type === 'ab_cuando_boton') {
-        // Se repite por cada pulsación. Mientras corre no mira el botón, así
-        // que una pulsación a medio camino se ignora.
+      if (deBoton) {
+        // Se repite por cada pulsación: corre al presionar o, en el otro
+        // sombrero, al soltar. Mientras corre no mira el botón, así que una
+        // pulsación a medio camino se ignora. Los 20 ms son el antirrebote.
+        const hasta = (nivel: string) =>
+          `  ESPERAR_HASTA(digitalRead(${pin}) == ${nivel});\n  ESPERAR(20);\n`;
         cuerpo =
           'while (true) {\n' +
-          `  ESPERAR_HASTA(digitalRead(${pin}) == LOW);\n` +
-          '  ESPERAR(20);\n' +
-          sangrar(cuerpo) +
-          `  ESPERAR_HASTA(digitalRead(${pin}) == HIGH);\n` +
-          '  ESPERAR(20);\n' +
+          hasta('LOW') +
+          (alSoltar ? hasta('HIGH') + sangrar(cuerpo) : sangrar(cuerpo) + hasta('HIGH')) +
           '}\n';
       }
       if (script.type === 'ab_cuando_serie') {

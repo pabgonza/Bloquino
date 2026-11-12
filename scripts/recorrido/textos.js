@@ -20,7 +20,7 @@ await espera(800);
 if (!(await enPaleta('.ab_definir_texto'))) await abrir('Variables');
 R['1 bloques de texto'] = (await enPaleta('.ab_definir_texto .blocklyDraggable.text')) && (await enPaleta('.ab_variable_texto')) && !(await enPaleta('.variables_set'));
 
-// 2. «definir orden en [hola]» bajo «al iniciar» y cambiarle el texto.
+// 2. «fijar orden en [hola]» bajo «al iniciar» y cambiarle el texto.
 const def = await forma('ab_definir_texto', 0, true);
 const ini = await forma('ab_al_iniciar');
 await arrastrar({ x: def.x + 14, y: def.y + 30 }, { x: ini.x + 14, y: ini.y + ini.h + 26 });
