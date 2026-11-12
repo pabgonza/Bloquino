@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Operadores y variables
-El catálogo SHALL incluir suma, resta, multiplicación, división, comparaciones (`<`, `>`, `=`), `y`, `o`, `no`, `número al azar entre [a] y [b]`, `asignar [x] del rango [a]-[b] al rango [c]-[d]`, `restringir [x] entre [a] y [b]`, y variables numéricas con `crear variable de número`, `definir [v] en [n]` y `cambiar [v] por [n]`. `definir` SHALL salir de la paleta con un número editable. Los tipos de C++ SHALL permanecer ocultos. Las variables de texto y los operadores de texto se definen en `bloques/texto`.
+El catálogo SHALL incluir suma, resta, multiplicación, división, comparaciones (`<`, `>`, `=`), `y`, `o`, `no`, `número al azar entre [a] y [b]`, `asignar [x] del rango [a]-[b] al rango [c]-[d]`, `restringir [x] entre [a] y [b]`, y variables numéricas con `definir [v] en [n]`, que sale de la paleta con un número editable, y `cambiar [v] por [n]`. Los tipos de C++ SHALL permanecer ocultos. Los textos se definen en `bloques/texto`.
 
 #### Scenario: Variable con espacios
 - **WHEN** el usuario crea la variable `mi cuenta` y la usa
