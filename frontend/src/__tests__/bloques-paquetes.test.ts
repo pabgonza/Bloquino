@@ -65,14 +65,10 @@ describe('paquete en el catálogo', () => {
     ws.dispose();
   });
 
-  it('el script de instalación trae la librería del commit que declara el paquete', () => {
-    const script = readFileSync(
-      path.resolve(__dirname, '../../../scripts/instalar-librerias.sh'),
-      'utf8',
-    );
+  it('la lista de librerías del kit trae la del paquete, en el commit que declara', () => {
+    const lista = readFileSync(path.resolve(__dirname, '../../../scripts/librerias-kit.txt'), 'utf8');
     for (const { libreria } of PAQUETES) {
-      expect(script).toContain(libreria.origen);
-      expect(script).toContain(libreria.commit);
+      expect(lista).toContain(`${libreria.nombre}@${libreria.origen}#${libreria.commit}`);
     }
   });
 });

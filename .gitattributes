@@ -1,2 +1,4 @@
 # Corre dentro del contenedor del backend: con CRLF `sh` falla.
 scripts/instalar-librerias.sh text eol=lf
+scripts/librerias-kit.txt text eol=lf
+docker/bloquino-entrypoint.sh text eol=lf

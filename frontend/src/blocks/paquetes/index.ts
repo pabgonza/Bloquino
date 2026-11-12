@@ -13,7 +13,7 @@ interface Opcion {
 }
 
 export interface Paquete {
-  /** Librería que debe estar en el backend (scripts/instalar-librerias.sh). */
+  /** Librería que debe estar en el backend (scripts/librerias-kit.txt). */
   libreria: { nombre: string; version: string; origen: string; commit?: string };
   /** Categoría de la paleta donde van los bloques. */
   categoria: string;

@@ -6,18 +6,23 @@ administrador; no hay interfaz. El ejemplo es BuzzerMusic (h6):
 
 ## 1. Instalar la librería en el backend
 
-Agregarla a `scripts/instalar-librerias.sh` con su versión fija: con
-`arduino-cli lib install "Nombre@versión"` si está en el índice de Arduino, o
-con `git clone` + `checkout` de un commit si vive en un repositorio propio.
-Correr el script en el contenedor:
+Agregar una línea a `scripts/librerias-kit.txt`, con su versión fija:
+`Nombre@versión` si está en el índice de Arduino, o
+`Nombre@https://github.com/usuario/repo.git#commit` si vive en un repositorio
+propio.
 
-```
-docker cp scripts/instalar-librerias.sh velxio-spike:/tmp/
-docker exec velxio-spike sh /tmp/instalar-librerias.sh
-```
+- **Imagen de la sala**: reconstruirla
+  (`docker compose -f docker-compose.bloquino.yml up -d --build`; ver
+  [bloquino-dia-de-clase.md](bloquino-dia-de-clase.md)).
+- **Contenedor de desarrollo** (`velxio-spike`): correr el script que lee la
+  lista. Se puede repetir sin problema, y hay que repetirlo si el contenedor
+  se recrea.
 
-El script se puede correr de nuevo sin problema. Hay que correrlo otra vez si
-el contenedor se recrea.
+  ```
+  docker cp scripts/librerias-kit.txt velxio-spike:/tmp/
+  docker cp scripts/instalar-librerias.sh velxio-spike:/tmp/
+  docker exec velxio-spike sh /tmp/instalar-librerias.sh
+  ```
 
 ## 2. Escribir el paquete
 
@@ -26,7 +31,7 @@ registrarlo en otro lado.
 
 | Campo | Qué es |
 | --- | --- |
-| `libreria` | `nombre`, `version`, `origen` y `commit`: lo mismo que instala el script. |
+| `libreria` | `nombre`, `version`, `origen` y `commit`: lo mismo que dice la lista de librerías. |
 | `categoria` | Categoría de la paleta donde aparecen los bloques (`sonido`, `luces`, `sensores`…). Van al final, con su color. |
 | `include` | Línea `#include` de la librería. |
 | `global` | Declaración del objeto. Con `{PIN}` en el nombre queda un objeto por pin usado. |
