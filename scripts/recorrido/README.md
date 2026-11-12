@@ -19,6 +19,8 @@ el programa de bloques, que se carga como JSON.
   serie (h8).
 - `lcd.js`, `control.js`, `display.js`: pantalla LCD, control remoto y displays
   de 7 segmentos (h8), cableados directo a la placa.
+- `seleccion.js`: un clic selecciona un componente o un cable, nunca los dos;
+  Supr y R actúan sobre lo seleccionado.
 - `ejemplos.js`: abre cada proyecto de `frontend/public/ejemplos/`, lo simula e
   interactúa; deja las capturas de `docs/ejemplos/`.
 - `sala.js` y `sala.bloquino`: prueba de la imagen de la sala (h9) sobre la
@@ -32,7 +34,7 @@ el programa de bloques, que se carga como JSON.
 Con el frontend (`npx vite`, puerto 5173) y el backend (puerto 3080) arriba:
 
 ```
-node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos lcd control display
+node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos lcd control display seleccion
 ```
 
 En el MCP de Playwright, una vez por sesión de trabajo (`browser_run_code_unsafe`):

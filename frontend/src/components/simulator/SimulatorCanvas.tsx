@@ -422,6 +422,11 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
   useEffect(() => {
     if (selectedComponentId || selectedWireId) setSelectedBoardId(null);
   }, [selectedComponentId, selectedWireId]);
+  // Bloquino: un cable seleccionado le quita la selección al componente, para
+  // que Supr borre una sola cosa.
+  useEffect(() => {
+    if (selectedWireId) setSelectedComponentId(null);
+  }, [selectedWireId]);
 
   // Hover tracking — drives the conditional pin overlay so the canvas isn't
   // permanently covered in pin chips. Pins show for the hovered/selected
@@ -1854,6 +1859,8 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
     // Move command if the component actually moved (vs being a click).
     dragStartPosRef.current = { x: component.x, y: component.y };
     setSelectedComponentId(componentId);
+    // Bloquino: componente o cable, nunca los dos (ver el efecto de selectedWireId).
+    setSelectedWire(null);
   };
 
   const handleCanvasMouseMove = (e: React.MouseEvent) => {
@@ -3370,7 +3377,10 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
               setSelectedWire(selectedWireId === wire.id ? null : wire.id);
             } else {
               setSelectedWire(null);
-              setSelectedComponentId(null);
+              // Bloquino: el clic sobre un componente también llega aquí; no debe
+              // quitarle la selección que le dio el mouseup (Supr y R la usan).
+              if (!(e.target as HTMLElement).closest('.component-interactive-group'))
+                setSelectedComponentId(null);
               // (The board selection is dropped on the background mousedown:
               // a click on a board bubbles here too and must keep it.)
             }
