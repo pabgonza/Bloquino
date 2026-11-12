@@ -32,7 +32,7 @@ Herramienta: MCP de Playwright sobre `http://localhost:5173/editor?alumno` a 136
   - S6 servo en el pin 9 y potenciómetro en A0. S7 HC-SR04 con TRIG 9 y ECHO 10, LED 13 y buzzer 8.
   - S8 DHT11 en el pin 2. S9 LED RGB en los pines 3, 5 y 6. S10 integración: HC-SR04, servo, LEDs y buzzer.
   - Diferencias entre curso y Bloquino: la sesión 4 arma el botón con resistencia de 10 kΩ a GND (`INPUT`, apretado = HIGH) y el bloque de botón usa `INPUT_PULLUP` (botón entre el pin y GND, apretado = LOW); la slide de la sesión 8 dibuja el DHT11 como «+ / datos / −» y el módulo del kit es «S / + / −».
-- [x] 4.2 Por cada sesión: armar en la protoboard con el mouse, programar con bloques, simular y comprobar. Arnés en `recorrido/` (ver su README); las nueve sesiones quedan repetibles (`s2` … `s10`).
+- [x] 4.2 Por cada sesión: armar en la protoboard con el mouse, programar con bloques, simular y comprobar. Arnés en `scripts/recorrido/` (ver su README); las nueve sesiones quedan repetibles (`s2` … `s10`).
   - [x] S2: el LED de la placa cambia cada 1000 ms (medido: 999, 991, 1021).
   - [x] S3: rojo, verde y amarillo prenden en orden, cada uno con su 220 Ω al riel −.
   - [x] S4: botón a caballo del canal entre el pin 2 y GND; el LED prende al apretar y apaga al soltar.
@@ -55,7 +55,7 @@ Herramienta: MCP de Playwright sobre `http://localhost:5173/editor?alumno` a 136
     - La perilla solo se puede arrastrar tomándola de la base: el dial gira (igual que en Tinkercad); anotarlo en la lista para probar a mano.
     - El LED de la paleta siempre sale rojo; para el semáforo se le cambia el color en el inspector (clic derecho), que ahora lo ofrece en español.
     - Un proyecto nuevo parte con el LED y la resistencia de ejemplo de Velxio junto a la placa.
-- [x] 4.4 Programar con el mouse (`recorrido/bloques.js`): sacar un bloque de la paleta y encajarlo, cambiar un menú, escribir un número y botar un bloque a la papelera; cada paso comprobado en el sketch.
+- [x] 4.4 Programar con el mouse (`scripts/recorrido/bloques.js`): sacar un bloque de la paleta y encajarlo, cambiar un menú, escribir un número y botar un bloque a la papelera; cada paso comprobado en el sketch.
 - [x] 4.3 Lista corta para probar a mano con el kit: `docs/bloquino-prueba-con-el-kit.md`, con las decisiones que siguen abiertas.
 
 ## 5. Cierre

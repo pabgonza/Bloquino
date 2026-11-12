@@ -1,6 +1,6 @@
 # Prueba a mano con el kit
 
-Lo que el recorrido automático (`openspec/changes/…/recorrido/`, sesiones 2 a
+Lo que el recorrido automático (`scripts/recorrido/`, sesiones 2 a
 10 con mouse real) no puede juzgar: cómo se siente y si coincide con el kit de
 verdad. Media hora, con la página de alumno (`/editor?alumno`) y el kit al lado.
 

@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const aqui = dirname(fileURLToPath(import.meta.url));
-const salida = join(aqui, '../../../../frontend/.recorrido');
+const salida = join(aqui, '../../frontend/.recorrido');
 mkdirSync(salida, { recursive: true });
 const lib = readFileSync(join(aqui, 'lib.js'), 'utf8');
 const nombres = [...lib.matchAll(/^(?:async )?function (\w+)|^const (\w+) =/gm)].map((m) => m[1] ?? m[2]);
