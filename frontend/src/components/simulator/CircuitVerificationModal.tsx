@@ -10,6 +10,7 @@
  * given. The caller (EditorToolbar) decides when to show it.
  */
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import type { CircuitWarning, VerificationResult } from '../../simulation/verify/circuitVerifier';
 
 interface Props {
@@ -22,19 +23,28 @@ const SEVERITY_COPY: Record<CircuitWarning['severity'], { label: string; color: 
   error: { label: 'Error', color: '#e74c3c' },
   warning: { label: 'Warning', color: '#f1c40f' },
 };
+// Bloquino: los textos pasan por i18n (claves editor.verify.*) con el inglés
+// de respaldo. Un problema con texto propio para su código (codes.<code>) se
+// muestra con ese texto y sin el identificador interno del componente.
 
 export const CircuitVerificationModal: React.FC<Props> = ({ result, onCancel, onRunAnyway }) => {
+  const { t, i18n } = useTranslation();
   const items: CircuitWarning[] = [...result.errors, ...result.warnings];
   // Portaled to <body>: see LibraryManagerModal - the toolbar's
   // container-type would otherwise shrink this fixed overlay.
   return createPortal(
     <div style={styles.overlay} onClick={onCancel}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h2 style={styles.title}>Circuit verification</h2>
+        <h2 style={styles.title}>{t('editor.verify.title', 'Circuit verification')}</h2>
         <p style={styles.subtitle}>
-          {result.errors.length === 0
-            ? `${result.warnings.length} warning${result.warnings.length === 1 ? '' : 's'} found.`
-            : `${result.errors.length} error${result.errors.length === 1 ? '' : 's'} and ${result.warnings.length} warning${result.warnings.length === 1 ? '' : 's'} found. Running anyway is at your own risk.`}
+          {t('editor.verify.summary', {
+            errors: result.errors.length,
+            warnings: result.warnings.length,
+            defaultValue:
+              result.errors.length === 0
+                ? `${result.warnings.length} warning${result.warnings.length === 1 ? '' : 's'} found.`
+                : `${result.errors.length} error${result.errors.length === 1 ? '' : 's'} and ${result.warnings.length} warning${result.warnings.length === 1 ? '' : 's'} found. Running anyway is at your own risk.`,
+          })}
         </p>
         <ul style={styles.list}>
           {items.map((it, i) => (
@@ -45,23 +55,23 @@ export const CircuitVerificationModal: React.FC<Props> = ({ result, onCancel, on
                   background: SEVERITY_COPY[it.severity].color,
                 }}
               >
-                {SEVERITY_COPY[it.severity].label}
+                {t(`editor.verify.${it.severity}`, SEVERITY_COPY[it.severity].label)}
               </span>
               <span style={styles.message}>
-                {it.componentId ? (
+                {it.componentId && !i18n.exists(`editor.verify.codes.${it.code}`) ? (
                   <strong style={styles.componentId}>{it.componentId}: </strong>
                 ) : null}
-                {it.message}
+                {t(`editor.verify.codes.${it.code}`, it.message)}
               </span>
             </li>
           ))}
         </ul>
         <div style={styles.actions}>
           <button onClick={onCancel} style={styles.primaryBtn}>
-            Cancel
+            {t('editor.verify.cancel', 'Cancel')}
           </button>
           <button onClick={onRunAnyway} style={styles.secondaryBtn}>
-            Run anyway
+            {t('editor.verify.runAnyway', 'Run anyway')}
           </button>
         </div>
       </div>

@@ -720,7 +720,7 @@ export const PartInspectorDialog: React.FC<PartInspectorDialogProps> = ({
                       >
                         {prop.options.map((opt: string) => (
                           <option key={opt} value={opt}>
-                            {opt.toUpperCase()}
+                            {prop.optionLabels?.[opt] ?? opt.toUpperCase()}
                           </option>
                         ))}
                       </select>

@@ -28,6 +28,7 @@ Fuera de este hito: componentes que no usan las 10 sesiones (h8), carga a la pla
 ### Modified Capabilities
 - `interfaz/identidad`: todos los textos que ve el alumno están en español.
 - `interfaz/distribucion`: dónde aparece un componente nuevo y cómo se encuadra el circuito al abrir un proyecto (ya implementado, falta su spec).
+- `interfaz/modo-alumno`: el circuito tiene una sola placa, que no se copia ni se elimina.
 
 ## Impact
 

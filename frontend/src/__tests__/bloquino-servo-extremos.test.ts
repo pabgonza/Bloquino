@@ -13,9 +13,8 @@ it('el servo llega a los extremos aunque el pulso mida unos µs de más o de men
     getCurrentCycles: () => ciclos,
     pinManager: { onPinChange: (_: number, cb: typeof pin) => ((pin = cb), () => {}) },
   };
-  PartSimulationRegistry.get('servo')!.attachEvents!(servo as any, sim as any, (nombre: string) =>
-    nombre === 'PWM' ? 9 : null,
-  );
+  const pinDe = (nombre: string) => (nombre === 'PWM' ? 9 : null);
+  PartSimulationRegistry.get('servo')!.attachEvents!(servo as any, sim as any, pinDe, 'servo');
   const pulso = (us: number) => {
     pin(9, true);
     ciclos += us * 16;

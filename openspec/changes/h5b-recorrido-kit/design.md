@@ -56,6 +56,21 @@ Se corrigen en los archivos de Velxio con el cambio más chico posible, marcado 
 - **Botón al arrancar** (`NetlistBuilder.ts`, `connectDigitalInputsToMcu.ts`): el netlist deja una marca `pull:<placa>:<pin>` en `sourcedNets` por cada pin cuyo pull interno incluye; el conector descarta el resultado de un netlist anterior a que el programa activara el pull. Se usa `sourcedNets` porque ya viaja del netlist al conector; un campo propio habría tocado cinco archivos.
 - **Servo** (`ComplexParts.ts`): margen de 100 µs alrededor de 544-2400 µs y recorte a 0-180°.
 
+### 9. Componente nuevo sin tapar a otro
+Los metadatos no traen el tamaño de un componente. `agregar` lo deja en la esquina, como antes, y dos cuadros después, ya dibujado, lo mide: si su caja toca la de otro componente o la de la placa, lo pasa al primer lugar libre del lienzo visible, de arriba abajo. La caja es la mayor entre la del elemento y las de sus dibujos internos (la de la perilla mide de menos).
+
+### 10. Inspector para el alumno
+`kit.ts` adapta los metadatos del kit al cargar la paleta (solo existe en la página de alumno): nombre en español y, editables, solo las propiedades de `bloquino.json → propiedades` (color del LED y del botón, ohmios de la resistencia), con sus opciones traducidas. El inspector de Velxio gana una línea: muestra `optionLabels` cuando la propiedad lo trae. La categoría, las pestañas y los valores internos se ocultan por CSS.
+
+### 11. Revisión del circuito
+`CircuitVerificationModal` pasa sus textos por i18n (`editor.verify.*`) con el inglés de respaldo. Cada código de problema tiene un texto en español en `codes.<código>`; con texto propio no se muestra el identificador del componente. La franja de error de la página deja fuera los registros `circuit-check`.
+
+### 12. Placa única
+La barra de edición de la placa se oculta por CSS y la página quita cualquier placa que aparezca de más (pegar con el teclado). Eliminar la placa con Supr sigue pidiendo confirmación.
+
+### 13. Tiras con la protoboard girada
+Los puntos se calculan desde el centro de la caja de la protoboard, con el zoom del lienzo y el ángulo de `properties.rotation`.
+
 ## Risks / Trade-offs
 
 - **Clases de Velxio en el CSS propio** (`.dynamic-component-wrapper`, `.component-label`, `.pid-*`, `.canvas-world`): si Velxio las renombra, los ajustes dejan de aplicarse sin error. Mitigación: el recorrido de verificación los cubre.

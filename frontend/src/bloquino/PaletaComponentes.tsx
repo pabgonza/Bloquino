@@ -9,7 +9,7 @@ import { useSimulatorStore } from '../store/useSimulatorStore';
 import { isBreadboard } from '../utils/breadboardNets';
 import { pickDropSlot } from '../utils/dropSlot';
 import textos from '../i18n/locales/es/bloquino.json';
-import { filtrarKit } from './kit';
+import { adaptarKit, filtrarKit } from './kit';
 
 const LADO = 56; // px del cuadro de la miniatura
 // Cómo sale cada componente del kit cuando difiere de Velxio: la resistencia
@@ -60,6 +60,43 @@ function agregar(componente: ComponentMetadata) {
   const nuevo = createComponentFromMetadata(componente, x, y);
   Object.assign(nuevo.properties, AJUSTES[componente.id]);
   sim.recordAddComponent(nuevo as Parameters<typeof sim.recordAddComponent>[0]);
+  // Ya dibujado se conoce su tamaño: si tapa a otro componente o a la placa,
+  // pasa al primer lugar libre del lienzo a la vista, de arriba abajo.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      // La caja del elemento no siempre es la de su dibujo (la perilla mide
+      // de menos): se toma la mayor entre la suya y las de sus dibujos.
+      const caja = (el: Element | null) =>
+        el &&
+        [el, ...(el.shadowRoot?.querySelectorAll('svg') ?? [])]
+          .map((e) => e.getBoundingClientRect())
+          .reduce((a, b) => (b.width * b.height > a.width * a.height ? b : a));
+      const mio = caja(document.getElementById(nuevo.id));
+      const lienzo = mundo?.parentElement?.getBoundingClientRect();
+      if (!mio || !lienzo) return;
+      const otros = [
+        ...document.querySelectorAll('[data-board-id]'),
+        ...sim.components.map((c) => document.getElementById(c.id)),
+      ].flatMap((el) => caja(el) ?? []);
+      const SEPARACION = 12;
+      const libre = (px: number, py: number) =>
+        otros.every(
+          (o) =>
+            px > o.right + SEPARACION ||
+            px + mio.width < o.left - SEPARACION ||
+            py > o.bottom + SEPARACION ||
+            py + mio.height < o.top - SEPARACION,
+        );
+      if (libre(mio.left, mio.top)) return;
+      for (let py = lienzo.top + 24; py + mio.height < lienzo.bottom; py += 24)
+        for (let px = lienzo.left + 24; px + mio.width < lienzo.right; px += 24)
+          if (libre(px, py))
+            return useSimulatorStore.getState().updateComponent(nuevo.id, {
+              x: nuevo.x + (px - mio.left) / zoom,
+              y: nuevo.y + (py - mio.top) / zoom,
+            });
+    }),
+  );
 }
 
 export function PaletaComponentes({ deshabilitada }: { deshabilitada: boolean }) {
@@ -67,7 +104,10 @@ export function PaletaComponentes({ deshabilitada }: { deshabilitada: boolean })
   const [busqueda, setBusqueda] = useState('');
   useEffect(() => {
     const registro = ComponentRegistry.getInstance();
-    void registro.load().then(() => setComponentes(registro.getAllComponents()));
+    void registro.load().then(() => {
+      adaptarKit(registro.getAllComponents());
+      setComponentes(registro.getAllComponents());
+    });
   }, []);
   const visibles = filtrarKit(componentes, busqueda);
 

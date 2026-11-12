@@ -307,9 +307,18 @@
   border-radius: 4px;
 }
 /* Inspector de componentes de Velxio (se dibuja fuera de la página): sin los
-   proyectos de ejemplo, la marca ni el enlace de compra, que no son del curso. */
+   proyectos de ejemplo, la marca ni el enlace de compra, que no son del curso,
+   y sin la categoría, la ficha técnica ni los valores internos, que están en
+   inglés. Qué propiedades se pueden cambiar lo decide kit.ts. */
 body:has(.bq-pagina) .pid-examples,
 body:has(.bq-pagina) .pid-brand,
-body:has(.bq-pagina) .pid-buy-button {
+body:has(.bq-pagina) .pid-buy-button,
+body:has(.bq-pagina) .pid-badges,
+body:has(.bq-pagina) .pid-tabs,
+body:has(.bq-pagina) .pid-defaults {
+  display: none;
+}
+/* La placa del curso es una y fija: sin copiar, girar ni eliminar. */
+.bq-pagina .board-dock-group--edit {
   display: none;
 }

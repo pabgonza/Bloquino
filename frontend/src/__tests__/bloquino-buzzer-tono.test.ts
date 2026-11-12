@@ -56,6 +56,7 @@ function armar() {
     { addEventListener: vi.fn(), removeEventListener: vi.fn() } as any,
     sim,
     (nombre: string) => (nombre === '1' ? 8 : null),
+    'buzzer',
   );
   const cuadro = (ciclos: number) => {
     sim.cpu.cycles += ciclos;

@@ -7,21 +7,22 @@ Herramienta: MCP de Playwright sobre `http://localhost:5173/editor?alumno` a 136
 - [x] 1.1 Agujeros bajo el margen de un componente cliqueables (CSS). Verificado: cables por clic desde los agujeros de la fila j bajo un DHT11 asentado; el programa lee el sensor.
 - [x] 1.2 Tira conectada (`bloquino/tiras.ts`). Verificado con el mouse: 5 agujeros en una columna, el riel completo (50) y la columna de una patita asentada; las marcas se borran al salir.
 - [x] 1.3 Sin nombre bajo los componentes en la página de alumno.
-- [ ] 1.4 Resaltado con la protoboard rotada, o impedir rotarla.
+- [x] 1.4 Resaltado con la protoboard girada. Verificado con el mouse a 0°, 90°, 180° y 270°: las marcas caen a menos de 0,3 px de los agujeros.
 
 ## 2. Lienzo
 
 - [x] 2.1 Componentes nuevos en la esquina visible del lienzo. Verificado con y sin panel de programa.
 - [x] 2.2 Circuito encuadrado al restaurar y al abrir un archivo. Verificado en ambos casos.
-- [ ] 2.3 Los componentes agregados seguidos caen a 36 px uno de otro y se tapan entre sí (sensor de distancia, potenciómetro y botón quedaron apilados): separar más o repartir.
+- [x] 2.3 Componente nuevo sin tapar a otro ni a la placa. Verificado: 14 componentes agregados seguidos, ninguna caja se toca.
 
 ## 3. Textos
 
 - [x] 3.1 Botón "Cancelar" del aviso de cableado y panel "Distancia" del sensor de distancia.
 - [x] 3.2 Inspector sin proyectos de ejemplo, marca ni enlace de compra.
-- [ ] 3.3 Inspector: nombre del componente ("Pushbutton"), categoría ("Input") y nombres de propiedades (`color`, `pressed`, `label`, `xray`) siguen en inglés; decidir qué propiedades ve el alumno.
-- [ ] 3.4 Diálogo de revisión del circuito y pestaña "Ficha técnica" del inspector: revisar idioma y si corresponden al alumno.
-- [ ] 3.5 La página pide `/api/metrics/run` al iniciar la simulación (404 en este backend): quitar la llamada o confirmar que no envía datos.
+- [x] 3.3 Inspector en español: título con el nombre del kit, sin categoría ni valores internos, y solo color (LED, botón) y ohmios (resistencia) para cambiar. Verificado: el LED pasa a verde desde el inspector; el panel del sensor de distancia se titula «Sensor de distancia».
+- [x] 3.4 Revisión del circuito en español y sin identificadores internos («Revisa tu circuito»); ya no sale además como error de compilación. La pestaña «Ficha técnica» queda oculta.
+- [x] 3.5 `/api/metrics/run`: revisado, no se toca. Va al backend propio y lleva solo el tipo de placa; no hay analítica externa (`gtag` no está cargado, `index.html` no trae scripts de terceros). El 404 queda en la consola.
+- [x] 3.6 Placa única y fija: sin barra para copiar, girar o eliminar la placa, y una placa pegada con el teclado se quita. Verificado con Ctrl+C y Ctrl+V.
 
 ## 4. Recorrido de las sesiones
 
@@ -50,14 +51,13 @@ Herramienta: MCP de Playwright sobre `http://localhost:5173/editor?alumno` a 136
     - Servo: `write(0)` no lo devolvía a 0° (el pulso mide unos µs menos que 544 y se descartaba). Ahora llega a los extremos.
     - El buzzer solo sonaba con la patita 1 al pin y la 2 a GND; al revés quedaba mudo (uno real suena igual). Ahora suena de las dos formas.
     - Un test de Velxio exigía etiquetas `wokwi-` o `velxio-` y fallaba desde h5 con `bloquino-dht11`: admite `bloquino-`.
-  - Encontrado, sin corregir (pasa a las tareas de abajo o a decisión de Pablo):
-    - El panel del sensor de distancia se titula «HC-SR04», no «Sensor de distancia» (3.3).
-    - La protoboard recién agregada queda con su riel inferior debajo de la placa (2.3).
+  - Encontrado, sin corregir (a decisión de Pablo; están en la lista para probar a mano):
     - La perilla solo se puede arrastrar tomándola de la base: el dial gira (igual que en Tinkercad); anotarlo en la lista para probar a mano.
-    - El LED de la paleta siempre sale rojo; para el semáforo hay que cambiarle el color en el inspector (3.3).
-- [ ] 4.4 Arrastrar bloques desde la paleta de bloques con el mouse (hasta ahora los programas se cargaron como JSON).
-- [ ] 4.3 Lista corta para probar a mano con el kit.
+    - El LED de la paleta siempre sale rojo; para el semáforo se le cambia el color en el inspector (clic derecho), que ahora lo ofrece en español.
+    - Un proyecto nuevo parte con el LED y la resistencia de ejemplo de Velxio junto a la placa.
+- [x] 4.4 Programar con el mouse (`recorrido/bloques.js`): sacar un bloque de la paleta y encajarlo, cambiar un menú, escribir un número y botar un bloque a la papelera; cada paso comprobado en el sketch.
+- [x] 4.3 Lista corta para probar a mano con el kit: `docs/bloquino-prueba-con-el-kit.md`, con las decisiones que siguen abiertas.
 
 ## 5. Cierre
 
-- [ ] 5.1 `openspec validate h5b-recorrido-kit --strict` y tests en verde.
+- [x] 5.1 `openspec validate h5b-recorrido-kit --strict` válido; batería completa con 6127 tests en verde y solo los 14 fallos conocidos del entorno Windows; recorrido de las 9 sesiones y de los bloques repetido al final sin fallos.

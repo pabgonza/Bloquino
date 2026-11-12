@@ -7,7 +7,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import metadatos from '../../public/components-metadata.json';
 import { leerModo } from '../bloquino/modo';
-import { filtrarKit } from '../bloquino/kit';
+import { adaptarKit, filtrarKit } from '../bloquino/kit';
+import type { ComponentMetadata } from '../types/component-metadata';
 import { ARCHIVO_BLOQUES, codigoSoloLectura, esTexto, marcarTexto } from '../blocks/archivo';
 import { useEditorStore } from '../store/useEditorStore';
 import { useSimulatorStore } from '../store/useSimulatorStore';
@@ -73,6 +74,25 @@ describe('paleta del kit', () => {
     expect(filtrarKit(componentes, 'serv').map((c) => c.nombre)).toEqual(['Servo']);
     expect(filtrarKit(componentes, 'BOTON').map((c) => c.nombre)).toEqual(['Botón']);
     expect(filtrarKit(componentes, 'xyz')).toEqual([]);
+  });
+
+  it('el inspector muestra el kit en español y solo lo que el alumno puede cambiar', () => {
+    const copia = structuredClone(metadatos.components) as unknown as ComponentMetadata[];
+    adaptarKit(copia);
+    const de = (id: string) => copia.find((c) => c.id === id)!;
+    const editables = (id: string) =>
+      de(id).properties.filter((p) => p.control).map((p) => `${p.name}: ${p.description}`);
+    expect(de('pushbutton').name).toBe('Botón');
+    expect(de('hc-sr04').name).toBe('Sensor de distancia');
+    expect(editables('pushbutton')).toEqual(['color: Color']);
+    expect(editables('led')).toEqual(['color: Color']);
+    expect(editables('resistor')).toEqual(['value: Resistencia (Ω)']);
+    expect(editables('servo')).toEqual([]);
+    const color = de('led').properties.find((p) => p.name === 'color')!;
+    expect(color.options).toContain('green');
+    expect(color.optionLabels?.green).toBe('Verde');
+    // Lo que no es del kit queda como estaba.
+    expect(de('lcd1602').name).toBe(metadatos.components.find((c) => c.id === 'lcd1602')!.name);
   });
 });
 

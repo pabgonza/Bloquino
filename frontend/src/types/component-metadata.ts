@@ -25,6 +25,8 @@ export interface PropertyDescriptor {
   type: 'string' | 'number' | 'boolean' | 'color' | 'select';
   defaultValue: any;
   options?: string[];
+  /** Bloquino: texto visible de cada opción (el inspector muestra la opción en mayúsculas si falta). */
+  optionLabels?: Record<string, string>;
   min?: number;
   max?: number;
   control?: 'text' | 'range' | 'color' | 'boolean' | 'select';

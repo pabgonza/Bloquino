@@ -513,6 +513,32 @@
       "revision": "Revision de la placa real",
       "saveToDrive": "Copiar a la unidad de la placa",
       "savedToDrive": "{{file}} copiado en {{drive}}. La placa reinicia con tu sketch."
+    },
+    "verify": {
+      "title": "Revisa tu circuito",
+      "summary": "Encontré {{errors}} problema(s) y {{warnings}} aviso(s). Arregla el circuito antes de simular; si sigues igual, algo podría quemarse.",
+      "error": "Problema",
+      "warning": "Aviso",
+      "cancel": "Volver a arreglarlo",
+      "runAnyway": "Simular igual",
+      "codes": {
+        "led-overcurrent": "Un LED está conectado sin resistencia: uno real se quemaría al instante. Ponle una resistencia de 220 Ω en serie.",
+        "unstable-solve": "Hay un corto circuito o un componente sin nada que limite su corriente (por ejemplo, un LED sin resistencia). Revisa las conexiones.",
+        "power-short": "El positivo (5 V o 3,3 V) está unido directo a GND: es un corto circuito. Quita ese cable.",
+        "solver-failed": "No pude calcular este circuito. Revisa que no haya dos fuentes de energía conectadas una contra la otra.",
+        "source-conflict": "Dos fuentes de energía están empujando el mismo cable. Quita una de las conexiones.",
+        "led-no-current": "Un LED está conectado pero casi no le llega corriente: no va a prender. Revisa que esté al derecho y que el circuito llegue a GND.",
+        "missing-connection": "A un componente le falta una conexión (energía, GND o una de sus patitas): así no va a funcionar.",
+        "shorted-component": "Un componente tiene sus dos patitas en la misma tira de la protoboard: queda puenteado y no hace nada.",
+        "unpowered-net": "A una parte del circuito no le llega energía: no está unida a 5 V ni a un pin de la placa.",
+        "no-return-path": "La corriente no tiene camino de vuelta: falta cerrar el circuito hacia GND.",
+        "resistor-overpower": "Una resistencia está recibiendo más potencia de la que aguanta: una real se calentaría. Usa una de más ohmios.",
+        "over-voltage": "A un componente le está llegando más voltaje del que aguanta.",
+        "reverse-polarity": "Un componente con polaridad está conectado al revés.",
+        "voltage-mismatch": "Un componente está recibiendo un voltaje distinto del que necesita.",
+        "unsupported-sensor": "Este sensor todavía no se puede simular.",
+        "bus-off-pins": "Este módulo está conectado a pines que no son los de su bus de comunicación."
+      }
     }
   },
   "about": {

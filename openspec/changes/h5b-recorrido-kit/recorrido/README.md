@@ -9,6 +9,7 @@ el programa de bloques, que se carga como JSON.
   `simular`, `prop`, `deslizar` para el panel de un sensor, `espiarAudio` y
   `notasOidas` para el buzzer, constructores de bloques).
 - `sN.js`: cuerpo de la sesión N. Deja sus resultados en `R`.
+- `bloques.js`: programar con el mouse (arrastrar, menú, número, papelera).
 - `conv.mjs`: arma los scripts en `frontend/.recorrido/`.
 
 ## Cómo correrlo
@@ -16,7 +17,7 @@ el programa de bloques, que se carga como JSON.
 Con el frontend (`npx vite`, puerto 5173) y el backend (puerto 3080) arriba:
 
 ```
-node openspec/changes/h5b-recorrido-kit/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10
+node openspec/changes/h5b-recorrido-kit/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques
 ```
 
 En el MCP de Playwright, una vez por sesión de trabajo (`browser_run_code_unsafe`):

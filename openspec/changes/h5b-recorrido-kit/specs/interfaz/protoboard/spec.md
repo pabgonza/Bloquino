@@ -17,6 +17,10 @@ Al pasar el mouse por un agujero de la protoboard, la página de alumno SHALL ma
 - **WHEN** el alumno pasa el mouse por un agujero del riel positivo superior
 - **THEN** queda marcado todo ese riel
 
+#### Scenario: Protoboard girada
+- **WHEN** el alumno gira la protoboard 90° y pasa el mouse por uno de sus agujeros
+- **THEN** las marcas verdes quedan sobre los agujeros de esa tira, en su posición girada
+
 #### Scenario: Patita de un componente asentado
 - **WHEN** el alumno pasa el mouse por la patita S de un DHT11 asentado en la columna 26
 - **THEN** quedan marcados los cinco agujeros de la columna 26 de esa mitad

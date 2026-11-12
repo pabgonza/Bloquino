@@ -44,5 +44,20 @@
     "dht11": "Temperatura y humedad",
     "breadboard": "Protoboard",
     "breadboard-mini": "Protoboard chica"
+  },
+  "propiedades": {
+    "led": {
+      "color": {
+        "nombre": "Color",
+        "opciones": { "red": "Rojo", "green": "Verde", "yellow": "Amarillo", "blue": "Azul", "white": "Blanco", "orange": "Naranja" }
+      }
+    },
+    "pushbutton": {
+      "color": {
+        "nombre": "Color",
+        "opciones": { "red": "Rojo", "green": "Verde", "blue": "Azul", "yellow": "Amarillo", "black": "Negro", "grey": "Gris" }
+      }
+    },
+    "resistor": { "value": { "nombre": "Resistencia (Ω)" } }
   }
 }

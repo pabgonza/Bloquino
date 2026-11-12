@@ -39,7 +39,9 @@ export function PaginaAlumno() {
   );
   const logs = useCompileLogsStore((s) => s.logs);
   const setLogs = useCompileLogsStore((s) => s.setLogs);
-  const errores = logs.filter((l) => l.type === 'error');
+  // Los problemas del circuito ('circuit-check') ya los muestra el diálogo de
+  // revisión de Velxio: aquí solo van los del programa.
+  const errores = logs.filter((l) => l.type === 'error' && l.target?.id !== 'circuit-check');
   const [erroresVistos, setErroresVistos] = useState(logs);
   const [guardado, setGuardado] = useState<Guardado>('guardado');
   const selector = useRef<HTMLInputElement>(null);
@@ -65,6 +67,14 @@ export function PaginaAlumno() {
   // Lo que el lienzo necesita de la página de Velxio: la simulación eléctrica
   // y deshacer / rehacer con el teclado.
   useEffect(() => startSimulation(), []);
+  // La placa del curso es una sola: si se pega otra (Ctrl+C y Ctrl+V), se quita.
+  useEffect(
+    () =>
+      useSimulatorStore.subscribe((s) => {
+        if (s.boards.length > 1) s.removeBoard(s.boards.at(-1)!.id);
+      }),
+    [],
+  );
   const lienzo = useRef<HTMLElement>(null);
   useEffect(() => resaltarTiras(lienzo.current!), []);
   useEffect(() => {

@@ -32,13 +32,24 @@ export function resaltarTiras(lienzo: HTMLElement) {
     const tira = hoyo && breadboardGroupKey(tipo(hoyo.componentId), hoyo.pinName);
     if (!proto?.pinInfo || !tira) return;
 
-    // De coordenadas de la protoboard a coordenadas de la capa, con el zoom del lienzo.
+    // De coordenadas de la protoboard a coordenadas de la capa: el zoom del
+    // lienzo y el giro de la protoboard, que Velxio aplica en torno a su centro.
     const caja = proto.getBoundingClientRect();
     const origen = capa.getBoundingClientRect();
-    const zoom = caja.width / proto.offsetWidth;
+    const zoom = new DOMMatrix(getComputedStyle(lienzo.querySelector('.canvas-world')!).transform).a;
+    const giro = components.find((c) => c.id === hoyo.componentId)?.properties.rotation;
+    const [cos, sen] = [Math.cos, Math.sin].map((fn) => fn(((Number(giro) || 0) * Math.PI) / 180));
+    const centro = {
+      x: caja.left + caja.width / 2 - origen.left,
+      y: caja.top + caja.height / 2 - origen.top,
+    };
     const puntos = proto.pinInfo
       .filter((p) => breadboardGroupKey(tipo(hoyo.componentId), p.name) === tira)
-      .map((p) => ({ x: caja.left - origen.left + p.x * zoom, y: caja.top - origen.top + p.y * zoom }));
+      .map((p) => {
+        const dx = (p.x - proto.offsetWidth / 2) * zoom;
+        const dy = (p.y - proto.offsetHeight / 2) * zoom;
+        return { x: centro.x + dx * cos - dy * sen, y: centro.y + dx * sen + dy * cos };
+      });
     const xs = puntos.map((p) => p.x);
     const ys = puntos.map((p) => p.y);
     const marca = (clase: string, x: number, y: number, ancho: number, alto: number) => {
