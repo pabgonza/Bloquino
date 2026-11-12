@@ -64,6 +64,9 @@ export default function BlocksPanel() {
       renderer: 'zelos',
       theme: tema,
       trashcan: true,
+      // Copia de node_modules/blockly/media: sin esto Blockly pide sus íconos y
+      // sonidos a internet, y la sala puede no tenerla.
+      media: '/blockly-media/',
     });
     // Paleta de Variables: los dos botones de crear, los bloques de número de
     // Blockly y los de texto. Blockly ofrece «definir» con el hueco vacío, y sin
