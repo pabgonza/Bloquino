@@ -65,6 +65,7 @@ import {
 import { isBreadboard } from '../utils/breadboardNets';
 import { isBoardSeated } from '../utils/socketSnap';
 import { computeSeating } from '../utils/breadboardSnap';
+import { girarConProtoboard } from '../bloquino/giroProtoboard'; // Bloquino: lo asentado gira con la protoboard
 import { createSerialBatcher } from './serialBatcher';
 import { emitSerialTap } from './serialTap';
 import { applySerialWireDisplay, applySerialWireTransmit, nominalBaud } from './serialWire';
@@ -4389,6 +4390,31 @@ export const useSimulatorStore = create<SimulatorState>((set, get) => {
           if (rc) get().updateComponent(rid, { x: rc.x + dx, y: rc.y + dy });
         }
       }
+
+      // Bloquino: a turning breadboard carries its seated parts too
+      // (bloquino/giroProtoboard.ts): each one turns about the board centre.
+      const turn =
+        before && isBreadboard(before.metadataId) && updates.properties && 'rotation' in updates.properties
+          ? (Number(updates.properties.rotation) || 0) - (Number(before.properties.rotation) || 0)
+          : 0;
+      if (turn) {
+        const board = get().components.find((c) => c.id === id)!;
+        const riders = new Set(
+          get()
+            .wires.filter((w) => w.bb && w.end.componentId === id)
+            .map((w) => w.start.componentId),
+        );
+        for (const rid of riders) {
+          const rc = get().components.find((c) => c.id === rid);
+          const next = rc && girarConProtoboard(board, rc, turn);
+          if (next)
+            get().updateComponent(rid, {
+              x: next.x,
+              y: next.y,
+              properties: { ...rc.properties, rotation: next.rotation },
+            });
+        }
+      }
     },
 
     reseatComponentOnBreadboard: (id) => {
@@ -5058,28 +5084,17 @@ export const useSimulatorStore = create<SimulatorState>((set, get) => {
     },
 
     recordRotate: (id, prevRotation, nextRotation) => {
+      // Bloquino: through updateComponent, so undo / redo re-stamp the wires
+      // and a breadboard carries its seated parts back and forth.
+      const turnTo = (rotation: number) => {
+        const c = get().components.find((x) => x.id === id);
+        if (c) get().updateComponent(id, { properties: { ...c.properties, rotation } });
+      };
       get().pushCommand(
         {
           description: 'Rotate component',
-          execute: () => {
-            set((s) => ({
-              components: s.components.map((c) =>
-                c.id === id ? { ...c, properties: { ...c.properties, rotation: nextRotation } } : c,
-              ),
-            }));
-            // Wires must follow the part on undo / redo too, otherwise a
-            // Ctrl+Z after a rotate would re-show the post-rotation pin
-            // positions against the now-restored unrotated component.
-            get().updateWirePositions(id);
-          },
-          undo: () => {
-            set((s) => ({
-              components: s.components.map((c) =>
-                c.id === id ? { ...c, properties: { ...c.properties, rotation: prevRotation } } : c,
-              ),
-            }));
-            get().updateWirePositions(id);
-          },
+          execute: () => turnTo(nextRotation),
+          undo: () => turnTo(prevRotation),
         },
         { applyNow: false },
       );

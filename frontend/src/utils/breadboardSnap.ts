@@ -23,6 +23,7 @@ import {
 import { breadboardGroupKey, isBreadboard } from './breadboardNets';
 import { calculatePinPosition } from './pinPositionCalculator';
 import { readPinInfo } from './readPinInfo';
+import { agujerosGirados } from '../bloquino/giroProtoboard'; // Bloquino: protoboard girada
 
 export interface Hole {
   name: string;
@@ -65,15 +66,14 @@ export function breadboardHoles(metadataId: string): readonly Hole[] | null {
 /**
  * Nearest hole of one breadboard to a world point. Pure — hole world
  * position is bb top-left + wrapper inset + element-space hole coords.
- * Rotated breadboards are not supported (returns null).
+ * Bloquino: a rotated breadboard uses its rotated holes (null if unmeasurable).
  */
 export function nearestHole(
   bb: ComponentLike,
   world: Pt,
   maxDistance: number,
 ): { name: string; x: number; y: number; dist: number } | null {
-  if (Number(bb.properties?.rotation) || 0) return null;
-  const holes = breadboardHoles(bb.metadataId);
+  const holes = agujerosGirados(bb, breadboardHoles(bb.metadataId));
   if (!holes) return null;
   const ox = bb.x + WRAPPER_INSET;
   const oy = bb.y + WRAPPER_INSET;
@@ -283,7 +283,7 @@ function cellKey(x: number, y: number): string {
 
 /** Bucket a breadboard's holes by world position for O(1) nearest lookup. */
 function indexHoles(bb: ComponentLike): IndexedHoles | null {
-  const holes = breadboardHoles(bb.metadataId);
+  const holes = agujerosGirados(bb, breadboardHoles(bb.metadataId)); // Bloquino: girada
   if (!holes) return null;
   const ox = bb.x + WRAPPER_INSET;
   const oy = bb.y + WRAPPER_INSET;
@@ -346,7 +346,7 @@ export function solvePlacement(
   const idx = indexHoles(bb);
   if (!idx) return null;
 
-  const holes = breadboardHoles(bb.metadataId)!;
+  const holes = agujerosGirados(bb, breadboardHoles(bb.metadataId))!; // Bloquino: girada
   const anchor = pins[0];
   const anchorX = wantX + anchor.dx;
   const anchorY = wantY + anchor.dy;
