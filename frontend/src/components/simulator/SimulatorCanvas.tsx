@@ -2618,7 +2618,11 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
 
     // Only re-fit when the component list transitions from empty/different
     // project to a populated one (i.e., a load/import event).
-    const isLoad = curr > 0 && (prev <= 0 || Math.abs(curr - prev) > 2);
+    // Bloquino: on mount even with the board alone (a new project starts
+    // centred, not in the top-left corner), and NOT on 0 → 1: adding the first
+    // part to that project must not move the view. The student page remounts
+    // the canvas on every file open, so loads still start from -1.
+    const isLoad = prev < 0 || (curr > 0 && Math.abs(curr - prev) > 2);
     if (!isLoad) return;
 
     const timer = setTimeout(() => {

@@ -19,7 +19,7 @@ import { useSimulatorStore } from '../store/useSimulatorStore';
 import { buildVlxPayload, parseVlxFile } from '../utils/vlxFile';
 
 const CLAVE = 'bloquino-proyecto';
-// El proyecto con que parte la página: UNO, LED del pin 13 y sketch de parpadeo.
+// El proyecto con que parte el store de Velxio: UNO, LED del pin 13 y sketch de parpadeo.
 const INICIAL = JSON.stringify(buildVlxPayload());
 const GRUPO = 'group-arduino-uno';
 
@@ -113,10 +113,13 @@ describe('guardado automático', () => {
 });
 
 describe('restaurar al abrir', () => {
-  it('sin nada guardado queda el proyecto inicial, con sus bloques', async () => {
-    const antes = useSimulatorStore.getState().components;
+  it('sin nada guardado queda el proyecto inicial: solo la placa, con sus bloques', async () => {
+    expect(useSimulatorStore.getState().components.length).toBeGreaterThan(0); // el ejemplo de Velxio
     await restaurar();
-    expect(useSimulatorStore.getState().components).toEqual(antes);
+    const { boards, components, wires } = useSimulatorStore.getState();
+    expect(boards.map((b) => b.boardKind)).toEqual(['arduino-uno']);
+    expect(components).toEqual([]);
+    expect(wires).toEqual([]);
     expect(archivoDe(ARCHIVO_BLOQUES).content).toBe(BLOQUES_INICIALES);
   });
 
@@ -149,6 +152,7 @@ describe('restaurar al abrir', () => {
     localStorage.setItem(CLAVE, guardado);
     await expect(restaurar()).resolves.toBeUndefined();
     expect(useSimulatorStore.getState().boards.map((b) => b.boardKind)).toEqual(['arduino-uno']);
+    expect(useSimulatorStore.getState().components).toEqual([]);
     expect(esTexto(archivoDe(ARCHIVO_BLOQUES).content)).toBe(false);
   });
 

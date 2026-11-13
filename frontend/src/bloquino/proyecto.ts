@@ -40,12 +40,19 @@ export async function abrir(archivo: File) {
 
 /** Carga el proyecto guardado en el navegador, si lo hay y se puede leer. */
 export async function restaurar() {
+  let abierto = false;
   try {
     const guardado = localStorage.getItem(CLAVE);
-    if (guardado) await abrir(new File([guardado], CLAVE));
+    if (guardado) {
+      await abrir(new File([guardado], CLAVE));
+      abierto = true;
+    }
   } catch {
     // Sin almacenamiento o con un proyecto dañado queda el proyecto inicial.
   }
+  // El proyecto inicial es solo la placa: sin el LED y la resistencia de
+  // ejemplo que Velxio pone en el pin 13.
+  if (!abierto) useSimulatorStore.setState({ components: [], wires: [] });
   // El proyecto del alumno siempre tiene bloques (no hace nada si ya existen).
   const editor = useEditorStore.getState();
   editor.addFileToGroup(editor.activeGroupId, {

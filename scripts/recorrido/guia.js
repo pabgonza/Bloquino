@@ -19,11 +19,15 @@ async (page) => {
   await page.setViewportSize({ width: 1280, height: 720 });
 
   // 1. Lo que ve un equipo nuevo en la dirección https:// (autoridad sin instalar).
+  // Si este navegador ya aceptó el aviso, no aparece: queda la captura anterior.
   await page.goto(IP).catch(() => {});
   await espera(1500);
-  await page.getByRole('button', { name: 'Avanzado' }).click();
-  await espera(500);
-  await foto('aviso-https-avanzado');
+  R.aviso = (await page.getByRole('button', { name: 'Avanzado' }).count()) > 0;
+  if (R.aviso) {
+    await page.getByRole('button', { name: 'Avanzado' }).click();
+    await espera(500);
+    await foto('aviso-https-avanzado');
+  }
 
   // 2. Proyecto nuevo.
   await page.goto(SALA);

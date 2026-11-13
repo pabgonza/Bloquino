@@ -29,7 +29,6 @@ más abajo.
 - [ ] LED RGB: ¿el del kit es de cátodo común?
 - [ ] Programas del curso en bloques: oír y ver con los componentes armados
   los que se apartan del `.ino` (tabla de abajo; ya cargan en el clon).
-- [ ] Decidir si el proyecto nuevo parte solo con la placa.
 
 ## Probado sin armar nada (2026-11-13)
 
@@ -40,7 +39,7 @@ en COM6 por `scripts/puente-serie.ps1`.
 | --- | --- |
 | Entrar por `https://192.168.18.111` aceptando el aviso | Contexto seguro, Web Serial disponible, simula y «Cargar a la placa» (placa simulada) termina en «¡Listo!». |
 | Tiras de la protoboard | Agujero: marca sus 5; riel: sus 50; cada marca a 0,3 px de su agujero. Igual con la protoboard girada. |
-| Ocho componentes seguidos | Quedan en fila arriba, sin encimarse ni tapar la placa. La resistencia del proyecto nuevo (la de Velxio) sí queda sobre la placa. |
+| Ocho componentes seguidos | Quedan en fila arriba, sin encimarse ni tapar la placa. La resistencia de ejemplo de Velxio sí quedaba sobre la placa: el proyecto nuevo ya no la trae. |
 | LED sin resistencia | «Revisa tu circuito» en español: «Un LED está conectado sin resistencia…», con «Volver a arreglarlo» y «Simular igual». |
 | Recargar a mitad del armado | Vuelven los 10 componentes, todos dentro del lienzo. |
 | Simulación con la CPU frenada (DevTools, como un notebook lento) | ÷1: 60 cuadros/s, tiempo real. ÷4: 13 cuadros/s y el parpadeo de 1 s corre al ~60 %. ÷6: 9 cuadros/s, ~40 %. Lo mismo con el parpadeo solo que con el marcador o la estación del tiempo: no depende del circuito. Falta medirlo en un notebook de la sala. |
@@ -117,7 +116,7 @@ la placa real:
   a la vez; comparar la melodía con el buzzer real y la misma librería.
 - Recargar la página a mitad de un armado: vuelve todo, encuadrado.
 
-## Decisiones tomadas (2026-11-12)
+## Decisiones tomadas
 
 - **Botón de la sesión 4**: el curso pasa a armarlo como Bloquino, entre el pin
   y GND con la resistencia interna del pin (apretado = LOW). Se cambia en las
@@ -126,8 +125,5 @@ la placa real:
   el módulo del kit y el de la pantalla.
 - **Ficha del componente**: se queda con clic derecho. Un clic selecciona;
   Supr elimina lo seleccionado y R lo gira.
-
-## Decisiones que siguen abiertas
-
-- **Proyecto nuevo**: hoy parte con el LED y la resistencia de ejemplo de
-  Velxio junto a la placa. ¿Mejor solo la placa?
+- **Proyecto nuevo** (2026-11-13): parte solo con la placa, sin el LED y la
+  resistencia de ejemplo de Velxio.
