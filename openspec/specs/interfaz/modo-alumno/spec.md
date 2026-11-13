@@ -14,11 +14,15 @@ El editor SHALL abrirse en modo alumno. En modo alumno SHALL quedar ocultos el e
 - **THEN** no ve explorador de archivos, osciloscopio, avisos de SPICE, menús File o Account, novedades ni ejemplos
 
 ### Requirement: Solo el kit del curso
-En modo alumno, la paleta SHALL ofrecer solo los componentes del kit del curso, y la única placa disponible SHALL ser el Arduino UNO. La ficha de un componente SHALL mostrar, en español, solo las propiedades que el alumno puede cambiar.
+En modo alumno, la paleta SHALL ofrecer solo los componentes del kit del curso y la placa Arduino UNO, que SHALL ser la única placa disponible. Elegir la placa en la paleta SHALL agregar una placa con el programa inicial. La ficha de un componente SHALL mostrar, en español, solo las propiedades que el alumno puede cambiar.
 
 #### Scenario: Componentes del kit
 - **WHEN** un alumno revisa la paleta
-- **THEN** encuentra LED, LED RGB, resistencia, botón, buzzer, servo, potenciómetro, sensor de distancia, temperatura y humedad, pantalla LCD, display de 1 dígito, display de 4 dígitos, receptor infrarrojo, control remoto y las protoboards, y no encuentra placas ESP32 ni Raspberry Pi
+- **THEN** encuentra Arduino UNO, LED, LED RGB, resistencia, botón, buzzer, servo, potenciómetro, sensor de distancia, temperatura y humedad, pantalla LCD, display de 1 dígito, display de 4 dígitos, receptor infrarrojo, control remoto y las protoboards, y no encuentra placas ESP32 ni Raspberry Pi
+
+#### Scenario: Agregar una placa
+- **WHEN** el alumno elige Arduino UNO en la paleta en un proyecto que ya tiene una placa
+- **THEN** aparece una segunda placa, sin encimarse con nada, con el programa de parpadeo
 
 #### Scenario: Pantalla como la del kit
 - **WHEN** el alumno agrega la pantalla LCD
@@ -42,25 +46,6 @@ Abrir el editor con el parámetro `profe` en la URL SHALL activar el modo profe,
 #### Scenario: Volver a modo alumno
 - **WHEN** se abre `/editor?alumno`
 - **THEN** el editor queda en modo alumno, también en las visitas siguientes
-
-### Requirement: Una sola placa, fija
-En la página de alumno el circuito SHALL tener siempre una sola placa Arduino UNO. La placa SHALL poder girarse (con R, con el botón de su barra y desde su ficha), pero SHALL NOT ofrecer acciones para copiarla o eliminarla, ni con botones, ni con el teclado, ni en su ficha, y pegar una placa copiada SHALL NOT dejar una segunda placa en el lienzo.
-
-#### Scenario: Barra de la placa
-- **WHEN** el alumno hace clic en la placa
-- **THEN** su barra ofrece girarla y no ofrece copiarla, pegar ni eliminarla
-
-#### Scenario: Copiar y pegar con el teclado
-- **WHEN** el alumno hace clic en la placa y presiona Ctrl+C y Ctrl+V
-- **THEN** el lienzo sigue con una sola placa
-
-#### Scenario: Girar y eliminar con el teclado
-- **WHEN** el alumno hace clic en la placa y presiona R y después Supr
-- **THEN** la placa gira 90° y no aparece la pregunta de eliminarla
-
-#### Scenario: Ficha de la placa
-- **WHEN** el alumno hace clic derecho en la placa
-- **THEN** su ficha ofrece rotarla y no ofrece eliminarla
 
 ### Requirement: Teclado según el foco
 En la página de alumno, las teclas del lienzo (Supr, R, colores de cable, copiar, pegar, deshacer y rehacer) SHALL actuar solo cuando el foco no está en el panel de programa. Un clic en el lienzo SHALL devolverle el foco.
@@ -101,7 +86,7 @@ Un clic sobre una pieza SHALL dejarla seleccionada, sola; con piezas seleccionad
 - **THEN** desaparece solo el buzzer; el cable sigue
 
 ### Requirement: Varias piezas seleccionadas
-Un clic con Shift SHALL sumar una pieza a la selección, o quitarla si ya estaba. Ctrl+A SHALL seleccionar todas las piezas, la placa incluida. Shift y arrastrar SHALL seleccionar las piezas que quedan enteras dentro del rectángulo, también si empieza sobre la protoboard; arrastrar sin tecla SHALL seguir moviendo la vista.
+Un clic con Shift SHALL sumar una pieza a la selección, o quitarla si ya estaba. Ctrl+A SHALL seleccionar todas las piezas, las placas incluidas. Shift y arrastrar SHALL seleccionar las piezas que quedan enteras dentro del rectángulo, también si empieza sobre la protoboard; arrastrar sin tecla SHALL seguir moviendo la vista.
 
 #### Scenario: Sumar y quitar con Shift
 - **WHEN** el alumno hace clic en un LED, Shift y clic en una resistencia, y Shift y clic otra vez en el LED
@@ -112,7 +97,7 @@ Un clic con Shift SHALL sumar una pieza a la selección, o quitarla si ya estaba
 - **THEN** los tres LED quedan seleccionados y la vista no se mueve
 
 ### Requirement: Acciones sobre el grupo
-Con varias piezas seleccionadas, arrastrar una SHALL moverlas todas; R SHALL girarlas 90° en torno al centro del grupo, la placa incluida; Supr SHALL eliminar las que no son la placa; y Ctrl+C y Ctrl+V SHALL pegar una copia de las que no son la placa, que queda seleccionada. Los cables entre dos piezas del grupo SHALL acompañarlas, y cada acción SHALL deshacerse con un solo Ctrl+Z.
+Con varias piezas seleccionadas, arrastrar una SHALL moverlas todas; R SHALL girarlas 90° en torno al centro del grupo; Supr SHALL eliminarlas, previa confirmación si hay placas entre ellas; y Ctrl+C y Ctrl+V SHALL pegar una copia de todas, las placas con una copia de su programa, que queda seleccionada. Los cables entre dos piezas del grupo SHALL acompañarlas, y cada acción SHALL deshacerse con un solo Ctrl+Z.
 
 #### Scenario: Mover un grupo
 - **WHEN** el alumno selecciona un LED y una resistencia unidos por un cable y arrastra el LED
@@ -126,10 +111,37 @@ Con varias piezas seleccionadas, arrastrar una SHALL moverlas todas; R SHALL gir
 - **WHEN** el alumno selecciona un LED y su resistencia unidos por un cable y presiona Ctrl+C y Ctrl+V
 - **THEN** aparece al lado una copia de los dos con su cable, y la copia queda seleccionada
 
+#### Scenario: La placa gira con el grupo y no se borra
+- **WHEN** el alumno presiona Ctrl+A, R y Supr, y cancela la confirmación
+- **THEN** todo gira, la placa incluida, y nada se borra
+
+#### Scenario: Copiar y pegar un circuito con su placa
+- **WHEN** el alumno presiona Ctrl+A, Ctrl+C y Ctrl+V sobre un semáforo armado
+- **THEN** aparece al lado una copia de la placa con su programa, la protoboard, los LED, las resistencias y los cables, y la copia queda seleccionada
+
 #### Scenario: Mover todo el circuito
 - **WHEN** el alumno presiona Ctrl+A y arrastra la protoboard
 - **THEN** la placa, la protoboard, lo asentado en ella y los cables se mueven juntos
 
-#### Scenario: La placa gira con el grupo y no se borra
-- **WHEN** el alumno presiona Ctrl+A, R y después Supr
-- **THEN** todo gira, la placa incluida, y después desaparecen los componentes y la placa queda; un Ctrl+Z devuelve los componentes
+#### Scenario: Borrar todo
+- **WHEN** el alumno presiona Ctrl+A y Supr, y acepta la confirmación
+- **THEN** el lienzo queda vacío, y un Ctrl+Z devuelve todo, la placa con su programa
+
+### Requirement: Varias placas, cada una con su programa
+En la página de alumno el circuito SHALL poder tener una o más placas Arduino UNO, cada una con su propio programa. Una placa SHALL poder girarse, copiarse y borrarse con R, Ctrl+C y Ctrl+V, Supr, su barra y su ficha, igual que las demás piezas. Copiar una placa SHALL copiar también su programa. Borrar una o más placas SHALL pedir confirmación en español, avisando que se pierde su programa, y SHALL llevarse sus cables; Ctrl+Z SHALL devolverlas con su programa y sus cables.
+
+#### Scenario: Copiar la placa con su programa
+- **WHEN** el alumno hace clic en la placa con el programa de parpadeo, presiona Ctrl+C y Ctrl+V, y cambia el programa de la copia
+- **THEN** aparece al lado una segunda placa con el mismo programa, y al cambiar el de la copia el de la primera no cambia
+
+#### Scenario: Borrar una placa
+- **WHEN** el alumno hace clic en la segunda placa, presiona Supr y acepta la confirmación
+- **THEN** la placa desaparece con sus cables, y Ctrl+Z la devuelve con su programa y sus cables
+
+#### Scenario: Cancelar el borrado
+- **WHEN** el alumno presiona Supr con una placa elegida y cancela la confirmación
+- **THEN** la placa y su programa siguen
+
+#### Scenario: Barra y ficha de la placa
+- **WHEN** el alumno hace clic en una placa y después clic derecho en ella
+- **THEN** su barra ofrece girarla, copiarla, pegar y eliminarla, y su ficha ofrece rotarla y eliminarla
