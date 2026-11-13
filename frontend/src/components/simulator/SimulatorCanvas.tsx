@@ -67,6 +67,8 @@ import {
   snapPositionToBreadboard,
 } from '../../utils/breadboardSnap';
 import { snapBoardToSocket, isBoardSeated } from '../../utils/socketSnap';
+// Bloquino: varias piezas seleccionadas a la vez (Shift + clic, Ctrl+A, rectángulo).
+import * as grupo from '../../bloquino/seleccion';
 import {
   findWireNearPoint,
   findSegmentNearPoint,
@@ -427,6 +429,45 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
   useEffect(() => {
     if (selectedWireId) setSelectedComponentId(null);
   }, [selectedWireId]);
+  // Bloquino: el grupo sigue a la selección de Velxio. Una pieza seleccionada
+  // que no está en el grupo lo reemplaza; sin pieza seleccionada, el grupo se
+  // vacía, salvo que solo quede la placa en él (Shift + clic la dejó sola).
+  const idsDelGrupo = grupo.useGrupo((s) => s.ids);
+  useEffect(() => {
+    const ids = grupo.useGrupo.getState().ids;
+    if (selectedComponentId && !ids.includes(selectedComponentId)) grupo.fijar([selectedComponentId]);
+    else if (!selectedComponentId && ids.some((id) => !boardsRef.current.some((b) => b.id === id))) grupo.vaciar();
+  }, [selectedComponentId]);
+  useEffect(() => {
+    if (selectedWireId) grupo.vaciar();
+  }, [selectedWireId]);
+  // Contorno de la placa en el grupo (las piezas lo llevan en su render).
+  useEffect(() => {
+    for (const el of document.querySelectorAll('[data-board-id]'))
+      el.classList.toggle(
+        'bq-placa-en-grupo',
+        idsDelGrupo.length > 1 && idsDelGrupo.includes((el as HTMLElement).dataset.boardId!),
+      );
+  }, [idsDelGrupo]);
+  /** Bloquino: deja `ids` como grupo y la última pieza como la de Velxio. */
+  const elegirGrupo = (ids: string[]) => {
+    grupo.fijar(ids);
+    setSelectedComponentId(grupo.principal());
+    useSimulatorStore.getState().setSelectedWire(null);
+  };
+  // Foto del lienzo al empezar a arrastrar un grupo (deshacer en un paso).
+  const grupoAntesRef = useRef<ReturnType<typeof grupo.foto> | null>(null);
+  // Shift + mouse, en coordenadas de pantalla: si se arrastra es un rectángulo
+  // de selección (su `el` aparece al moverse); si no, el clic suma o quita
+  // `alternar` del grupo. Así el rectángulo también empieza sobre la protoboard.
+  const rectanguloRef = useRef<{ x: number; y: number; el: HTMLDivElement | null; alternar?: string } | null>(null);
+  const empezarRectangulo = (e: React.MouseEvent, alternar?: string) => {
+    e.preventDefault();
+    rectanguloRef.current = { x: e.clientX, y: e.clientY, el: null, alternar };
+  };
+  const rectanguloRecienRef = useRef(false);
+  // La pieza que se cliqueó (el arrastre puede pasar a su protoboard).
+  const clicadaRef = useRef<string | null>(null);
 
   // Hover tracking — drives the conditional pin overlay so the canvas isn't
   // permanently covered in pin chips. Pins show for the hovered/selected
@@ -1684,16 +1725,41 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       // Ctrl+V pastes the last copy (with the pointer over the canvas, so a
       // paste meant for another panel never drops a part), Delete removes it.
       const sim = useSimulatorStore.getState();
-      // Bloquino: en la página de alumno la placa es fija (ni R, ni copiar, ni Supr).
       const boardId =
-        selectedBoardId &&
-        !document.querySelector('.bq-pagina') &&
-        sim.boards.some((b) => b.id === selectedBoardId)
-          ? selectedBoardId
-          : null;
+        selectedBoardId && sim.boards.some((b) => b.id === selectedBoardId) ? selectedBoardId : null;
+      // Bloquino: en la página de alumno la placa se gira, pero no se copia ni se elimina.
+      const alumno = grupo.esAlumno();
+      const boardEditable = alumno ? null : boardId;
       const editable = !interactionRunningRef.current;
       const mod = e.ctrlKey || e.metaKey;
       if (!editable) return;
+      // Bloquino: Ctrl+A selecciona todo; con varias piezas, las teclas son del grupo.
+      if (alumno) {
+        const tecla = e.key.toLowerCase();
+        if (mod && tecla === 'a') {
+          grupo.seleccionarTodo();
+          elegirGrupo(grupo.useGrupo.getState().ids);
+          e.preventDefault();
+          return;
+        }
+        if (mod && tecla === 'v' && grupo.hayCopia()) {
+          if (canvasRef.current?.matches(':hover')) elegirGrupo(grupo.pegar());
+          e.preventDefault();
+          return;
+        }
+        if (grupo.grupoMultiple()) {
+          if (!mod && !e.altKey && tecla === 'r') grupo.girar();
+          else if (mod && tecla === 'c') {
+            if ((window.getSelection()?.toString() ?? '') !== '') return;
+            grupo.copiar();
+          } else if (e.key === 'Delete' || e.key === 'Backspace') {
+            grupo.borrar();
+            elegirGrupo(grupo.useGrupo.getState().ids);
+          } else return;
+          e.preventDefault();
+          return;
+        }
+      }
       if (!mod && !e.altKey && (e.key === 'r' || e.key === 'R')) {
         if (selectedComponentId) {
           handleRotateComponent(selectedComponentId);
@@ -1710,8 +1776,8 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
         if (selectedComponentId) {
           sim.copyComponent(selectedComponentId);
           e.preventDefault();
-        } else if (boardId) {
-          sim.copyBoard(boardId);
+        } else if (boardEditable) {
+          sim.copyBoard(boardEditable);
           e.preventDefault();
         }
         return;
@@ -1719,15 +1785,15 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       if (mod && e.key.toLowerCase() === 'v') {
         const overCanvas = canvasRef.current?.matches(':hover') ?? false;
         if (!sim.canvasClipboard || !overCanvas) return;
-        const pasted = sim.pasteClipboard(boardId ?? undefined);
+        const pasted = sim.pasteClipboard(boardEditable ?? undefined);
         if (pasted?.kind === 'component') setSelectedComponentId(pasted.id);
         else if (pasted?.kind === 'board') selectBoard(pasted.id);
         e.preventDefault();
         return;
       }
-      if ((e.key === 'Delete' || e.key === 'Backspace') && !selectedComponentId && boardId) {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && !selectedComponentId && boardEditable) {
         // Same confirmation the dock / inspector remove goes through.
-        setBoardToRemove(boardId);
+        setBoardToRemove(boardEditable);
         e.preventDefault();
         return;
       }
@@ -1843,8 +1909,24 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
     }
 
     e.stopPropagation();
-    const component = components.find((c) => c.id === componentId);
+    let component = components.find((c) => c.id === componentId);
     if (!component) return;
+
+    // Bloquino: arrastrar una pieza del grupo mueve el grupo. Si está asentada
+    // en una protoboard del grupo, se arrastra la protoboard (que la lleva).
+    grupoAntesRef.current = null;
+    clicadaRef.current = componentId;
+    if (grupo.grupoMultiple() && grupo.enGrupo(componentId) && !interactionRunning) {
+      grupoAntesRef.current = grupo.foto();
+      const base = wiresRef.current.find(
+        (w) => w.bb && w.start.componentId === componentId && grupo.enGrupo(w.end.componentId),
+      )?.end.componentId;
+      const protoboard = base && components.find((c) => c.id === base);
+      if (protoboard) {
+        componentId = protoboard.id;
+        component = protoboard;
+      }
+    }
 
     setClickStartTime(Date.now());
     setClickStartPos({ x: e.clientX, y: e.clientY });
@@ -1858,7 +1940,7 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
     // Snapshot the starting position. mouseup uses this to push a single
     // Move command if the component actually moved (vs being a click).
     dragStartPosRef.current = { x: component.x, y: component.y };
-    setSelectedComponentId(componentId);
+    if (!grupoAntesRef.current) setSelectedComponentId(componentId);
     // Bloquino: componente o cable, nunca los dos (ver el efecto de selectedWireId).
     setSelectedWire(null);
   };
@@ -1881,8 +1963,33 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       return;
     }
 
+    // Bloquino: rectángulo de Shift + arrastrar.
+    const rect = rectanguloRef.current;
+    if (rect) {
+      if (!rect.el) {
+        if (Math.hypot(e.clientX - rect.x, e.clientY - rect.y) < 5) return;
+        rect.el = document.body.appendChild(document.createElement('div'));
+        rect.el.className = 'bq-rectangulo';
+      }
+      Object.assign(rect.el.style, {
+        left: `${Math.min(rect.x, e.clientX)}px`,
+        top: `${Math.min(rect.y, e.clientY)}px`,
+        width: `${Math.abs(e.clientX - rect.x)}px`,
+        height: `${Math.abs(e.clientY - rect.y)}px`,
+      });
+      return;
+    }
+
     // Handle component/board dragging
     if (draggedComponentId) {
+      // Bloquino: dónde estaba la pieza arrastrada, para mover el resto del grupo lo mismo.
+      const posicionDe = (id: string) => {
+        const st = useSimulatorStore.getState();
+        const placa = id.startsWith('__board__:') ? id.slice('__board__:'.length) : null;
+        const p = placa ? st.boards.find((b) => b.id === placa) : st.components.find((c) => c.id === id);
+        return p ? { x: p.x, y: p.y } : null;
+      };
+      const previa = grupoAntesRef.current ? posicionDe(draggedComponentId) : null;
       // Drag-to-front: the FIRST movement of a drag raises the item above
       // everything else on the canvas (boards over parts and parts over
       // boards, symmetrically — whatever you dragged last wins). Movement,
@@ -1966,6 +2073,13 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
           carrySeatedBoards(dragged, nx, ny);
         }
         updateComponent(draggedComponentId, { x: nx, y: ny } as any);
+      }
+      const ahora = previa && posicionDe(draggedComponentId);
+      if (previa && ahora) {
+        const fuera = draggedComponentId.startsWith('__board__:')
+          ? draggedComponentId.slice('__board__:'.length)
+          : draggedComponentId;
+        grupo.desplazar(ahora.x - previa.x, ahora.y - previa.y, fuera);
       }
       // Recalculate wire positions during drag so wires follow the component.
       recalculateAllWirePositions();
@@ -2086,6 +2200,25 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
   seatDroppedComponentRef.current = seatDroppedComponent;
 
   const handleCanvasMouseUp = (e: React.MouseEvent) => {
+    // Bloquino: al soltar el rectángulo se suma al grupo lo que quedó dentro;
+    // sin arrastre, Shift + clic suma o quita la pieza cliqueada.
+    const rect = rectanguloRef.current;
+    if (rect) {
+      rectanguloRef.current = null;
+      if (rect.el) {
+        rect.el.remove();
+        grupo.seleccionarEn({
+          left: Math.min(rect.x, e.clientX),
+          top: Math.min(rect.y, e.clientY),
+          right: Math.max(rect.x, e.clientX),
+          bottom: Math.max(rect.y, e.clientY),
+        });
+      } else if (rect.alternar) grupo.alternar(rect.alternar);
+      elegirGrupo(grupo.useGrupo.getState().ids);
+      // El clic que sigue llega al fondo y no debe vaciar el grupo.
+      rectanguloRecienRef.current = true;
+      return;
+    }
     // Finish panning — commit ref value to state so React knows the final pan
     if (isPanningRef.current) {
       isPanningRef.current = false;
@@ -2255,7 +2388,23 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       // and just opens the property dialog — no history entry needed.
       const start = dragStartPosRef.current;
       const isClick = posDiff < 5 && timeDiff < 300;
-      if (!isClick && start && draggedComponentId && !draggedComponentId.startsWith('__board__')) {
+      const antesDelGrupo = grupoAntesRef.current;
+      grupoAntesRef.current = null;
+      if (antesDelGrupo && isClick && !draggedComponentId.startsWith('__board__')) {
+        // Bloquino: un clic (sin arrastrar) en una pieza del grupo la deja sola.
+        elegirGrupo([clicadaRef.current ?? draggedComponentId]);
+      } else if (antesDelGrupo && !isClick) {
+        // Bloquino: el grupo se asienta como la pieza arrastrada (lo que ella se
+        // corrió al calzar, se corren las demás) y se deshace en un paso.
+        if (!draggedComponentId.startsWith('__board__')) {
+          const antes = useSimulatorStore.getState().components.find((c) => c.id === draggedComponentId);
+          seatDroppedComponent(draggedComponentId);
+          const despues = useSimulatorStore.getState().components.find((c) => c.id === draggedComponentId);
+          if (antes && despues) grupo.desplazar(despues.x - antes.x, despues.y - antes.y, draggedComponentId);
+        }
+        recalculateAllWirePositions();
+        grupo.registrar('Mover grupo', antesDelGrupo);
+      } else if (!isClick && start && draggedComponentId && !draggedComponentId.startsWith('__board__')) {
         // Seat BEFORE recording the move, so undo restores the pre-drag
         // position in one step instead of leaving the part mid-seat.
         seatDroppedComponent(draggedComponentId);
@@ -2730,7 +2879,8 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       return (
         <React.Fragment key={component.id}>
           <div
-            className="component-interactive-group"
+            // Bloquino: contorno de las piezas de un grupo (alumno.css).
+            className={`component-interactive-group${idsDelGrupo.length > 1 && idsDelGrupo.includes(component.id) ? ' bq-en-grupo' : ''}`}
             onMouseEnter={() => setHoveredComponentId(component.id)}
             onMouseLeave={() =>
               setHoveredComponentId((curr) => (curr === component.id ? null : curr))
@@ -2835,7 +2985,8 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
     return (
       <React.Fragment key={component.id}>
         <div
-          className="component-interactive-group"
+          // Bloquino: contorno de las piezas de un grupo (alumno.css).
+          className={`component-interactive-group${idsDelGrupo.length > 1 && idsDelGrupo.includes(component.id) ? ' bq-en-grupo' : ''}`}
           onMouseEnter={() => setHoveredComponentId(component.id)}
           onMouseLeave={() =>
             setHoveredComponentId((curr) => (curr === component.id ? null : curr))
@@ -3288,6 +3439,17 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
         <div
           ref={canvasRef}
           className="canvas-content"
+          // Bloquino: Shift + mouse es del grupo antes que de piezas, placa o
+          // agujeros: clic suma o quita lo de debajo; arrastre, rectángulo.
+          onMouseDownCapture={(e) => {
+            if (e.button !== 0 || !e.shiftKey || wireInProgress || interactionRunning || !grupo.esAlumno()) return;
+            const t = e.target as HTMLElement;
+            const pieza = t.closest('.component-interactive-group')?.querySelector<HTMLElement>('[data-component-id]')
+              ?.dataset.componentId;
+            const placa = t.closest<HTMLElement>('[data-board-id]')?.dataset.boardId;
+            e.stopPropagation();
+            empezarRectangulo(e, pieza ?? placa);
+          }}
           onMouseDown={handleCanvasMouseDown}
           onMouseMove={handleCanvasMouseMove}
           onMouseUp={handleCanvasMouseUp}
@@ -3358,6 +3520,13 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
               addWireWaypoint(world.x, world.y);
               return;
             }
+            // Bloquino: el clic que cierra un rectángulo de selección no la vacía.
+            if (rectanguloRecienRef.current) {
+              rectanguloRecienRef.current = false;
+              return;
+            }
+            // Bloquino: Shift + clic ya lo resolvió el mousedown (sumar o quitar).
+            if (e.shiftKey && grupo.esAlumno()) return;
             // If a segment handle drag just finished, don't also select
             if (segmentDragJustCommittedRef.current) {
               segmentDragJustCommittedRef.current = false;
@@ -3385,6 +3554,9 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
               // quitarle la selección que le dio el mouseup (Supr y R la usan).
               if (!(e.target as HTMLElement).closest('.component-interactive-group'))
                 setSelectedComponentId(null);
+              // Bloquino: y el grupo, salvo que el clic sea en una pieza o en la placa.
+              if (!(e.target as HTMLElement).closest('.component-interactive-group, [data-board-id]'))
+                grupo.vaciar();
               // (The board selection is dropped on the background mousedown:
               // a click on a board bubbles here too and must keep it.)
             }
@@ -3502,6 +3674,11 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
                     setHoveredBoardId((curr) => (curr === board.id ? null : curr))
                   }
                   onMouseDown={(e) => {
+                    // Bloquino: arrastrar la placa dentro del grupo mueve el grupo.
+                    grupoAntesRef.current =
+                      grupo.grupoMultiple() && grupo.enGrupo(board.id) && !interactionRunning
+                        ? grupo.foto()
+                        : null;
                     setClickStartTime(Date.now());
                     setClickStartPos({ x: e.clientX, y: e.clientY });
                     const world = toWorld(e.clientX, e.clientY);

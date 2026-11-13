@@ -377,8 +377,21 @@ body:has(.bq-pagina) .pid-defaults {
 .bq-pagina .bloquino-al-osciloscopio {
   display: none !important;
 }
-/* La placa del curso es una y fija: sin copiar, girar ni eliminar. */
-body:has(.bq-pagina) .part-inspector-dialog:has([board-kind]) .pid-action-button,
-.bq-pagina .board-dock-group--edit {
+/* La placa del curso es una: se gira, pero no se copia ni se elimina. */
+body:has(.bq-pagina) .part-inspector-dialog:has([board-kind]) .pid-action-button:not([title="Rotar 90°"]),
+.bq-pagina .board-dock-group--edit .board-dock-btn:not([title="Rotar (R)"]) {
   display: none;
+}
+/* Piezas de un grupo seleccionado (seleccion.ts) y el rectángulo de Shift. */
+.bq-pagina .bq-en-grupo .dynamic-component-wrapper,
+.bq-pagina .bq-placa-en-grupo {
+  outline: 2px dashed #1e88e5;
+  outline-offset: 2px;
+}
+.bq-rectangulo {
+  position: fixed;
+  z-index: 50;
+  border: 1px dashed #1e88e5;
+  background: rgba(30, 136, 229, 0.1);
+  pointer-events: none;
 }

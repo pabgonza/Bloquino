@@ -6,7 +6,7 @@
 type Pieza = { id: string; x: number; y: number; properties: Record<string, unknown> };
 type Medio = (id: string) => { w: number; h: number } | null;
 
-const medioDelDom: Medio = (id) => {
+export const medioDelDom: Medio = (id) => {
   const caja = globalThis.document?.getElementById(id)?.closest<HTMLElement>('.dynamic-component-wrapper');
   return caja ? { w: caja.offsetWidth / 2, h: caja.offsetHeight / 2 } : null;
 };
@@ -50,19 +50,28 @@ export function agujerosGirados<H extends { x: number; y: number }>(
   return girados.get(clave) as readonly H[];
 }
 
+/** Un punto girado `delta` grados en torno a `c`. */
+export function girarPunto(c: { x: number; y: number }, p: { x: number; y: number }, delta: number) {
+  const [cos, sen] = cosSen(delta);
+  const [dx, dy] = [p.x - c.x, p.y - c.y];
+  return { x: c.x + dx * cos - dy * sen, y: c.y + dx * sen + dy * cos };
+}
+
+/** Posición y giro de `pieza` cuando gira `delta` grados en torno al punto `c` (null si no se puede medir). */
+export function girarEnTorno(c: { x: number; y: number }, pieza: Pieza, delta: number, medio = medioDelDom) {
+  const m = medio(pieza.id);
+  if (!m) return null;
+  const centro = girarPunto(c, { x: pieza.x + m.w, y: pieza.y + m.h }, delta);
+  return {
+    x: centro.x - m.w,
+    y: centro.y - m.h,
+    rotation: ((((Number(pieza.properties.rotation) || 0) + delta) % 360) + 360) % 360,
+  };
+}
+
 /** Posición y giro de `pieza` cuando `protoboard` gira `delta` grados (null si no se pueden medir). */
 export function girarConProtoboard(protoboard: Pieza, pieza: Pieza, delta: number, medio = medioDelDom) {
   const mp = medio(protoboard.id);
-  const mc = medio(pieza.id);
-  if (!mp || !mc) return null;
-  const [cos, sen] = cosSen(delta);
-  const cx = protoboard.x + mp.w;
-  const cy = protoboard.y + mp.h;
-  const dx = pieza.x + mc.w - cx;
-  const dy = pieza.y + mc.h - cy;
-  return {
-    x: cx + dx * cos - dy * sen - mc.w,
-    y: cy + dx * sen + dy * cos - mc.h,
-    rotation: ((((Number(pieza.properties.rotation) || 0) + delta) % 360) + 360) % 360,
-  };
+  if (!mp) return null;
+  return girarEnTorno({ x: protoboard.x + mp.w, y: protoboard.y + mp.h }, pieza, delta, medio);
 }

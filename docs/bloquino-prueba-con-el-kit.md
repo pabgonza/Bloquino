@@ -115,6 +115,11 @@ la placa real:
 - Canciones (Sonido): `empezar canción` con un parpadeo debajo suena y parpadea
   a la vez; comparar la melodía con el buzzer real y la misma librería.
 - Recargar la página a mitad de un armado: vuelve todo, encuadrado.
+- Varias piezas a la vez, como en Tinkercad: Shift + clic suma o quita; Ctrl+A
+  junta todo; Shift + arrastrar dibuja un rectángulo (también sobre la
+  protoboard). Con el grupo: arrastrar, R, Supr, Ctrl+C y Ctrl+V, y Ctrl+Z
+  deshace cada cosa de una vez. ¿Se entiende el contorno punteado? La placa
+  gira con el grupo y sola (R o su botón), pero no se borra ni se copia.
 
 ## Decisiones tomadas
 

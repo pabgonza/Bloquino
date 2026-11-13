@@ -20,27 +20,31 @@ resistencia, un LED y un piezo), más la hoja oficial de atajos de Tinkercad:
 | Ctrl+C, Ctrl+V | Pega una copia del grupo un poco corrida, y la copia queda seleccionada |
 | Arrastrar en el fondo | Mueve la vista (también con Shift o Ctrl): no hay rectángulo de selección a la vista |
 | Ctrl+D | No hace nada en Circuits (sí en el editor 3D) |
+| Ctrl+C, Ctrl+V sobre el Arduino | Pega un segundo Arduino («2»); el panel Código pasa a tener un selector de placa, cada una con su programa |
 
 ## What Changes
 
 - Selección de varias piezas en la página de alumno, como en Tinkercad:
   Shift + clic suma o quita, Ctrl+A selecciona todo, y mover, R, Supr, Ctrl+C
   y Ctrl+V actúan sobre el grupo. Cada acción se deshace en un solo paso.
-- La placa entra en la selección como en Tinkercad (Shift + clic, Ctrl+A) y se
-  mueve con el grupo. Lo único distinto: R, Supr y Ctrl+C la saltan, porque en
-  Bloquino la placa no se gira, no se borra ni se copia (requisito «Una sola
-  placa, fija»).
-- Agregado que no viene de Tinkercad: Shift + arrastrar en el fondo dibuja un
-  rectángulo y selecciona lo que queda dentro (arrastrar sin tecla sigue
-  moviendo la vista, como en Tinkercad). Juntar un circuito entero con clics es
-  lento para un niño.
+- La placa entra en la selección como en Tinkercad (Shift + clic, Ctrl+A), se
+  mueve y gira con el grupo. Pablo pidió además que la placa se pueda girar
+  sola (R, su barra y su ficha), como en Tinkercad. Lo único distinto: Supr y
+  Ctrl+C la saltan, porque un proyecto de Bloquino tiene una sola placa. Copiar
+  y borrar placas, cada una con su programa, queda para el change
+  `varias-placas` (deseable, etapa posterior).
+- Agregado que no viene de Tinkercad: Shift + arrastrar dibuja un rectángulo y
+  selecciona lo que queda dentro (arrastrar sin tecla sigue moviendo la vista,
+  como en Tinkercad). Puede empezar sobre la protoboard. Juntar un circuito
+  entero con clics es lento para un niño.
 - Los cables que unen dos piezas del grupo se mueven, giran, borran y copian
   con ellas; lo asentado en una protoboard del grupo va con ella.
 
 ## Capabilities
 
 ### Modified Capabilities
-- `interfaz/modo-alumno`: la selección del lienzo admite varios componentes.
+- `interfaz/modo-alumno`: la selección del lienzo admite varias piezas, y la
+  placa se puede girar.
 
 ## Impact
 

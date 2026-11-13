@@ -21,6 +21,10 @@ el programa de bloques, que se carga como JSON.
   de 7 segmentos (h8), cableados directo a la placa.
 - `seleccion.js`: un clic selecciona un componente o un cable, nunca los dos;
   Supr y R actúan sobre lo seleccionado.
+- `grupo.js`: varias piezas a la vez (Shift + clic, Ctrl+A, rectángulo con
+  Shift + arrastrar), moverlas, girarlas con la placa, copiar, pegar y borrar,
+  y deshacer cada cosa en un paso. Se corre como `sala.js`, sobre el servidor
+  de desarrollo.
 - `carga.js`: «Cargar a la placa» (h7): avance, monitor serie de la placa y
   soltarla al simular. Con un UNO conectado y ya autorizado en el navegador
   (la primera vez lo elige una persona), carga a la placa real; si no, a una
