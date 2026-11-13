@@ -39,14 +39,12 @@ Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques.
 
 ## Cargar a la placa (h7)
 
-Probado con un Arduino UNO original (chip USB 16U2, Optiboot 4.4). Falta el
-clon del kit, que usa el chip USB CH340:
+Probado con un Arduino UNO original (chip USB 16U2, Optiboot 4.4) y con el
+clon del kit (chip USB CH340), que Pablo cargó desde la página el 2026-11-12:
+funciona bien.
 
-- Conectarlo y ver que Windows lo reconoce («USB-SERIAL CH340» en el
-  Administrador de dispositivos).
-- En la página, «Cargar a la placa»: debe aparecer en la lista del navegador,
-  cargar el parpadeo y mostrar en el monitor serie lo que el programa dice.
-- Si falla, probar sin navegador para ver la traza de lo enviado y recibido:
+- Si una placa falla, probar sin navegador para ver la traza de lo enviado y
+  recibido:
   `powershell -File scripts\puente-serie.ps1 COM<n>` en una terminal y, en
   otra, desde `frontend\`,
   `$env:BLOQUINO_PUENTE = 4700; $env:BLOQUES_BACKEND_URL = "http://localhost"; npx vitest run src/__tests__/bloquino-carga.test.ts -t "placa real"`.
