@@ -29,6 +29,11 @@ export const led = (estado: 'HIGH' | 'LOW', pin = 13): B => ({
   fields: { ESTADO: estado, PIN: String(pin) },
 });
 export const esperar = (s: number): B => ({ type: 'ab_esperar', inputs: { S: num(s) } });
+/** `esperar [s] segundos o hasta que <cond>`; sin condición si no se da. */
+export const esperarOHasta = (s: number | object, COND?: object): B => ({
+  type: 'ab_esperar_o_hasta',
+  inputs: { S: typeof s === 'number' ? num(s) : s, ...(COND && { COND }) },
+});
 export const parpadeo = (pin: number, s: number) =>
   porSiempre(led('HIGH', pin), esperar(s), led('LOW', pin), esperar(s));
 export const boton = { block: { type: 'ab_boton', fields: { PIN: '2' } } };

@@ -131,6 +131,9 @@ la placa real:
   copia; clic derecho → «Editar». Ejemplo: `14-mis-bloques.bloquino` en el
   LED RGB del kit. ¿Se entiende que el «definir» no corre solo? ¿Sirve para
   la sesión 9 (`color (r) (g) (b)`)?
+- `esperar … segundos o hasta que`: ejemplo `15-latido.bloquino` con el LED,
+  el botón y el buzzer del kit. Tres pulsaciones y la alarma suena al tiro,
+  sin esperar a que termine el latido. ¿Se entiende el «o hasta que»?
 
 ## Decisiones tomadas
 

@@ -178,3 +178,21 @@ await ejemplo('14-mis-bloques', async (r, ids) => {
   for (let t = 0; t < 3800; t += 100) { const v = await rgb(); if (vistos.at(-1) !== v) vistos.push(v); await espera(100); }
   r.colores = vistos.join(' → ');
 });
+
+await ejemplo('15-latido', async (r, ids) => {
+  // Tres pulsaciones suben la espera de 0,3 a 3,3: la alarma corta el latido al tiro.
+  const luz = () => prop(ids.led[0], 'value').then((p) => !!p.value);
+  const boton = await centro(ids.pushbutton[0]);
+  const pulsar = async () => { await page.mouse.move(boton.x, boton.y); await page.mouse.down(); await espera(150); await page.mouse.up(); await espera(150); };
+  await espera(800);
+  await pulsar();
+  await pulsar();
+  await espera(1500);
+  await pulsar();
+  const t0 = Date.now();
+  let cambios = 0;
+  for (let a = await luz(); Date.now() - t0 < 1500; await espera(40)) { const b = await luz(); if (b !== a) cambios++; a = b; }
+  r['cambios del LED en 1,5 s tras la tercera pulsación'] = cambios;
+  r.notas = (await notasOidas()).length;
+  r.monitor = await serie();
+});

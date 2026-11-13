@@ -117,6 +117,18 @@ G.ab_contar = (b) => {
 G.ab_si = (b) => `if (${condicion(b)}) {\n${cuerpo(b)}}\n`;
 G.ab_si_sino = (b) => `if (${condicion(b)}) {\n${cuerpo(b)}} else {\n${cuerpo(b, 'SINO')}}\n`;
 G.ab_esperar_hasta = (b) => gen.ctx.esperarHasta(condicion(b));
+// Espera con tiempo límite: termina al cumplirse el tiempo o la condición.
+// Con corrutinas, su macro se agrega solo si se usa (una línea, por __LINE__).
+G.ab_esperar_o_hasta = (b) => {
+  const ms = milis(b);
+  const c = condicion(b);
+  if (!gen.ctx.paralelo)
+    return `for (unsigned long desde = millis(); millis() - desde < (unsigned long)(${ms}) && !(${c});) {}\n`;
+  gen.ctx.globales.add(
+    '#define ESPERAR_O_HASTA(ms, condicion) do { despierta = millis() + (unsigned long)(ms); paso = __LINE__; case __LINE__: if (!(condicion) && (long)(millis() - despierta) < 0) return; } while (0)',
+  );
+  return `ESPERAR_O_HASTA(${ms}, ${c});\n`;
+};
 
 const CRONOMETRO = 'unsigned long cronometro = 0;';
 G.ab_cronometro = () => {

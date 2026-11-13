@@ -27,6 +27,7 @@
   "AB_SI": "si %1 %2 %3",
   "AB_SI_SINO": "si %1 %2 %3 si no %4 %5",
   "AB_ESPERAR_HASTA": "esperar hasta que %1",
+  "AB_ESPERAR_O_HASTA": "esperar %1 segundos o hasta que %2",
   "AB_CRONOMETRO": "cronómetro",
   "AB_REINICIAR_CRONOMETRO": "reiniciar cronómetro",
 

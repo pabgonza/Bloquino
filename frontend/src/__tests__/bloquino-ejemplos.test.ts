@@ -72,9 +72,9 @@ const seMontan = (s: Tramo, t: Tramo) => {
 };
 
 describe('ejemplos', () => {
-  it('son catorce, numerados', () => {
+  it('son quince, numerados', () => {
     expect(EJEMPLOS.map((e) => e.archivo.slice(0, 2))).toEqual(
-      Array.from({ length: 14 }, (_, i) => String(i + 1).padStart(2, '0')),
+      Array.from({ length: 15 }, (_, i) => String(i + 1).padStart(2, '0')),
     );
   });
 

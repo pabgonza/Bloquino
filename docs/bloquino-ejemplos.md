@@ -1,6 +1,6 @@
 # Ejemplos de Bloquino
 
-Catorce proyectos listos, uno por tema; el 13 tiene dos placas y el 14 usa Mis bloques. Entre todos usan cada componente del kit
+Quince proyectos listos, uno por tema; el 13 tiene dos placas, el 14 usa Mis bloques y el 15 una espera que se corta. Entre todos usan cada componente del kit
 y cada bloque de la paleta. Están en `frontend/public/ejemplos/` y se abren con
 el botón **Abrir** de la página. En la sala también se pueden bajar desde
 `http://<IP del notebook>/ejemplos/02-semaforo.bloquino`.
@@ -21,6 +21,7 @@ el botón **Abrir** de la página. En la sala también se pueden bajar desde
 | 12 | [bloques de pin](ejemplos/12-bloques-de-pin.jpg) | Botón entre 5V y el pin 2 con resistencia de 10 kΩ a tierra, LED (9) y potenciómetro (A0). | La luz «L» sigue al botón y el LED a la perilla, con los bloques de Avanzado. |
 | 13 | [dos placas](ejemplos/13-dos-placas.jpg) | Placa 1 y Placa 2, cada una con su programa: el pin 13 de la 1 va al pin 2 de la 2, y GND con GND. | La «L» de la Placa 1 parpadea y la de la Placa 2 la sigue. En Código, el selector de arriba cambia de placa. |
 | 14 | [mis bloques](ejemplos/14-mis-bloques.jpg) | LED RGB (11, 10 y 9) con tres resistencias, como el 08. | Parpadea blanco 3 veces y después pasa por rojo, verde y azul. En Mis bloques están `color (r) (g) (b)` y `parpadear (veces) veces`; clic derecho → «Editar» en un «definir». |
+| 15 | [latido](ejemplos/15-latido.jpg) | LED (13), botón (7) y buzzer (3). | El LED late. Cada pulsación hace el latido más lento (el monitor dice la espera); sobre 3 segundos suena la alarma, al tiro: el latido espera con «esperar … segundos o hasta que espera > 3». |
 
 Las capturas de `docs/ejemplos/` las deja el guion de prueba mientras simula.
 
