@@ -50,6 +50,7 @@ describe('paleta del kit', () => {
 
   it('deja solo los componentes del kit, en su orden y con nombre en español', () => {
     expect(filtrarKit(componentes).map((c) => c.nombre)).toEqual([
+      'Arduino UNO',
       'LED',
       'LED RGB',
       'Resistencia',
@@ -69,10 +70,10 @@ describe('paleta del kit', () => {
     ]);
   });
 
-  it('no ofrece placas ni componentes fuera del kit', () => {
+  it('no ofrece otras placas ni componentes fuera del kit', () => {
     const ids = filtrarKit(componentes).map((c) => c.componente.id);
     expect(ids).not.toContain('dht22');
-    expect(ids.some((id) => /esp32|raspberry|arduino/.test(id))).toBe(false);
+    expect(ids.filter((id) => /esp32|raspberry|arduino|pico/.test(id))).toEqual(['arduino-uno']);
   });
 
   it('el buscador filtra por nombre, sin importar tildes ni mayúsculas', () => {

@@ -33,7 +33,7 @@ async (page) => {
     return {
       grupo: useGrupo.getState().ids.map(corto),
       piezas: Object.fromEntries(s.components.map((c) => [corto(c.id), [Math.round(c.x), Math.round(c.y), Number(c.properties.rotation) || 0]])),
-      placa: [Math.round(s.boards[0].x), Math.round(s.boards[0].y), Number(s.boards[0].rotation) || 0],
+      placa: s.boards[0] && [Math.round(s.boards[0].x), Math.round(s.boards[0].y), Number(s.boards[0].rotation) || 0],
       asientos: s.wires.filter((w) => w.bb).length,
       asientoMax: +Math.max(0, ...s.wires.filter((w) => w.bb).map((w) => Math.hypot(w.start.x - w.end.x, w.start.y - w.end.y))).toFixed(1),
       cables: s.wires.filter((w) => !w.bb).length,
@@ -118,22 +118,45 @@ async (page) => {
   await tecla('Control+z');
   R['7 tras Ctrl+Z'] = Object.keys((await estado()).piezas).length;
 
-  // 8. Ctrl+A y Supr: la placa queda.
+  // 8. Ctrl+A y Supr: con la placa pide confirmar; cancelado no borra nada, aceptado
+  // borra todo, y Ctrl+Z devuelve todo, la placa con su programa.
+  const placas = () => page.evaluate(() => window.__grupoPrueba.store.useSimulatorStore.getState().boards.length);
+  await page.evaluate(() => { window.confirm = () => false; });
   await tecla('Control+a');
+  await tecla('Delete');
+  R['8 cancelado'] = Object.keys((await estado()).piezas).length;
+  await page.evaluate(() => { window.confirm = () => true; });
   await tecla('Delete');
   const vacio = await estado();
   R['8 Ctrl+A y Supr'] = { piezas: Object.keys(vacio.piezas).length, placa: !!vacio.placa };
   await tecla('Control+z');
-  R['8 Ctrl+Z'] = Object.keys((await estado()).piezas).length;
+  R['8 Ctrl+Z'] = { piezas: Object.keys((await estado()).piezas).length, placas: await placas() };
 
-  // 9. La placa sola: R la gira; Supr y Ctrl+C no hacen nada.
+  // 8b. Ctrl+A, Ctrl+C y Ctrl+V: una copia del circuito con su placa y sus cables.
+  const antesCopia = await estado();
+  await tecla('Control+a');
+  await tecla('Control+c');
+  await tecla('Control+v');
+  const copia = await estado();
+  R['8b circuito copiado'] = {
+    placas: await placas(),
+    piezas: `${Object.keys(antesCopia.piezas).length} → ${Object.keys(copia.piezas).length}`,
+    cables: `${antesCopia.cables} → ${copia.cables}`,
+    asientos: `${antesCopia.asientos} → ${copia.asientos}`,
+    grupo: copia.grupo.length,
+  };
+  await foto('circuito-copiado');
+  await tecla('Control+z');
+  R['8b Ctrl+Z'] = { placas: await placas(), piezas: Object.keys((await estado()).piezas).length };
+
+  // 9. La placa sola: R la gira; Supr pide confirmar (cancelado, queda).
   await page.mouse.click(1000, 650); await espera(300);
   const placa = await centro('wokwi-arduino-uno');
   await page.mouse.click(placa.x, placa.y + 30); await espera(400);
   await tecla('r');
   R['9 placa girada'] = (await estado()).placa[2];
+  await page.evaluate(() => { window.__pregunta = 0; window.confirm = () => (window.__pregunta++, false); });
   await tecla('Delete');
-  R['9 sin pregunta de eliminar'] = (await page.getByText(/eliminar la placa|Remove board/i).count()) === 0;
-  await page.keyboard.press('Escape');
+  R['9 Supr pregunta y queda'] = { preguntas: await page.evaluate(() => window.__pregunta), placa: !!(await estado()).placa };
   return R;
 }

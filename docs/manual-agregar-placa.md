@@ -6,9 +6,11 @@ Estado de cada placa candidata y etapas en
 repo). Rutas relativas a `repo/`; las de código, a `frontend/src/` salvo que
 digan otra cosa.
 
-Hoy no existe una ficha de placas en Bloquino: el UNO está escrito en varios
-lugares (lista en el paso 0). El primer change de placas (`placa-nano`) crea
-la ficha `bloquino/placas.ts` y los menús de pines por placa; desde ahí,
+El proyecto ya admite varias placas, cada una con su programa (change
+`varias-placas`), pero todas son UNO, y el UNO está escrito en varios lugares
+(lista en el paso 0). El primer change de placas (`placa-nano`) agrega la
+ficha a `bloquino/placas.ts` (hoy solo numera las placas) y los menús de
+pines por placa; desde ahí,
 agregar otra placa es llenar la ficha y seguir los pasos 4 a 11. Lo marcado
 **(a crear)** todavía no existe.
 
@@ -18,8 +20,10 @@ agregar otra placa es llenar la ficha y seguir los pasos 4 a 11. Lo marcado
   Una placa por change.
 - Revisar los lugares que suponen el UNO (búsqueda rápida):
   `grep -rn "arduino-uno\|arduino:avr:uno\|UNO" frontend/src/bloquino frontend/src/blocks frontend/src/__tests__ scripts docker Dockerfile.bloquino`.
-  Los conocidos: `bloquino/proyecto.ts` (`abrir`), `bloquino/PaginaAlumno.tsx`
-  (una sola placa), `bloquino/flash/*`, `blocks/catalogo/base.ts` (menús de
+  Los conocidos: `bloquino/proyecto.ts` (`abrir`),
+  `bloquino/PaletaComponentes.tsx` (la tarjeta que agrega la placa),
+  `bloquino/PanelPrograma.tsx` (selector «1 (Arduino UNO)»),
+  `bloquino/flash/*`, `blocks/catalogo/base.ts` (menús de
   pines), `blocks/catalogo/pantallas.ts` (pines por defecto),
   `blocks/generador/bloques.ts`, `i18n/locales/es/bloquino.json`,
   `__tests__/bloquino-ejemplos.test.ts`, `__tests__/helpers/bloques.ts`,
@@ -77,19 +81,22 @@ contenedor: `docker exec velxio-spike find / -name pins_arduino.h -path "*<varia
 
 ## 3. Elegir la placa en la página de alumno
 
-- «Nuevo» (`bloquino/PaginaAlumno.tsx`) pregunta la placa entre las de la
-  ficha; el proyecto inicial (`bloquino/proyecto.ts` → `restaurar`) usa esa.
-  Hoy el proyecto inicial sale de `INITIAL_BOARD` de `useSimulatorStore.ts`
-  (id `arduino-uno`): cambiar el tipo con la API del store
-  (`removeBoard` + `addBoard`), sin editar `INITIAL_BOARD`.
-- `abrir` (`bloquino/proyecto.ts`) acepta cualquier tipo de la ficha, y sigue
-  exigiendo una sola placa.
-- La regla de una placa (suscripción en `PaginaAlumno.tsx`, marca
-  `Bloquino: en la página de alumno la placa es fija` en
-  `components/simulator/SimulatorCanvas.tsx`, regla de `bloquino/alumno.css`)
-  no cambia.
+- Paleta: la placa es una entrada más de `kit` en
+  `i18n/locales/es/bloquino.json` (hoy `"arduino-uno": "Arduino UNO"`, primera
+  de la lista) y su tarjeta usa la miniatura de los metadatos de Velxio.
+  `agregar` (`bloquino/PaletaComponentes.tsx`) reconoce la placa por el id
+  (`componente.id === 'arduino-uno'`): generalizarlo a las placas de la ficha
+  y llamar a `addBoard` con su tipo.
+- Selector del panel de programa (`bloquino/PanelPrograma.tsx`): hoy escribe
+  «(Arduino UNO)» fijo; tomar el nombre de la ficha.
+- Proyecto nuevo: sigue saliendo de `INITIAL_BOARD` de `useSimulatorStore.ts`
+  (id `arduino-uno`). Si «Nuevo» tiene que preguntar la placa, cambiar el tipo
+  con la API del store (`removeBoard` + `addBoard`), sin editar
+  `INITIAL_BOARD`.
+- `abrir` (`bloquino/proyecto.ts`) hoy rechaza cualquier placa que no sea
+  UNO: aceptar los tipos de la ficha.
 - Textos: `i18n/locales/es/bloquino.json` (nombre de la placa, mensajes de
-  archivo y de carga que hoy dicen «Arduino UNO»).
+  archivo, de carga y de «sin placas» que hoy dicen «Arduino UNO»).
 
 ## 4. Bloques y pines
 
@@ -194,8 +201,8 @@ Con la placa en el lienzo, correr cada componente del kit. Puntos frágiles:
 
 - Un proyecto con la placa en `frontend/public/ejemplos/` (formato
   `.bloquino`), armado en la página y descargado, con cables ordenados.
-- `__tests__/bloquino-ejemplos.test.ts` hoy espera `['arduino-uno']` en cada
-  ejemplo: aceptar las placas de la ficha.
+- `__tests__/bloquino-ejemplos.test.ts` acepta varias placas por ejemplo, pero
+  exige que todas sean `arduino-uno`: aceptar las de la ficha.
 - Lista y capturas: `docs/bloquino-ejemplos.md` y `docs/ejemplos/`
   (`scripts/recorrido/ejemplos.js`).
 
@@ -219,7 +226,8 @@ Deltas en `openspec/changes/placa-<nombre>/specs/`, con
 `## MODIFIED Requirements` copiando el requisito entero:
 
 - `interfaz/modo-alumno`: «Solo el kit del curso» (la placa ya no es solo el
-  UNO) y, si cambia, «Una sola placa, fija».
+  UNO) y «Varias placas, cada una con su programa».
+- `interfaz/varias-placas`: el selector nombra el tipo de cada placa.
 - `proyecto/archivo`: «Archivos que no se pueden abrir» y «Proyecto nuevo».
 - Carga: requisito nuevo en `carga/web-serial-uno` para placas del mismo
   protocolo, o capacidad nueva (`carga/web-serial-mega`, `carga/esp32`).

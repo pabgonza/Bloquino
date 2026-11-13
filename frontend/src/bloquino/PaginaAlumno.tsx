@@ -13,6 +13,7 @@ import textos from '../i18n/locales/es/bloquino.json';
 import { cargarALaPlaca, useCarga } from './flash/cargar';
 import { PaletaComponentes } from './PaletaComponentes';
 import { PanelPrograma } from './PanelPrograma';
+import { numerar } from './placas';
 import {
   abrir,
   autoguardar,
@@ -35,9 +36,10 @@ export function PaginaAlumno() {
   // La cabecera del lienzo de Velxio (selector de placa, Serial, Scope, Add)
   // se "portaliza" a esta ranura, que no se muestra.
   const [ranura, setRanura] = useState<HTMLDivElement | null>(null);
-  const corriendo = useSimulatorStore(
-    (s) => s.boards.find((b) => b.id === s.activeBoardId)?.running ?? false,
-  );
+  const corriendo = useSimulatorStore((s) => s.boards.some((b) => b.running));
+  const placas = useSimulatorStore((s) => s.boards.length);
+  // Sin placas, Iniciar y Cargar solo avisan.
+  const conPlacas = (hacer: () => void) => () => (placas ? hacer() : window.alert(textos.sinPlacas));
   const logs = useCompileLogsStore((s) => s.logs);
   const setLogs = useCompileLogsStore((s) => s.setLogs);
   // Los problemas del circuito ('circuit-check') ya los muestra el diálogo de
@@ -46,6 +48,7 @@ export function PaginaAlumno() {
   const [erroresVistos, setErroresVistos] = useState(logs);
   const [guardado, setGuardado] = useState<Guardado>('guardado');
   const carga = useCarga((s) => s.carga);
+  const nombrePlaca = useCarga((s) => s.nombre);
   const cargando = !!carga && carga.fase !== 'lista' && carga.fase !== 'error';
   const selector = useRef<HTMLInputElement>(null);
   // Proyectos cargados hasta ahora. El lienzo se monta cuando ya hay uno y se
@@ -70,14 +73,13 @@ export function PaginaAlumno() {
   // Lo que el lienzo necesita de la página de Velxio: la simulación eléctrica
   // y deshacer / rehacer con el teclado.
   useEffect(() => startSimulation(), []);
-  // La placa del curso es una sola: si se pega otra (Ctrl+C y Ctrl+V), se quita.
-  useEffect(
-    () =>
-      useSimulatorStore.subscribe((s) => {
-        if (s.boards.length > 1) s.removeBoard(s.boards.at(-1)!.id);
-      }),
-    [],
-  );
+  // Cada placa nueva, pegada o abierta recibe su número.
+  useEffect(() => {
+    numerar();
+    return useSimulatorStore.subscribe((s, antes) => {
+      if (s.boards !== antes.boards) numerar();
+    });
+  }, []);
   const lienzo = useRef<HTMLElement>(null);
   useEffect(() => resaltarTiras(lienzo.current!), []);
   useEffect(() => {
@@ -179,11 +181,19 @@ export function PaginaAlumno() {
         </button>
         <button
           className={corriendo ? 'bq-boton bq-boton-detener' : 'bq-boton bq-boton-iniciar'}
-          onClick={() => runEditorCommand(corriendo ? 'sim.stop' : 'sim.run')}
+          onClick={
+            corriendo
+              ? () => runEditorCommand('sim.stop')
+              : conPlacas(() => runEditorCommand(placas > 1 ? 'sim.runAll' : 'sim.run'))
+          }
         >
           {corriendo ? textos.detener : textos.iniciar}
         </button>
-        <button className="bq-boton" disabled={cargando} onClick={() => void cargarALaPlaca()}>
+        <button
+          className="bq-boton"
+          disabled={cargando}
+          onClick={conPlacas(() => void cargarALaPlaca())}
+        >
           {cargando ? textos.carga.cargando : textos.cargar}
         </button>
       </header>
@@ -202,7 +212,10 @@ export function PaginaAlumno() {
               {!cargando && (
                 <button onClick={() => useCarga.setState({ carga: null })}>{textos.cerrar}</button>
               )}
-              <strong>{textos.carga.fases[carga.fase]}</strong>
+              <strong>
+                {nombrePlaca && `${nombrePlaca}: `}
+                {textos.carga.fases[carga.fase]}
+              </strong>
               {'pct' in carga && <progress max={100} value={carga.pct} />}
               {carga.fase === 'error' && <p>{carga.mensaje}</p>}
               {carga.fase === 'error' && carga.enlace && <a href={carga.enlace}>{carga.enlace}</a>}

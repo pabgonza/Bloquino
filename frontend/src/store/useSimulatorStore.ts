@@ -2570,8 +2570,11 @@ export const useSimulatorStore = create<SimulatorState>((set, get) => {
       if (explicitId) {
         id = explicitId;
       } else {
-        const existing = get().boards.filter((b) => b.boardKind === boardKind);
-        id = existing.length === 0 ? boardKind : `${boardKind}-${existing.length + 1}`;
+        // Bloquino: el primer número libre. Contar las placas repetía el id de
+        // otra al borrar una del medio y agregar una nueva.
+        const taken = new Set(get().boards.map((b) => b.id));
+        id = boardKind;
+        for (let n = 2; taken.has(id); n++) id = `${boardKind}-${n}`;
       }
 
       const pm = new PinManager();

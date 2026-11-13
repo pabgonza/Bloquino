@@ -1,0 +1,120 @@
+{
+  "format": "velxio-project",
+  "version": 1,
+  "exportedAt": "2026-11-13T15:39:58.066Z",
+  "name": "13-dos-placas",
+  "boards": [
+    {
+      "id": "arduino-uno",
+      "name": "Placa 1",
+      "boardKind": "arduino-uno",
+      "x": 50,
+      "y": 50,
+      "activeFileGroupId": "group-arduino-uno",
+      "languageMode": "arduino",
+      "serialBaudRate": 0
+    },
+    {
+      "id": "arduino-uno-2",
+      "name": "Placa 2",
+      "boardKind": "arduino-uno",
+      "x": 364,
+      "y": 50,
+      "activeFileGroupId": "group-arduino-uno-2",
+      "languageMode": "arduino",
+      "serialBaudRate": 0
+    }
+  ],
+  "fileGroups": {
+    "group-arduino-uno": [
+      {
+        "name": "sketch.ino",
+        "content": "// Generado desde bloques\nvoid setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  // El pin 13 prende la luz L y le avisa a la Placa 2 por el cable\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}\n"
+      },
+      {
+        "name": "bloques.json",
+        "content": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"ab_al_iniciar\",\"id\":\"LV{)*^]rr|d0bwo4Lic%\",\"x\":30,\"y\":30,\"next\":{\"block\":{\"type\":\"ab_por_siempre\",\"id\":\"rwft%Uh,kNM?QTV,(epn\",\"inputs\":{\"DO\":{\"block\":{\"type\":\"ab_comentario\",\"id\":\"+4Xc!dB#DgoJ4DF1_gE!\",\"fields\":{\"TEXTO\":\"El pin 13 prende la luz L y le avisa a la Placa 2 por el cable\"},\"next\":{\"block\":{\"type\":\"ab_pin_digital\",\"id\":\"ulaNfVFmL3C{*,YW|rT+\",\"fields\":{\"PIN\":\"13\",\"ESTADO\":\"HIGH\"},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"(0bK2;,9r{;xyyw0ErAr\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"9chWD|.Cm/wNt5P3A$HV\",\"fields\":{\"NUM\":1}}}},\"next\":{\"block\":{\"type\":\"ab_pin_digital\",\"id\":\"gG1RU9}2[g%j:dTf^}?Y\",\"fields\":{\"PIN\":\"13\",\"ESTADO\":\"LOW\"},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"IYPmb6H4N_|;h6{~JM/d\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"7JqiH-UT1,Xe$%fifOP:\",\"fields\":{\"NUM\":1}}}}}}}}}}}}}}}}}}]}}"
+      }
+    ],
+    "group-arduino-uno-2": [
+      {
+        "name": "sketch.ino",
+        "content": "// Generado desde bloques\nvoid setup() {\n  pinMode(2, INPUT);\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  // El pin 2 escucha a la Placa 1 por el cable\n  if (digitalRead(2)) {\n    digitalWrite(13, HIGH);\n  } else {\n    digitalWrite(13, LOW);\n  }\n}\n"
+      },
+      {
+        "name": "bloques.json",
+        "content": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"ab_al_iniciar\",\"id\":\"FJq_=4Ll3@s6#;1K,43X\",\"x\":30,\"y\":30,\"next\":{\"block\":{\"type\":\"ab_por_siempre\",\"id\":\"YYhRPY{F0#H]$@8-ccr4\",\"inputs\":{\"DO\":{\"block\":{\"type\":\"ab_comentario\",\"id\":\")4fk[jcf,xFg373,ph1E\",\"fields\":{\"TEXTO\":\"El pin 2 escucha a la Placa 1 por el cable\"},\"next\":{\"block\":{\"type\":\"ab_si_sino\",\"id\":\"8B6?[X5AKHu|[bXppJm8\",\"inputs\":{\"COND\":{\"block\":{\"type\":\"ab_leer_digital\",\"id\":\"Ulhw@aGV3urwoz`dJ50g\",\"fields\":{\"PIN\":\"2\"}}},\"DO\":{\"block\":{\"type\":\"ab_pin_digital\",\"id\":\"+4aYi+eSn4t]V6L_kMIY\",\"fields\":{\"PIN\":\"13\",\"ESTADO\":\"HIGH\"}}},\"SINO\":{\"block\":{\"type\":\"ab_pin_digital\",\"id\":\"UYL=50pFH0R)W^B(BQ1s\",\"fields\":{\"PIN\":\"13\",\"ESTADO\":\"LOW\"}}}}}}}}}}}}]}}"
+      }
+    ]
+  },
+  "components": [],
+  "wires": [
+    {
+      "id": "wire-1794584384409",
+      "start": {
+        "componentId": "arduino-uno",
+        "pinName": "13",
+        "x": 175,
+        "y": 59
+      },
+      "end": {
+        "componentId": "arduino-uno-2",
+        "pinName": "2",
+        "x": 600.5,
+        "y": 59
+      },
+      "waypoints": [
+        {
+          "x": 175,
+          "y": 29
+        },
+        {
+          "x": 600,
+          "y": 29
+        },
+        {
+          "x": 600,
+          "y": 59
+        }
+      ],
+      "color": "#22c55e",
+      "autoRouted": false
+    },
+    {
+      "id": "wire-1794584386867",
+      "start": {
+        "componentId": "arduino-uno",
+        "pinName": "GND.2",
+        "x": 219.5,
+        "y": 241.5
+      },
+      "end": {
+        "componentId": "arduino-uno-2",
+        "pinName": "GND.2",
+        "x": 533.5,
+        "y": 241.5
+      },
+      "waypoints": [
+        {
+          "x": 219,
+          "y": 241.5
+        },
+        {
+          "x": 219,
+          "y": 291
+        },
+        {
+          "x": 533,
+          "y": 291
+        },
+        {
+          "x": 533,
+          "y": 241.5
+        }
+      ],
+      "color": "#000000",
+      "autoRouted": false
+    }
+  ],
+  "activeBoardId": "arduino-uno"
+}

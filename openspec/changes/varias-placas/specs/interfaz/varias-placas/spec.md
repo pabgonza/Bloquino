@@ -5,7 +5,7 @@ Un circuito con más de una placa, como en Tinkercad Circuits: cada placa tiene 
 ## ADDED Requirements
 
 ### Requirement: Placas numeradas
-Cada placa SHALL tener un número que la nombra en la página («Placa 1», «Placa 2»…), sin repetirse en el circuito. Una placa agregada o pegada SHALL recibir el menor número libre.
+Cada placa SHALL tener un número que la nombra en la página («Placa 1», «Placa 2»…), sin repetirse en el circuito. Una placa agregada o pegada SHALL recibir el menor número libre. Con dos o más placas, el número SHALL verse bajo cada placa.
 
 #### Scenario: Pegar una placa
 - **WHEN** el circuito tiene la Placa 1 y el alumno la copia y la pega

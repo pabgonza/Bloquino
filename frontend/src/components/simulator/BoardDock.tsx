@@ -90,6 +90,8 @@ export const BoardDock: React.FC<BoardDockProps> = ({
     <div
       className="board-dock"
       data-board-dock={board.id}
+      // Bloquino: el nombre de la placa, que la página de alumno muestra bajo ella.
+      data-nombre={board.name}
       style={{
         left: box.left,
         top: box.top + box.h + 6,

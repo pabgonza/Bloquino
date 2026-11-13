@@ -15,11 +15,15 @@ export type Carga =
   | { fase: 'grabando' | 'verificando'; pct: number }
   | { fase: 'error'; mensaje: string; detalle: string; enlace?: string };
 
-/** `placaReal`: el monitor serie está escuchando a la placa, no a la simulación. */
-export const useCarga = create<{ carga: Carga | null; placaReal: boolean }>(() => ({
+/** `placaReal`: el monitor serie está escuchando a la placa, no a la simulación.
+ *  `nombre`: la placa que se carga, cuando el circuito tiene más de una. */
+export const useCarga = create<{ carga: Carga | null; placaReal: boolean; nombre?: string }>(() => ({
   carga: null,
   placaReal: false,
 }));
+
+// Puerto de cada placa del circuito (id → puerto), mientras dure la página.
+const puertos = new Map<string, SerialPort>();
 
 // Fabricantes USB de las placas y sus clones (Arduino, CH340, FTDI, CP210x):
 // así el selector no ofrece los puertos Bluetooth del computador.
@@ -44,22 +48,26 @@ if ('serial' in navigator) navigator.serial.addEventListener('disconnect', () =>
 
 export async function cargarALaPlaca() {
   const pasar = (carga: Carga) => useCarga.setState({ carga });
+  const sim = useSimulatorStore.getState();
+  const placa = sim.boards.find((b) => b.id === sim.activeBoardId)!;
+  useCarga.setState({ nombre: sim.boards.length > 1 ? placa.name : undefined });
   let puerto: SerialPort | undefined;
   try {
     if (!('serial' in navigator))
       throw new ErrorDeCarga(window.isSecureContext ? 'navegador' : 'sinHttps');
     await soltarPlaca();
     // El selector de puerto solo se abre dentro del clic: va antes de compilar.
+    // Con una placa sirve el puerto ya autorizado; con varias, cada placa elige el suyo.
     puerto =
-      (await navigator.serial.getPorts())[0] ??
+      puertos.get(placa.id) ??
+      (sim.boards.length === 1 ? (await navigator.serial.getPorts())[0] : undefined) ??
       (await navigator.serial.requestPort({ filters: FILTROS }).catch(() => {
         throw new ErrorDeCarga('sinElegir');
       }));
+    puertos.set(placa.id, puerto);
 
     runEditorCommand('sim.stop');
     pasar({ fase: 'compilando' });
-    const sim = useSimulatorStore.getState();
-    const placa = sim.boards.find((b) => b.id === sim.activeBoardId)!;
     const salida: string[] = [];
     const compilado = await compileBoardForFlash(placa, (linea) => salida.push(linea));
     if (!compilado.ok)
@@ -98,7 +106,10 @@ export async function cargarALaPlaca() {
       error instanceof ErrorDeCarga ? error.motivo : 'sinRespuesta'
     ) as keyof typeof textos.carga.fallas;
     // Una placa recordada que no responde se olvida: la próxima vez se elige de nuevo.
-    if (motivo === 'sinRespuesta') void puerto?.forget?.().catch(() => {});
+    if (motivo === 'sinRespuesta') {
+      puertos.delete(placa.id);
+      void puerto?.forget?.().catch(() => {});
+    }
     pasar({
       fase: 'error',
       mensaje: textos.carga.fallas[motivo],

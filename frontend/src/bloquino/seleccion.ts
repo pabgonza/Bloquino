@@ -1,17 +1,20 @@
 // Varias piezas seleccionadas a la vez, como en Tinkercad Circuits: Shift + clic
 // suma o quita, Ctrl+A junta todo, y mover, girar, borrar, copiar y pegar actúan
-// sobre el grupo. La placa entra en el grupo, se mueve y gira con él, pero no se
-// borra ni se copia (el proyecto de Bloquino tiene una sola placa). Velxio sigue
-// llevando su `selectedComponentId`: es la pieza «principal» (la ficha la usa).
+// sobre el grupo. Las placas también, con su programa. Velxio sigue llevando su
+// `selectedComponentId`: es la pieza «principal» (la ficha la usa).
 import { create } from 'zustand';
+import { useEditorStore } from '../store/useEditorStore';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 import type { Wire } from '../types/wire';
 import { boardBox, boardSize } from '../utils/boardGeometry';
+import textos from '../i18n/locales/es/bloquino.json';
 import { girarEnTorno, girarPunto, medioDelDom } from './giroProtoboard';
 
 type Sim = ReturnType<typeof useSimulatorStore.getState>;
 type Pieza = Sim['components'][number];
-type Foto = Pick<Sim, 'components' | 'wires' | 'boards'>;
+type Placa = Sim['boards'][number];
+type Programa = { archivos: { name: string; content: string }[]; carpetas: string[] };
+type Foto = Pick<Sim, 'components' | 'wires' | 'boards'> & { programas: Record<string, Programa> };
 
 /** Ids del grupo: componentes y placas. */
 export const useGrupo = create<{ ids: string[] }>(() => ({ ids: [] }));
@@ -54,13 +57,43 @@ const internos = (wires: Wire[], ids: Set<string>) =>
   wires.filter((w) => !w.bb && ids.has(w.start.componentId) && ids.has(w.end.componentId));
 
 // ── Deshacer ──────────────────────────────────────────────────────────────
-const foto = (): Foto => ({ components: sim().components, wires: sim().wires, boards: sim().boards });
+const editor = () => useEditorStore.getState();
+const programa = (b: Placa): Programa => ({
+  archivos: editor().getGroupFiles(b.activeFileGroupId).map(({ name, content }) => ({ name, content })),
+  carpetas: [...(editor().folderGroups[b.activeFileGroupId] ?? [])],
+});
+const foto = (): Foto => ({
+  components: sim().components,
+  wires: sim().wires,
+  boards: sim().boards,
+  programas: Object.fromEntries(sim().boards.map((b) => [b.id, programa(b)])),
+});
+
+/** Crea una placa como `b`, con su id (o uno nuevo si no trae) y el programa `p`. */
+function crearPlaca(b: Placa, p: Programa) {
+  const id = sim().addBoard(b.boardKind, b.x, b.y, b.id || undefined);
+  const grupoArchivos = `group-${id}`;
+  useSimulatorStore.setState({
+    boards: sim().boards.map((x) =>
+      x.id === id ? { ...b, id, activeFileGroupId: grupoArchivos, running: false } : x,
+    ),
+  });
+  editor().deleteFileGroup(grupoArchivos);
+  editor().createFileGroup(grupoArchivos, p.archivos);
+  if (p.carpetas.length)
+    useEditorStore.setState((s) => ({ folderGroups: { ...s.folderGroups, [grupoArchivos]: p.carpetas } }));
+  return id;
+}
 
 function volverA(f: Foto) {
-  // De las placas solo posición y giro: el resto (programa, simulación) no es del lienzo.
+  // Las placas que faltan vuelven con su programa; de las que siguen, solo
+  // posición y giro (el programa y la simulación no son del lienzo).
+  const antes = new Map(f.boards.map((b) => [b.id, b]));
+  for (const b of sim().boards) if (!antes.has(b.id)) sim().removeBoard(b.id);
+  for (const b of f.boards) if (!sim().boards.some((x) => x.id === b.id)) crearPlaca(b, f.programas[b.id]);
   const boards = sim().boards.map((b) => {
-    const antes = f.boards.find((x) => x.id === b.id);
-    return antes ? { ...b, x: antes.x, y: antes.y, rotation: antes.rotation } : b;
+    const a = antes.get(b.id)!;
+    return { ...b, x: a.x, y: a.y, rotation: a.rotation };
   });
   useSimulatorStore.setState({ components: f.components, wires: f.wires, boards });
   sim().recalculateAllWirePositions();
@@ -143,11 +176,20 @@ export function girar(medio = medioDelDom) {
 }
 
 // ── Borrar ────────────────────────────────────────────────────────────────
-/** Borra las piezas del grupo (la placa queda) con sus cables. */
-export function borrar() {
-  const quitar = new Set(useGrupo.getState().ids.filter((id) => !esPlaca(id)));
+/** Borra las piezas con sus cables; si hay placas, antes pide confirmar. */
+export function borrar(ids = useGrupo.getState().ids) {
+  const quitar = new Set(ids);
+  const placas = sim().boards.filter((b) => quitar.has(b.id));
   if (!quitar.size) return;
+  if (
+    placas.length &&
+    !window.confirm(
+      placas.length === 1 ? textos.avisoBorrarPlaca : textos.avisoBorrarPlacas.replace('{n}', `${placas.length}`),
+    )
+  )
+    return;
   const antes = foto();
+  for (const b of placas) sim().removeBoard(b.id);
   useSimulatorStore.setState({
     components: sim().components.filter((c) => !quitar.has(c.id)),
     wires: sim().wires.filter((w) => !quitar.has(w.start.componentId) && !quitar.has(w.end.componentId)),
@@ -157,17 +199,18 @@ export function borrar() {
 }
 
 // ── Copiar y pegar ────────────────────────────────────────────────────────
-let copia: { piezas: Pieza[]; cables: Wire[] } | null = null;
+let copia: { piezas: Pieza[]; placas: { placa: Placa; programa: Programa }[]; cables: Wire[] } | null = null;
 let pegadas = 0; // dos pegadas en el mismo milisegundo no repiten ids
 export const hayCopia = () => !!copia && !sim().canvasClipboard;
 const CORRIDO = 20;
 
-/** Copia las piezas del grupo (sin la placa) y los cables entre ellas. */
+/** Copia las piezas del grupo, las placas con su programa, y los cables entre ellas. */
 export function copiar() {
-  const ids = new Set(useGrupo.getState().ids.filter((id) => !esPlaca(id)));
+  const ids = new Set(useGrupo.getState().ids);
   if (!ids.size) return;
   copia = {
     piezas: sim().components.filter((c) => ids.has(c.id)),
+    placas: sim().boards.filter((b) => ids.has(b.id)).map((placa) => ({ placa, programa: programa(placa) })),
     cables: sim().wires.filter((w) => ids.has(w.start.componentId) && ids.has(w.end.componentId)),
   };
   // Lo último copiado manda: la copia de una sola pieza es la de Velxio.
@@ -177,8 +220,15 @@ export function copiar() {
 /** Pega la copia un poco corrida, con ids nuevos, y la deja seleccionada. */
 export function pegar() {
   if (!copia) return [];
+  const antes = foto();
   const sello = `${Date.now().toString(36)}${(pegadas++).toString(36)}`;
   const nuevoId = new Map(copia.piezas.map((c, i) => [c.id, `${c.id.split('_')[0]}_${sello}_${i}`]));
+  // Sin nombre: la página le pone el número libre siguiente (placas.ts).
+  const placas = copia.placas.map(({ placa, programa: p }) => {
+    const id = crearPlaca({ ...placa, id: '', name: undefined, x: placa.x + CORRIDO, y: placa.y + CORRIDO }, p);
+    nuevoId.set(placa.id, id);
+    return { placa: sim().boards.find((b) => b.id === id)!, programa: p };
+  });
   const piezas = copia.piezas.map((c) => ({ ...c, id: nuevoId.get(c.id)!, x: c.x + CORRIDO, y: c.y + CORRIDO }));
   const cables = copia.cables.map((w, i) => ({
     ...w,
@@ -187,13 +237,13 @@ export function pegar() {
     end: { ...w.end, componentId: nuevoId.get(w.end.componentId)!, x: w.end.x + CORRIDO, y: w.end.y + CORRIDO },
     waypoints: (w.waypoints ?? []).map((p) => ({ x: p.x + CORRIDO, y: p.y + CORRIDO })),
   }));
-  const antes = foto();
   useSimulatorStore.setState({ components: [...sim().components, ...piezas], wires: [...sim().wires, ...cables] });
   // La próxima pegada sale corrida de esta, como en Tinkercad.
-  copia = { piezas, cables };
-  fijar(piezas.map((c) => c.id));
+  copia = { piezas, placas, cables };
+  const ids = [...placas.map(({ placa }) => placa.id), ...piezas.map((c) => c.id)];
+  fijar(ids);
   registrar('Pegar grupo', antes);
-  return piezas.map((c) => c.id);
+  return ids;
 }
 
 // ── Rectángulo ────────────────────────────────────────────────────────────

@@ -5,11 +5,14 @@ import { createElement, useEffect, useRef, useState } from 'react';
 import { ComponentRegistry } from '../services/ComponentRegistry';
 import type { ComponentMetadata } from '../types/component-metadata';
 import { createComponentFromMetadata } from '../components/DynamicComponent';
+import { useEditorStore } from '../store/useEditorStore';
 import { useSimulatorStore } from '../store/useSimulatorStore';
+import { ARCHIVO_BLOQUES, BLOQUES_INICIALES } from '../blocks/archivo';
 import { isBreadboard } from '../utils/breadboardNets';
 import { pickDropSlot } from '../utils/dropSlot';
 import textos from '../i18n/locales/es/bloquino.json';
 import { adaptarKit, filtrarKit } from './kit';
+import * as grupo from './seleccion';
 
 const LADO = 56; // px del cuadro de la miniatura
 // Cómo sale cada componente del kit cuando difiere de Velxio: la resistencia
@@ -52,6 +55,7 @@ function Miniatura({ componente }: { componente: ComponentMetadata }) {
   );
 }
 
+/** Agrega un componente del kit, o una placa con el programa inicial. */
 function agregar(componente: ComponentMetadata) {
   const sim = useSimulatorStore.getState();
   // Primer lugar libre desde la esquina visible del lienzo, como el selector de
@@ -64,10 +68,25 @@ function agregar(componente: ComponentMetadata) {
     [...sim.components, ...sim.boards],
     { step: 36 / zoom },
   );
-  const nuevo = createComponentFromMetadata(componente, x, y);
-  Object.assign(nuevo.properties, AJUSTES[componente.id]);
-  sim.recordAddComponent(nuevo as Parameters<typeof sim.recordAddComponent>[0]);
-  // Ya dibujado se conoce su tamaño: si tapa a otro componente o a la placa,
+  let nuevo: { id: string; x: number; y: number };
+  let mover: (x: number, y: number) => void;
+  if (componente.id === 'arduino-uno') {
+    const antes = grupo.foto();
+    const id = sim.addBoard('arduino-uno', x, y);
+    const editor = useEditorStore.getState();
+    editor.addFileToGroup(`group-${id}`, { name: ARCHIVO_BLOQUES, content: BLOQUES_INICIALES });
+    sim.setActiveBoardId(id);
+    grupo.registrar('Agregar placa', antes);
+    nuevo = { id, x, y };
+    mover = (nx, ny) => useSimulatorStore.getState().setBoardPosition({ x: nx, y: ny }, id);
+  } else {
+    const pieza = createComponentFromMetadata(componente, x, y);
+    Object.assign(pieza.properties, AJUSTES[componente.id]);
+    sim.recordAddComponent(pieza as Parameters<typeof sim.recordAddComponent>[0]);
+    nuevo = pieza;
+    mover = (nx, ny) => useSimulatorStore.getState().updateComponent(pieza.id, { x: nx, y: ny });
+  }
+  // Ya dibujado se conoce su tamaño: si tapa a otro componente o a una placa,
   // pasa al primer lugar libre del lienzo a la vista, de arriba abajo.
   requestAnimationFrame(() =>
     requestAnimationFrame(() => {
@@ -82,7 +101,7 @@ function agregar(componente: ComponentMetadata) {
       const lienzo = mundo?.parentElement?.getBoundingClientRect();
       if (!mio || !lienzo) return;
       const otros = [
-        ...document.querySelectorAll('[data-board-id]'),
+        ...sim.boards.map((b) => document.querySelector(`[data-board-id="${b.id}"]`)),
         ...sim.components.map((c) => document.getElementById(c.id)),
       ].flatMap((el) => caja(el) ?? []);
       const SEPARACION = 12;
@@ -98,10 +117,7 @@ function agregar(componente: ComponentMetadata) {
       for (let py = lienzo.top + 24; py + mio.height < lienzo.bottom; py += 24)
         for (let px = lienzo.left + 24; px + mio.width < lienzo.right; px += 24)
           if (libre(px, py))
-            return useSimulatorStore.getState().updateComponent(nuevo.id, {
-              x: nuevo.x + (px - mio.left) / zoom,
-              y: nuevo.y + (py - mio.top) / zoom,
-            });
+            return mover(nuevo.x + (px - mio.left) / zoom, nuevo.y + (py - mio.top) / zoom);
     }),
   );
 }

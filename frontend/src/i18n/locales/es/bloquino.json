@@ -39,6 +39,10 @@
   "nombrePorDefecto": "mi-proyecto",
   "archivoInvalido": "Ese archivo no es un proyecto de Bloquino.",
   "archivoOtraPlaca": "Ese proyecto no es para un Arduino UNO.",
+  "sinPlacas": "No hay placas en el circuito: agrega un Arduino UNO desde la paleta.",
+  "elegirPlaca": "Placa que programas",
+  "avisoBorrarPlaca": "Vas a borrar una placa y su programa. Si quieres conservarlo, cancela y descarga el proyecto. ¿Seguro?",
+  "avisoBorrarPlacas": "Vas a borrar {n} placas y sus programas. Si quieres conservarlos, cancela y descarga el proyecto. ¿Seguro?",
   "guardado": {
     "guardado": "Guardado",
     "guardando": "Guardando…",
@@ -54,6 +58,7 @@
   "avisoVolver": "Al volver a Bloques se pierden los cambios que hiciste en el texto. ¿Quieres continuar?",
   "monitorSerie": "Monitor serie",
   "kit": {
+    "arduino-uno": "Arduino UNO",
     "led": "LED",
     "rgb-led": "LED RGB",
     "resistor": "Resistencia",

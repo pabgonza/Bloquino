@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Cargar el programa a la placa
-Al pulsar Cargar a la placa, la página SHALL detener la simulación, compilar el programa de la placa elegida en el panel de programa, reiniciar la placa real por el puerto serie y grabarle el programa con el protocolo del bootloader del UNO (STK500v1 a 115200 baudios). Mientras dura SHALL mostrar qué placa se carga («Placa 2»), la etapa en curso y el avance, y al terminar SHALL decir que el programa quedó en la placa. Sin placas en el circuito SHALL avisarlo sin cargar nada.
+Al pulsar Cargar a la placa, la página SHALL detener la simulación, compilar el programa de la placa elegida en el panel de programa, reiniciar la placa real por el puerto serie y grabarle el programa con el protocolo del bootloader del UNO (STK500v1 a 115200 baudios). Mientras dura SHALL mostrar la etapa en curso y el avance, y con dos o más placas, qué placa se carga («Placa 2»), y al terminar SHALL decir que el programa quedó en la placa. Sin placas en el circuito SHALL avisarlo sin cargar nada.
 
 #### Scenario: Parpadeo en la placa real
 - **WHEN** el alumno arma el programa de parpadeo del pin 13 y pulsa Cargar a la placa con un Arduino UNO conectado

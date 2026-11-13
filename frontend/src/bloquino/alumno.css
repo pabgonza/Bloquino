@@ -377,10 +377,25 @@ body:has(.bq-pagina) .pid-defaults {
 .bq-pagina .bloquino-al-osciloscopio {
   display: none !important;
 }
-/* La placa del curso es una: se gira, pero no se copia ni se elimina. */
-body:has(.bq-pagina) .part-inspector-dialog:has([board-kind]) .pid-action-button:not([title="Rotar 90°"]),
-.bq-pagina .board-dock-group--edit .board-dock-btn:not([title="Rotar (R)"]) {
+/* La placa se gira, se copia y se elimina; sus ajustes de Velxio no son del curso. */
+body:has(.bq-pagina) .part-inspector-dialog:has([board-kind]) .pid-action-button:not([title="Rotar 90°"], .pid-action-delete),
+.bq-pagina .board-dock-group--edit .board-dock-btn[title="Ajustes de la placa"] {
   display: none;
+}
+/* El monitor serie es el de la placa elegida en el selector: sin las pestañas
+   de Velxio, que cambian de placa solo en el monitor (su título es «Placa N»). */
+.bq-serie button[title^="Placa "] {
+  display: none !important; /* su estilo va en línea */
+}
+/* Con dos o más placas, el número de cada una bajo ella (placas.ts). */
+.bq-pagina .board-docks-layer:has(.board-dock + .board-dock) .board-dock::before {
+  content: attr(data-nombre);
+  margin-right: auto;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: #1e88e5;
+  color: #fff;
+  font: 600 12px/18px system-ui, sans-serif;
 }
 /* Piezas de un grupo seleccionado (seleccion.ts) y el rectángulo de Shift. */
 .bq-pagina .bq-en-grupo .dynamic-component-wrapper,

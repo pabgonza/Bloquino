@@ -17,7 +17,7 @@ import {
 import { useElectricalStore } from '../../store/useElectricalStore';
 import { openDeviceGateway } from '../../lib/openDeviceGateway';
 import { remoteBoardActions } from '../../simulation/remoteBoardAutostart';
-import React, { useEffect, useState, useRef, useCallback, useSyncExternalStore } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useRef, useCallback, useSyncExternalStore } from 'react'; // Bloquino: useLayoutEffect
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { adcPinMapFor } from '../velxio-components/Esp32Element';
@@ -294,7 +294,6 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
   const recordRemoveComponent = useSimulatorStore((s) => s.recordRemoveComponent);
   const rotateBoard = useSimulatorStore((s) => s.rotateBoard);
   const copyBoard = useSimulatorStore((s) => s.copyBoard);
-  const pasteClipboard = useSimulatorStore((s) => s.pasteClipboard);
   const canvasClipboard = useSimulatorStore((s) => s.canvasClipboard);
   const recordMove = useSimulatorStore((s) => s.recordMove);
   const recordRotate = useSimulatorStore((s) => s.recordRotate);
@@ -530,6 +529,21 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
   } | null>(null);
   // Board removal confirmation dialog
   const [boardToRemove, setBoardToRemove] = useState<string | null>(null);
+  // Bloquino: en la página de alumno la placa se borra con el aviso de
+  // Bloquino y se puede deshacer, sola o en un grupo (seleccion.ts).
+  useLayoutEffect(() => {
+    if (!boardToRemove || !grupo.esAlumno()) return;
+    setBoardToRemove(null);
+    grupo.borrar([boardToRemove]);
+  }, [boardToRemove]);
+  // Bloquino: en la página de alumno, pegar una placa se deshace con Ctrl+Z.
+  const pegarDeVelxio = (nearBoardId?: string) => {
+    const sim = useSimulatorStore.getState();
+    const antes = grupo.esAlumno() && sim.canvasClipboard?.kind === 'board' ? grupo.foto() : null;
+    const pasted = sim.pasteClipboard(nearBoardId);
+    if (antes && pasted) grupo.registrar('Pegar placa', antes);
+    return pasted;
+  };
   // Board Options modal — id of the board whose options are being edited.
   const [boardOptionsModalFor, setBoardOptionsModalFor] = useState<string | null>(null);
   // Hardware-flash modal: set to a board id when the user picks
@@ -1727,9 +1741,8 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       const sim = useSimulatorStore.getState();
       const boardId =
         selectedBoardId && sim.boards.some((b) => b.id === selectedBoardId) ? selectedBoardId : null;
-      // Bloquino: en la página de alumno la placa se gira, pero no se copia ni se elimina.
       const alumno = grupo.esAlumno();
-      const boardEditable = alumno ? null : boardId;
+      const boardEditable = boardId;
       const editable = !interactionRunningRef.current;
       const mod = e.ctrlKey || e.metaKey;
       if (!editable) return;
@@ -1785,7 +1798,7 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
       if (mod && e.key.toLowerCase() === 'v') {
         const overCanvas = canvasRef.current?.matches(':hover') ?? false;
         if (!sim.canvasClipboard || !overCanvas) return;
-        const pasted = sim.pasteClipboard(boardEditable ?? undefined);
+        const pasted = pegarDeVelxio(boardEditable ?? undefined);
         if (pasted?.kind === 'component') setSelectedComponentId(pasted.id);
         else if (pasted?.kind === 'board') selectBoard(pasted.id);
         e.preventDefault();
@@ -3719,7 +3732,7 @@ export const SimulatorCanvas = ({ headerSlot }: SimulatorCanvasProps = {}) => {
                   onPaste={
                     canvasClipboard
                       ? () => {
-                          const pasted = pasteClipboard(board.id);
+                          const pasted = pegarDeVelxio(board.id);
                           if (pasted?.kind === 'component') setSelectedComponentId(pasted.id);
                           else if (pasted?.kind === 'board') selectBoard(pasted.id);
                         }

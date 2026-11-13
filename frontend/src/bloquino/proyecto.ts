@@ -24,14 +24,14 @@ export async function abrir(archivo: File) {
   const proyecto = await parseVlxFile(archivo).catch(() => {
     throw new Error(textos.archivoInvalido);
   });
-  const [placa] = proyecto.boards;
-  if (proyecto.boards.length !== 1 || placa.boardKind !== 'arduino-uno')
-    throw new Error(textos.archivoOtraPlaca);
+  if (proyecto.boards.some((b) => b.boardKind !== 'arduino-uno')) throw new Error(textos.archivoOtraPlaca);
   // Sin bloques, el código se escribió a mano: abre en modo Texto para que el
   // panel de bloques no lo regenere.
-  const archivos = (proyecto.fileGroups[placa.activeFileGroupId] ??= []);
-  if (!archivos.some((a) => a.name === ARCHIVO_BLOQUES))
-    archivos.push({ name: ARCHIVO_BLOQUES, content: marcarTexto(BLOQUES_INICIALES, true) });
+  for (const placa of proyecto.boards) {
+    const archivos = (proyecto.fileGroups[placa.activeFileGroupId] ??= []);
+    if (!archivos.some((a) => a.name === ARCHIVO_BLOQUES))
+      archivos.push({ name: ARCHIVO_BLOQUES, content: marcarTexto(BLOQUES_INICIALES, true) });
+  }
   nombre = proyecto.name || nombre;
   useSimulatorStore
     .getState()
@@ -53,12 +53,13 @@ export async function restaurar() {
   // El proyecto inicial es solo la placa: sin el LED y la resistencia de
   // ejemplo que Velxio pone en el pin 13.
   if (!abierto) useSimulatorStore.setState({ components: [], wires: [] });
-  // El proyecto del alumno siempre tiene bloques (no hace nada si ya existen).
+  // La placa del alumno siempre tiene bloques (no hace nada si ya existen).
   const editor = useEditorStore.getState();
-  editor.addFileToGroup(editor.activeGroupId, {
-    name: ARCHIVO_BLOQUES,
-    content: BLOQUES_INICIALES,
-  });
+  if (useSimulatorStore.getState().boards.length)
+    editor.addFileToGroup(editor.activeGroupId, {
+      name: ARCHIVO_BLOQUES,
+      content: BLOQUES_INICIALES,
+    });
 }
 
 /** Guarda el proyecto poco después de cada cambio y al salir de la página. */

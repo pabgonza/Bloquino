@@ -162,3 +162,11 @@ await ejemplo('12-bloques-de-pin', async (r, ids) => {
   r.soltado = await led13();
   for (const v of [0, 1023]) { await perilla(ids.potentiometer[0], v); r['brillo con perilla ' + v] = Math.round((await prop(ids.led[0], 'brightness')).brightness * 100) / 100; }
 });
+
+await ejemplo('13-dos-placas', async (r) => {
+  // La luz «L» de cada placa: la de la Placa 2 sigue a la de la Placa 1.
+  const luces = () => page.evaluate(() => ['arduino-uno', 'arduino-uno-2'].map((id) => (document.getElementById(id).led13 ? 'L' : '-')).join(''));
+  const vistas = [];
+  for (let t = 0; t < 3000; t += 100) { vistas.push(await luces()); await espera(100); }
+  r['luces (Placa 1, Placa 2)'] = [...new Set(vistas)];
+});

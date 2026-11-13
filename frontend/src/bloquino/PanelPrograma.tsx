@@ -5,9 +5,11 @@ import { lazy, Suspense, useState } from 'react';
 import { CodeEditor } from '../components/editor/CodeEditor';
 import { SerialMonitor } from '../components/simulator/SerialMonitor';
 import { useEditorStore } from '../store/useEditorStore';
+import { useSimulatorStore } from '../store/useSimulatorStore';
 import { ARCHIVO_BLOQUES, esTexto, marcarTexto } from '../blocks/archivo';
 import textos from '../i18n/locales/es/bloquino.json';
 import { useCarga } from './flash/cargar';
+import { numeroDe } from './placas';
 
 const BlocksPanel = lazy(() => import('../blocks/BlocksPanel'));
 
@@ -25,7 +27,10 @@ export function PanelPrograma() {
   const [conTexto, setConTexto] = useState(false);
   const [serieAbierta, setSerieAbierta] = useState(false);
   const placaReal = useCarga((s) => s.placaReal);
+  const placas = useSimulatorStore((s) => s.boards);
+  const elegida = useSimulatorStore((s) => s.activeBoardId);
   const vista: Vista = enTexto ? 'texto' : conTexto ? 'ambos' : 'bloques';
+  if (!placas.length) return <p className="bq-programa bq-sin-placas">{textos.sinPlacas}</p>;
 
   const elegir = (nueva: Vista) => {
     if (nueva === vista) return;
@@ -51,6 +56,22 @@ export function PanelPrograma() {
   return (
     <div className="bq-programa">
       <div className="bq-vistas" role="tablist">
+        {placas.length > 1 && (
+          <select
+            className="bq-elegir-placa"
+            aria-label={textos.elegirPlaca}
+            value={elegida ?? ''}
+            onChange={(e) => useSimulatorStore.getState().setActiveBoardId(e.target.value)}
+          >
+            {[...placas]
+              .sort((a, b) => numeroDe(a) - numeroDe(b))
+              .map((b) => (
+                <option key={b.id} value={b.id}>
+                  {numeroDe(b)} (Arduino UNO)
+                </option>
+              ))}
+          </select>
+        )}
         {VISTAS.map(([id, nombre]) => (
           <button
             key={id}

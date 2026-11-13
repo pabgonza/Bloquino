@@ -23,10 +23,16 @@ const EJEMPLOS = readdirSync(DIR)
   .sort()
   .map((archivo) => {
     const proyecto = JSON.parse(readFileSync(path.join(DIR, archivo), 'utf8'));
-    const archivos: { name: string; content: string }[] = Object.values(proyecto.fileGroups)[0] as never;
-    const de = (nombre: string) => archivos.find((a) => a.name === nombre)!.content;
-    return { archivo, proyecto, bloques: JSON.parse(de(ARCHIVO_BLOQUES)), ino: de('sketch.ino') };
+    // Un programa por placa.
+    const programas = (Object.values(proyecto.fileGroups) as { name: string; content: string }[][]).map((archivos) => {
+      const de = (nombre: string) => archivos.find((a) => a.name === nombre)!.content;
+      return { bloques: JSON.parse(de(ARCHIVO_BLOQUES)), ino: de('sketch.ino') };
+    });
+    return { archivo, proyecto, programas };
   });
+const PROGRAMAS = EJEMPLOS.flatMap(({ archivo, programas }) =>
+  programas.map((p, i) => ({ ...p, cual: `${archivo} (placa ${i + 1})` })),
+);
 
 // Todos los bloques de un programa guardado, con los anidados.
 const tipos = (nodo: unknown, salida = new Set<string>()): Set<string> => {
@@ -66,25 +72,30 @@ const seMontan = (s: Tramo, t: Tramo) => {
 };
 
 describe('ejemplos', () => {
-  it('son doce, numerados', () => {
+  it('son trece, numerados', () => {
     expect(EJEMPLOS.map((e) => e.archivo.slice(0, 2))).toEqual(
-      Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')),
+      Array.from({ length: 13 }, (_, i) => String(i + 1).padStart(2, '0')),
     );
   });
 
-  it.each(EJEMPLOS)('$archivo abre como proyecto de una placa UNO', async ({ archivo, proyecto }) => {
+  it.each(EJEMPLOS)('$archivo abre como proyecto de placas UNO, cada una con su programa', async ({ archivo, proyecto, programas }) => {
     const leido = await parseVlxFile(new File([JSON.stringify(proyecto)], archivo));
-    expect(leido.boards.map((b) => b.boardKind)).toEqual(['arduino-uno']);
+    expect(leido.boards.length).toBeGreaterThan(0);
+    expect(leido.boards.every((b) => b.boardKind === 'arduino-uno')).toBe(true);
+    expect(programas).toHaveLength(leido.boards.length);
     expect(leido.name).toBe(archivo.replace('.bloquino', ''));
     // Cada cable sale y llega a algo que existe.
-    const ids = new Set(['arduino-uno', ...proyecto.components.map((c: { id: string }) => c.id)]);
+    const ids = new Set([
+      ...proyecto.boards.map((b: { id: string }) => b.id),
+      ...proyecto.components.map((c: { id: string }) => c.id),
+    ]);
     for (const w of proyecto.wires as Wire[]) {
       expect(ids.has(w.start.componentId)).toBe(true);
       expect(ids.has(w.end.componentId)).toBe(true);
     }
   });
 
-  it.each(EJEMPLOS)('$archivo trae el sketch que generan sus bloques', ({ bloques, ino }) => {
+  it.each(PROGRAMAS)('$cual trae el sketch que generan sus bloques', ({ bloques, ino }) => {
     const ws = new Blockly.Workspace();
     Blockly.serialization.workspaces.load(bloques, ws);
     const generado = generar(ws);
@@ -108,7 +119,7 @@ describe('ejemplos', () => {
   });
 
   it('entre todos usan cada bloque de la paleta', () => {
-    const usados = new Set(EJEMPLOS.flatMap((e) => [...tipos(e.bloques)]));
+    const usados = new Set(PROGRAMAS.flatMap((p) => [...tipos(p.bloques)]));
     const paleta = [
       ...CATEGORIAS.flatMap((c) => c.paleta ?? []).map((b) => (b as { type: string }).type),
       'variables_set',
@@ -122,14 +133,17 @@ describe('ejemplos', () => {
 
   it('entre todos usan cada componente del kit', () => {
     const usados = new Set(
-      EJEMPLOS.flatMap((e) => e.proyecto.components.map((c: { metadataId: string }) => c.metadataId)),
+      EJEMPLOS.flatMap((e) => [
+        ...e.proyecto.components.map((c: { metadataId: string }) => c.metadataId),
+        ...e.proyecto.boards.map((b: { boardKind: string }) => b.boardKind),
+      ]),
     );
     expect(Object.keys(textos.kit).filter((id) => !usados.has(id))).toEqual([]);
   });
 });
 
 describe.skipIf(!CON_BACKEND)('ejemplos: compilación', () => {
-  it.each(EJEMPLOS)('$archivo compila', async ({ ino }) => {
+  it.each(PROGRAMAS)('$cual compila', async ({ ino }) => {
     expect((await compilar(ino)).hex.length).toBeGreaterThan(100);
   }, 60_000);
 });

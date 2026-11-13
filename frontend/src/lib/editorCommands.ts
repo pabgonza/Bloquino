@@ -50,6 +50,8 @@ export type EditorCommandId =
   | 'sim.record'
   | 'sim.compile'
   | 'sim.run'
+  // Bloquino: Run All, que la página de alumno usa con dos o más placas.
+  | 'sim.runAll'
   | 'sim.stop'
   | 'sim.resetBoard'
   | 'view.toggleExplorer'

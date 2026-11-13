@@ -147,7 +147,6 @@ describe('restaurar al abrir', () => {
   it.each([
     ['JSON roto', '{ esto no es json'],
     ['otro JSON', '{"hola":1}'],
-    ['proyecto sin placa', JSON.stringify({ ...JSON.parse(INICIAL), boards: [] })],
   ])('con %s guardado abre el proyecto inicial', async (_caso, guardado) => {
     localStorage.setItem(CLAVE, guardado);
     await expect(restaurar()).resolves.toBeUndefined();
@@ -176,14 +175,34 @@ describe('archivo de proyecto', () => {
     expect(proyecto()).toEqual(antes);
   });
 
-  it('rechaza un proyecto que no es para un solo Arduino UNO', async () => {
+  it('rechaza un proyecto con alguna placa que no es Arduino UNO', async () => {
     agregarLed();
     const antes = proyecto();
     const base = JSON.parse(INICIAL);
-    const esp32 = { ...base, boards: [{ ...base.boards[0], boardKind: 'esp32' }] };
-    await expect(abrir(archivo(esp32, 'otro.vlx'))).rejects.toThrow('Arduino UNO');
-    await expect(abrir(archivo({ ...base, boards: [] }))).rejects.toThrow('Arduino UNO');
+    const esp32 = { ...base.boards[0], id: 'esp32', boardKind: 'esp32' };
+    await expect(abrir(archivo({ ...base, boards: [esp32] }, 'otro.vlx'))).rejects.toThrow('Arduino UNO');
+    await expect(abrir(archivo({ ...base, boards: [base.boards[0], esp32] }))).rejects.toThrow('Arduino UNO');
     expect(proyecto()).toEqual(antes);
+  });
+
+  it('un proyecto sin placas abre sin placas', async () => {
+    await abrir(archivo({ ...JSON.parse(INICIAL), boards: [] }));
+    expect(useSimulatorStore.getState().boards).toEqual([]);
+  });
+
+  it('dos placas con programas distintos van y vuelven por el archivo, con su número', async () => {
+    const base = JSON.parse(INICIAL);
+    const segunda = { ...base.boards[0], id: 'arduino-uno-2', activeFileGroupId: 'group-arduino-uno-2', name: 'Placa 2', x: 500 };
+    base.boards[0].name = 'Placa 1';
+    base.fileGroups['group-arduino-uno-2'] = [{ name: 'sketch.ino', content: '// la segunda\n' }];
+    await abrir(archivo({ ...base, boards: [base.boards[0], segunda] }));
+    const antes = proyecto();
+    expect(antes.boards.map((b: { name?: string }) => b.name)).toEqual(['Placa 1', 'Placa 2']);
+    const descargado = archivo(buildVlxPayload());
+    cargar(INICIAL);
+    await abrir(descargado);
+    expect(proyecto()).toEqual(antes);
+    expect(useEditorStore.getState().getGroupFiles('group-arduino-uno-2')[0].content).toBe('// la segunda\n');
   });
 
   it('un .vlx sin bloques abre en modo Texto con su código intacto', async () => {

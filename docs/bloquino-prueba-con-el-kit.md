@@ -43,6 +43,7 @@ en COM6 por `scripts/puente-serie.ps1`.
 | LED sin resistencia | «Revisa tu circuito» en español: «Un LED está conectado sin resistencia…», con «Volver a arreglarlo» y «Simular igual». |
 | Recargar a mitad del armado | Vuelven los 10 componentes, todos dentro del lienzo. |
 | Simulación con la CPU frenada (DevTools, como un notebook lento) | ÷1: 60 cuadros/s, tiempo real. ÷4: 13 cuadros/s y el parpadeo de 1 s corre al ~60 %. ÷6: 9 cuadros/s, ~40 %. Lo mismo con el parpadeo solo que con el marcador o la estación del tiempo: no depende del circuito. Falta medirlo en un notebook de la sala. |
+| Varias placas en la sala (`http://localhost`), parpadeo de 1 s en la Placa 1 | Sin frenar: 1 placa, tiempo real; 2 placas, ~90 %; 3 placas, ~60 %. Con la CPU ÷4: 1 o 2 placas, ~60 %; 3 placas, ~25 %. Cada placa es un AVR más: el cable entre ellas no pesa. |
 | Los 10 programas del curso de la tabla de abajo | Cargan y se verifican en el clon (2 a 5 KB, 5 a 8 s cada uno). |
 | Monitor serie (órdenes por texto, placa real) | Con fin de línea responde en 17–51 ms; sin fin de línea, en 63–70 ms. |
 
@@ -118,8 +119,13 @@ la placa real:
 - Varias piezas a la vez, como en Tinkercad: Shift + clic suma o quita; Ctrl+A
   junta todo; Shift + arrastrar dibuja un rectángulo (también sobre la
   protoboard). Con el grupo: arrastrar, R, Supr, Ctrl+C y Ctrl+V, y Ctrl+Z
-  deshace cada cosa de una vez. ¿Se entiende el contorno punteado? La placa
-  gira con el grupo y sola (R o su botón), pero no se borra ni se copia.
+  deshace cada cosa de una vez. ¿Se entiende el contorno punteado?
+- Varias placas, como en Tinkercad: copiar la placa (Ctrl+C y Ctrl+V) la pega
+  con su programa; «Arduino UNO» en la paleta agrega otra con el parpadeo.
+  Bajo cada placa sale su número y, en Código, un selector arriba elige cuál
+  se programa; Cargar a la placa graba la elegida. Borrar una placa pide
+  confirmar, y Ctrl+Z la devuelve con su programa. Ejemplo:
+  `13-dos-placas.bloquino`. ¿Se entiende cuál se está programando?
 
 ## Decisiones tomadas
 

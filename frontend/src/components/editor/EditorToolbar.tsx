@@ -1718,6 +1718,7 @@ export const EditorToolbar = ({
       })),
     compile: () => void handleCompile(),
     run: () => void handleRun(),
+    runAll: () => void handleRunAll(), // Bloquino
     stop: () => handleStop(),
     resetBoard: () => handleReset(),
     toggleConsole: () => setConsoleOpen((v) => !v),
@@ -1737,6 +1738,8 @@ export const EditorToolbar = ({
       registerEditorCommand('sim.record', () => menuCommandsRef.current.record()),
       registerEditorCommand('sim.compile', () => menuCommandsRef.current.compile()),
       registerEditorCommand('sim.run', () => menuCommandsRef.current.run()),
+      // Bloquino: Run All para la página de alumno.
+      registerEditorCommand('sim.runAll', () => menuCommandsRef.current.runAll()),
       registerEditorCommand('sim.stop', () => menuCommandsRef.current.stop()),
       registerEditorCommand('sim.resetBoard', () => menuCommandsRef.current.resetBoard()),
       registerEditorCommand('view.toggleConsole', () => menuCommandsRef.current.toggleConsole()),

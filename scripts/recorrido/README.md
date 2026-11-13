@@ -22,9 +22,14 @@ el programa de bloques, que se carga como JSON.
 - `seleccion.js`: un clic selecciona un componente o un cable, nunca los dos;
   Supr y R actúan sobre lo seleccionado.
 - `grupo.js`: varias piezas a la vez (Shift + clic, Ctrl+A, rectángulo con
-  Shift + arrastrar), moverlas, girarlas con la placa, copiar, pegar y borrar,
-  y deshacer cada cosa en un paso. Se corre como `sala.js`, sobre el servidor
-  de desarrollo.
+  Shift + arrastrar), moverlas, girarlas con la placa, copiar, pegar y borrar
+  (también el circuito entero con su placa), y deshacer cada cosa en un paso.
+  Se corre como `sala.js`, sobre el servidor de desarrollo.
+- `placas.js`: varias placas (copiar una con su programa, selector del panel
+  de programa, cable de una placa a otra, simular las dos, borrar con
+  confirmación y Ctrl+Z, numeración, placa de la paleta, circuito sin placas).
+  Rehace `frontend/public/ejemplos/13-dos-placas.bloquino`. Se corre como
+  `grupo.js`.
 - `carga.js`: «Cargar a la placa» (h7): avance, monitor serie de la placa y
   soltarla al simular. Con un UNO conectado y ya autorizado en el navegador
   (la primera vez lo elige una persona), carga a la placa real; si no, a una
