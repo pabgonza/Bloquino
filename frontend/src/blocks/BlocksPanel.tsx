@@ -10,7 +10,7 @@ import { num, txt } from './catalogo/base';
 import { type Definir, dialogo as dialogoMisBloques } from './catalogo/misBloques';
 import { paleta as paletaMisBloques, vigilar } from './misBloques';
 import Dialogo from './misBloques/Dialogo';
-import { tema } from './tema';
+import { ESCALA, tema } from './tema';
 import { generar } from './generador';
 import { ARCHIVO_BLOQUES, BLOQUES_INICIALES, esTexto } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
@@ -51,6 +51,7 @@ export default function BlocksPanel() {
       toolbox: PALETA,
       renderer: 'zelos',
       theme: tema,
+      zoom: { startScale: ESCALA },
       trashcan: true,
       // Copia de node_modules/blockly/media: sin esto Blockly pide sus íconos y
       // sonidos a internet, y la sala puede no tenerla.

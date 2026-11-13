@@ -20,4 +20,9 @@ export const tema = Blockly.Theme.defineTheme('bloquino', {
   },
   // La página es oscura y la paleta clara: sin esto los nombres heredan el blanco.
   componentStyles: { toolboxForegroundColour: '#333' },
+  // Letra semigruesa, como Scratch: la negrita de Zelos ensancha los bloques.
+  fontStyle: { family: '"Helvetica Neue", "Segoe UI", Helvetica, sans-serif', weight: '500', size: 12 },
 });
+
+/** Escala de los bloques en el panel y en la paleta. Scratch usa 0.675. */
+export const ESCALA = 0.675;

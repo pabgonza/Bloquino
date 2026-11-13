@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { Blockly } from '../blockly';
-import { tema } from '../tema';
+import { ESCALA, tema } from '../tema';
 import { type Definir, type Parte, nuevaDefinicion } from '../catalogo/misBloques';
 import { crear, editar, validar } from '.';
 
@@ -37,6 +37,7 @@ export default function Dialogo({ ws, definicion, cerrar }: Props) {
       readOnly: true,
       renderer: 'zelos',
       theme: tema,
+      zoom: { startScale: ESCALA },
       media: '/blockly-media/',
     });
     previa.current = w;

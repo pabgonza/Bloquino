@@ -12,19 +12,19 @@ await page.locator('.blocklyToolboxCategory').filter({ hasText: 'Sonido' }).firs
 await espera(600);
 const enPaleta = await forma('ab_tocar_nota', 0, true);
 const ultimo = await forma('ab_esperar', 1);
-await arrastrar({ x: enPaleta.x + 14, y: enPaleta.y + 30 }, { x: ultimo.x + 14, y: ultimo.y + ultimo.h + 26 });
+await arrastrar({ x: enPaleta.x + 14, y: enPaleta.y + enPaleta.h / 2 }, { x: ultimo.x + 14, y: ultimo.y + ultimo.h + enPaleta.h / 2 });
 R['1 encajar'] = /delay\(1000\); \/ tone\(8, 262, 500\);/.test(await sketch());
 
 // 2. Menú del pin del primer LED: 13 → 12.
-const ledB = await forma('ab_led', 0);
-await page.mouse.click(ledB.x + ledB.w - 35, ledB.y + 26);
+const pinLed = await campoDe('ab_led', 1);
+await page.mouse.click(pinLed.x, pinLed.y);
 await espera(400);
 await page.locator('.blocklyDropDownDiv .blocklyMenuItem').filter({ hasText: /^\W*12$/ }).first().click();
 R['2 menú'] = /digitalWrite\(12, HIGH\)/.test(await sketch());
 
 // 3. Número del primer «esperar»: 1 → 0.2.
-const esp = await forma('ab_esperar', 0);
-await page.mouse.click(esp.x + 82, esp.y + 24);
+const segundos = await page.evaluate(() => { const b = [...document.querySelectorAll('.blocklyDraggable.ab_esperar')].find((e) => !e.closest('.blocklyFlyout')); const r = b.querySelector('.math_number > .blocklyPath').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+await page.mouse.click(segundos.x, segundos.y);
 await espera(300);
 await page.keyboard.press('Control+a');
 await page.keyboard.type('0.2');
@@ -34,7 +34,7 @@ R['3 número'] = /digitalWrite\(12, HIGH\); \/ delay\(200\);/.test(await sketch(
 // 4. El bloque de nota, a la papelera.
 const nota_ = await forma('ab_tocar_nota', 0);
 const papelera = await page.evaluate(() => { const r = document.querySelector('.blocklyTrash').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
-await arrastrar({ x: nota_.x + 10, y: nota_.y + 30 }, papelera);
+await arrastrar({ x: nota_.x + 10, y: nota_.y + nota_.h / 2 }, papelera);
 R.sketch = await sketch();
 R['4 papelera'] = !R.sketch.includes('tone(');
 await page.screenshot({ path: './.playwright-mcp/bloques.jpg', type: 'jpeg', quality: 85, scale: 'css' });
