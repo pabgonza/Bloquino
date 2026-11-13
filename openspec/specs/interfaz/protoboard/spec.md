@@ -59,4 +59,5 @@ Al girar la protoboard, cada componente asentado en ella SHALL girar con ella, e
 - **THEN** sus patitas quedan asentadas en agujeros de la protoboard
 
 #### Scenario: Deshacer el giro
-- **WHEN** el alumno gira la protoboard y luego aprieta Ctrl+
+- **WHEN** el alumno gira la protoboard y luego aprieta Ctrl+Z
+- **THEN** la protoboard y sus componentes vuelven a su posición y giro anteriores, asentados en los mismos agujeros
