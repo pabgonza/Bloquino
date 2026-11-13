@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Una clase con Bloquino</title>
+<style>
+:root {
+  --fondo: #f4f6fa; --papel: #fff; --tinta: #1d2433; --suave: #5a6478; --borde: #dde2ec;
+  --profe: #1565c0; --profe-f: #e3eefb; --alumno: #2e7d32; --alumno-f: #e6f4e7;
+  --marca: #e65100; --codigo: #0f1724; --codigo-t: #d7e3f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #12161f; --papel: #1b212d; --tinta: #e6eaf2; --suave: #9aa5b8; --borde: #2c3444;
+    --profe: #7fb2f0; --profe-f: #1a2b44; --alumno: #81c784; --alumno-f: #1b3320;
+    --marca: #ffa65c; --codigo: #0b0f17;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font: 16px/1.5 system-ui, "Segoe UI", sans-serif; }
+main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 2rem; margin: 0 0 4px; }
+h2 { font-size: 1.4rem; margin: 48px 0 12px; display: flex; gap: 10px; align-items: center; }
+h2 .n { background: var(--tinta); color: var(--fondo); border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; font-size: 1rem; flex: none; }
+h3 { font-size: 1.05rem; margin: 0 0 6px; }
+p { margin: 0 0 8px; }
+.sub { color: var(--suave); margin-bottom: 16px; }
+a { color: var(--profe); }
+code, pre { font-family: Consolas, "Cascadia Mono", monospace; font-size: .9em; }
+code { background: var(--borde); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--codigo); color: var(--codigo-t); padding: 12px 14px; border-radius: 8px; overflow-x: auto; margin: 8px 0; line-height: 1.45; }
+pre .ok { color: #8fd694; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 8px; }
+nav a { text-decoration: none; background: var(--papel); border: 1px solid var(--borde); border-radius: 999px; padding: 4px 12px; color: var(--tinta); font-size: .9rem; }
+.rol { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; margin-bottom: 6px; }
+.rol.profe { background: var(--profe-f); color: var(--profe); }
+.rol.alumno { background: var(--alumno-f); color: var(--alumno); }
+.tarjeta { min-width: 0; overflow-wrap: anywhere; background: var(--papel); border: 1px solid var(--borde); border-radius: 12px; padding: 16px; }
+.pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.aviso { border-left: 4px solid var(--marca); background: var(--papel); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+figure { margin: 8px 0 0; }
+figure img { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--borde); }
+figcaption { color: var(--suave); font-size: .85rem; margin-top: 4px; }
+.marcado { position: relative; }
+.marcado b { position: absolute; transform: translate(-50%, -50%); background: var(--marca); color: #fff; border: 2px solid #fff; border-radius: 50%; width: clamp(18px, 2.6vw, 26px); height: clamp(18px, 2.6vw, 26px); display: grid; place-items: center; font-size: clamp(.65rem, 1.2vw, .8rem); box-shadow: 0 1px 4px #0006; }
+.anillo { position: absolute; transform: translate(-50%, -50%); border: 3px solid var(--marca); border-radius: 8px; }
+ol.leyenda { columns: 2; column-gap: 24px; padding-left: 20px; margin: 10px 0 0; }
+ol.leyenda li { break-inside: avoid; margin-bottom: 4px; }
+.momento { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-bottom: 12px; }
+.momento > div:first-of-type { border-top: 4px solid var(--profe); }
+.momento > div:last-of-type { border-top: 4px solid var(--alumno); }
+.momento h3 { grid-column: 1 / -1; margin: 12px 0 0; }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+table { width: 100%; border-collapse: collapse; background: var(--papel); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+th { background: var(--borde); font-size: .9rem; }
+svg text { font-family: system-ui, "Segoe UI", sans-serif; }
+.sala { background: var(--papel); border: 1px solid var(--borde); border-radius: 12px; padding: 8px; }
+.sala svg { width: 100%; height: auto; display: block; }
+@media (max-width: 720px) {
+  .momento, .dos { grid-template-columns: 1fr; }
+  ol.leyenda { columns: 1; }
+  h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+<main>
+<h1>Una clase con Bloquino</h1>
+<p class="sub">Preparar la clase, sumar a los alumnos y dictarla, vista por el <span class="rol profe">profesor</span> y por el <span class="rol alumno">alumno</span>.</p>
+
+<div class="sala">
+<svg viewBox="0 0 900 270" role="img" aria-label="Esquema de la sala: el notebook del profesor con Bloquino en Docker, conectado por la red de la sala a los equipos de los alumnos, cada uno con su Arduino por USB">
+  <style>
+    .c { fill: var(--papel); stroke: var(--borde); stroke-width: 2; }
+    .p { fill: var(--profe-f); stroke: var(--profe); stroke-width: 2; }
+    .a { fill: var(--alumno-f); stroke: var(--alumno); stroke-width: 2; }
+    .t { fill: var(--tinta); font-size: 15px; }
+    .s { fill: var(--suave); font-size: 13px; }
+    .r { stroke: var(--suave); stroke-width: 2; stroke-dasharray: 6 5; fill: none; }
+    .u { fill: #1b6ca8; }
+  </style>
+  <rect class="p" x="20" y="70" width="230" height="130" rx="12"/>
+  <text class="t" x="135" y="100" text-anchor="middle" font-weight="700">Notebook del profesor</text>
+  <rect class="c" x="45" y="115" width="180" height="40" rx="8"/>
+  <text class="t" x="135" y="140" text-anchor="middle">Docker · Bloquino</text>
+  <text class="s" x="135" y="182" text-anchor="middle">compila los programas</text>
+  <path class="r" d="M250 135 H360"/>
+  <text class="s" x="305" y="122" text-anchor="middle">red de</text>
+  <text class="s" x="305" y="156" text-anchor="middle">la sala</text>
+  <rect class="c" x="360" y="105" width="150" height="60" rx="30"/>
+  <text class="t" x="435" y="132" text-anchor="middle" font-weight="700">https://</text>
+  <text class="t" x="435" y="152" text-anchor="middle">192.168.18.111</text>
+  <path class="r" d="M510 135 C560 135 560 55 610 55 M510 135 H610 M510 135 C560 135 560 215 610 215"/>
+  <g>
+    <rect class="a" x="610" y="30" width="150" height="50" rx="10"/><text class="t" x="685" y="60" text-anchor="middle">Alumno 1</text>
+    <rect class="a" x="610" y="110" width="150" height="50" rx="10"/><text class="t" x="685" y="140" text-anchor="middle">Alumno 2</text>
+    <rect class="a" x="610" y="190" width="150" height="50" rx="10"/><text class="t" x="685" y="220" text-anchor="middle">Alumno …</text>
+  </g>
+  <g>
+    <path d="M760 55 H800 M760 135 H800 M760 215 H800" stroke="var(--suave)" stroke-width="3"/>
+    <rect class="u" x="800" y="38" width="70" height="34" rx="4"/><rect class="u" x="800" y="118" width="70" height="34" rx="4"/><rect class="u" x="800" y="198" width="70" height="34" rx="4"/>
+    <text x="835" y="60" text-anchor="middle" fill="#fff" font-size="13">UNO</text><text x="835" y="140" text-anchor="middle" fill="#fff" font-size="13">UNO</text><text x="835" y="220" text-anchor="middle" fill="#fff" font-size="13">UNO</text>
+    <text class="s" x="780" y="262" text-anchor="middle">USB</text>
+  </g>
+</svg>
+</div>
+<p class="sub" style="margin-top:8px">Sin internet, sin cuentas ni lista de alumnos: cada equipo guarda su proyecto en su navegador y lo entrega como archivo <code>.bloquino</code>.</p>
+
+<nav>
+  <a href="#preparar">1 · Preparar la clase</a>
+  <a href="#sumar">2 · Sumar a los alumnos</a>
+  <a href="#dictar">3 · Dictar la clase</a>
+  <a href="#terminar">4 · Al terminar</a>
+  <a href="#falla">Si algo falla</a>
+</nav>
+
+<!-- 1 -->
+<h2 id="preparar"><span class="n">1</span> Preparar la clase</h2>
+<div class="pasos">
+  <div class="tarjeta">
+    <span class="rol profe">Profesor · una vez</span>
+    <h3>Construir Bloquino</h3>
+    <p>Con internet y Docker Desktop abierto, en PowerShell desde <code>repo/</code>:</p>
+    <pre>.\scripts\sala.ps1 --build</pre>
+    <p>Abrir el firewall (PowerShell <b>como administrador</b>):</p>
+    <pre>New-NetFirewallRule -DisplayName "Bloquino" -Direction Inbound -Protocol TCP -LocalPort 80,443 -Action Allow</pre>
+  </div>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor · antes de cada clase</span>
+    <h3>Levantar la sala</h3>
+    <p>Conectar el notebook a la red de la sala, abrir Docker Desktop y:</p>
+    <pre>.\scripts\sala.ps1
+
+<span class="ok">Alumnos:                    https://192.168.18.111</span>
+La primera vez, cada equipo: http://192.168.18.111/ca.crt
+Solo simular, sin cargar:    http://192.168.18.111</pre>
+    <p>Escribir en la pizarra la dirección <b>Alumnos</b>.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor · 1 minuto</span>
+    <h3>Probar desde otro equipo</h3>
+    <p>Un celular en la misma red sirve: abrir la dirección y pulsar <b>Iniciar simulación</b>. Si la luz de la placa parpadea, compila.</p>
+    <p class="sub">La IP cambia si el notebook se reconecta a la red: volver a correr <code>sala.ps1</code> y dar la nueva.</p>
+  </div>
+</div>
+
+<!-- 2 -->
+<h2 id="sumar"><span class="n">2</span> Sumar a los alumnos</h2>
+<p>No hay inscripción: un alumno «entra» a la clase abriendo la dirección en Chrome o Edge. La primera vez, cada equipo necesita confiar en el certificado de la sala para poder cargar a la placa. Dos caminos:</p>
+<div class="dos">
+  <div class="tarjeta">
+    <span class="rol alumno">Equipo del alumno · recomendado</span>
+    <h3>A. Instalar la autoridad (una vez)</h3>
+    <p>Abrir <code>http://&lt;IP&gt;/ca.crt</code> (descarga <code>bloquino-ca.crt</code>) y, en la carpeta de descargas:</p>
+    <pre>Import-Certificate -FilePath .\bloquino-ca.crt -CertStoreLocation Cert:\CurrentUser\Root</pre>
+    <p>Windows pregunta si confiar: <b>Sí</b>. Cerrar y abrir el navegador. Sin permisos de administrador. Después, nunca más avisos.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Equipo del alumno · rápido</span>
+    <h3>B. Aceptar el aviso del navegador</h3>
+    <figure class="marcado">
+      <img src="img/aviso-https-avanzado.jpg" alt="Aviso de Chrome «La conexión no es privada» con la configuración avanzada abierta">
+      <span class="anillo" style="left:35.5%;top:98%;width:39%;height:7%"></span>
+    </figure>
+    <figcaption><b>Avanzado</b> → <b>Acceder a … (sitio no seguro)</b>. El aviso vuelve cada cierto tiempo.</figcaption>
+  </div>
+</div>
+<div class="aviso">Entrar siempre por <code>https://</code>: el proyecto se guarda por dirección, y uno armado en <code>http://</code> no aparece en la otra.</div>
+
+<div class="tarjeta" style="margin-top:12px">
+  <span class="rol alumno">Alumno</span>
+  <h3>Lo que ve al entrar</h3>
+  <figure class="marcado">
+    <img src="img/nuevo.jpg" alt="Página del alumno: barra de botones arriba, lienzo con la placa al centro y paleta de componentes a la derecha">
+    <b style="left:26.8%;top:3.3%">1</b><b style="left:32.7%;top:3.3%">2</b><b style="left:37.6%;top:3.3%">3</b>
+    <b style="left:66.7%;top:3.3%">4</b><b style="left:74%;top:3.3%">5</b><b style="left:87.3%;top:3.3%">6</b>
+    <b style="left:77.5%;top:9.7%">7</b><b style="left:39.1%;top:53.3%">8</b>
+  </figure>
+  <ol class="leyenda">
+    <li><b>Nuevo</b>: empezar de cero.</li>
+    <li><b>Abrir</b>: un archivo <code>.bloquino</code>.</li>
+    <li><b>Descargar</b>: guardar el proyecto como archivo.</li>
+    <li><b>Código</b>: abre los bloques.</li>
+    <li><b>Iniciar simulación</b>.</li>
+    <li><b>Cargar a la placa</b> real, por USB.</li>
+    <li><b>Componentes</b>: clic para sacar uno.</li>
+    <li><b>Lienzo</b>: la placa y el circuito.</li>
+  </ol>
+  <p class="sub" style="margin-top:8px">Todo se guarda solo en el navegador («Guardado», junto a Descargar).</p>
+</div>
+
+<!-- 3 -->
+<h2 id="dictar"><span class="n">3</span> Dictar la clase</h2>
+<p class="sub">En cada momento, lo que hace el profesor (azul) y lo que ve el alumno (verde).</p>
+
+<div class="momento">
+  <h3>a · Repartir el punto de partida</h3>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Da el nombre de un ejemplo de la sala, que se descarga desde la dirección:</p>
+    <pre>https://&lt;IP&gt;/ejemplos/02-semaforo.bloquino</pre>
+    <p>O pasa un <code>.bloquino</code> propio (pendrive, carpeta compartida). O nada: se parte de <b>Nuevo</b>.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <figure><img src="img/ejemplo.jpg" alt="El ejemplo del semáforo abierto: tres LED en la protoboard cableados a la placa"></figure>
+    <figcaption><b>Abrir</b> → elegir el archivo. El circuito y su programa aparecen completos.</figcaption>
+  </div>
+</div>
+
+<div class="momento">
+  <h3>b · Armar el circuito</h3>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Proyecta su pantalla y arma al mismo tiempo que los alumnos.</p>
+    <p class="sub">Atajos: <b>Supr</b> borra lo seleccionado, <b>R</b> gira, <b>Ctrl+Z</b> deshace. Clic derecho abre la ficha del componente.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <figure><img src="img/componente.jpg" alt="Un buzzer recién sacado de la paleta aparece en la esquina del lienzo"></figure>
+    <figcaption>Clic en la paleta → el componente aparece arriba a la izquierda; arrastrarlo a la protoboard. Cables: clic en una pata y clic en la otra.</figcaption>
+  </div>
+</div>
+
+<div class="momento">
+  <h3>c · Programar con bloques</h3>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Recorre la sala. La pestaña <b>Texto</b> muestra el C++ que generan los bloques; <b>Bloques + Texto</b>, los dos lado a lado.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <figure><img src="img/bloques.jpg" alt="Panel de bloques abierto junto al circuito, con las categorías a la izquierda y el programa del semáforo"></figure>
+    <figcaption><b>Código</b> → arrastrar bloques desde las categorías. Varios scripts corren a la vez.</figcaption>
+  </div>
+</div>
+
+<div class="momento">
+  <h3>d · Probar en el simulador</h3>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Cada simulación compila en su notebook (15 alumnos a la vez: menos de 15 s). Si un programa falla, el error sale en la página de ese alumno.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <figure><img src="img/simulando.jpg" alt="Simulación corriendo: el LED verde del semáforo encendido y el botón rojo Detener simulación"></figure>
+    <figcaption><b>Iniciar simulación</b>: el circuito cobra vida. Mientras corre, la paleta se bloquea; <b>Detener</b> para seguir armando.</figcaption>
+  </div>
+</div>
+
+<div class="momento">
+  <h3>e · Cargar a la placa real</h3>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Ayuda con los avisos:</p>
+    <p>«<b>La placa está ocupada</b>»: cerrar el Arduino IDE u otra pestaña de Bloquino.<br>«<b>La placa no responde</b>»: cable USB solo de carga o mal puesto.</p>
+    <p class="sub">Solo Chrome y Edge de computador.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <div class="dos">
+      <figure><img src="img/cargando.jpg" alt="Tarjeta «Cargando el programa a la placa…» con barra de avance"></figure>
+      <figure><img src="img/carga-lista.jpg" alt="Tarjeta «¡Listo! Tu programa ya está en la placa»"></figure>
+    </div>
+    <figcaption>Conectar el Arduino por USB → <b>Cargar a la placa</b>. La primera vez el navegador pregunta cuál: elegir el puerto del Arduino. Después el <b>Monitor serie</b> (bajo los bloques) muestra lo que la placa escribe.</figcaption>
+  </div>
+</div>
+
+<div class="momento">
+  <h3>f · Entregar</h3>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Recoge los archivos (pendrive, carpeta compartida, correo) y revisa cada uno con <b>Abrir</b>.</p>
+    <p class="sub">Abrir reemplaza el proyecto de ese navegador: el profesor revisa en su propio equipo, no en el del alumno.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <p><b>Descargar</b> → escribir un nombre (por ejemplo <code>semaforo-ana</code>) → queda <code>semaforo-ana.bloquino</code> en Descargas.</p>
+    <p class="sub">Ese archivo trae el circuito y el programa; se abre en cualquier equipo con Bloquino.</p>
+  </div>
+</div>
+
+<!-- 4 -->
+<h2 id="terminar"><span class="n">4</span> Al terminar</h2>
+<div class="dos">
+  <div class="tarjeta">
+    <span class="rol alumno">Alumno</span>
+    <p><b>Descargar</b> antes de cerrar. El proyecto también queda en el navegador y vuelve la próxima clase, si la dirección es la misma.</p>
+  </div>
+  <div class="tarjeta">
+    <span class="rol profe">Profesor</span>
+    <p>Puede dejar Docker andando o apagar Bloquino:</p>
+    <pre>docker compose -f docker-compose.bloquino.yml down</pre>
+    <p class="sub">Nunca con <code>-v</code>: borraría la autoridad del certificado y habría que instalarla de nuevo en cada equipo.</p>
+  </div>
+</div>
+
+<h2 id="falla">Si algo falla</h2>
+<table>
+  <tr><th>Qué pasa</th><th>Qué hacer</th></tr>
+  <tr><td>En el notebook abre y en los equipos no</td><td>Firewall (paso 1) o los equipos están en otra red (wifi de invitados, datos del celular).</td></tr>
+  <tr><td>Abría y dejó de abrir</td><td>Cambió la IP: <code>.\scripts\sala.ps1</code> y dar la dirección nueva.</td></tr>
+  <tr><td>Ningún programa simula</td><td><code>docker restart bloquino</code></td></tr>
+  <tr><td>La placa no aparece en la lista</td><td>Clon con chip CH340: instalar su driver antes de la clase.</td></tr>
+  <tr><td>La página se ve antigua</td><td>Ctrl+F5.</td></tr>
+</table>
+<p class="sub" style="margin-top:12px">Detalle completo en <a href="../bloquino-dia-de-clase.md">bloquino-dia-de-clase.md</a>. Capturas: <code>scripts/recorrido/guia.js</code>.</p>
+</main>
+</body>
+</html>

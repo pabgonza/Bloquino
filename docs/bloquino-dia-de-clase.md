@@ -4,6 +4,10 @@ Bloquino corre en el notebook del profesor, dentro de Docker, y los alumnos
 entran desde sus equipos por la red de la sala. No hace falta internet durante
 la clase. Los comandos son de PowerShell, desde la carpeta `repo/`.
 
+La clase completa, con capturas y vista por el profesor y por el alumno:
+[guia-de-la-clase/index.html](guia-de-la-clase/index.html) (abrirla en el
+navegador).
+
 ## Una vez: construir la imagen
 
 Con internet y Docker Desktop abierto:

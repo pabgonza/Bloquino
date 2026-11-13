@@ -32,6 +32,9 @@ el programa de bloques, que se carga como JSON.
   página ya compilada. No usa `lib.js` ni `conv.mjs`: se corre directo con
   `browser_run_code_unsafe` (parámetro `filename`), tras poner en `DIRECCION`
   la IP del notebook.
+- `guia.js`: rehace las capturas de `docs/guia-de-la-clase/` sobre la sala
+  (`http://localhost`), con una placa simulada en la página. Se corre como
+  `sala.js`.
 - `conv.mjs`: arma los scripts en `frontend/.recorrido/`.
 
 ## Cómo correrlo
