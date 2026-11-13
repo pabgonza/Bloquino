@@ -12,9 +12,45 @@ verdad. Media hora, con la página de alumno (`/editor?alumno`) y el kit al lado
   y Supr lo elimina. Con la simulación corriendo, **clic** sobre un sensor abre
   su panel de valores.
 
+## Pendiente (2026-11-13)
+
+Lo que falta probar con el kit y en la sala; el detalle de cada punto está
+más abajo.
+
+- [ ] Sala: regla de firewall con los puertos 80 y 443 y entrar desde otro
+  equipo de la red (`docs/bloquino-dia-de-clase.md`). En este notebook no
+  hay regla «Bloquino» y la red figura como Pública.
+- [ ] Cargar a la placa real desde otro equipo por `https://<IP>`, con la
+  autoridad instalada o aceptando el aviso (desde el mismo notebook ya
+  funciona: ver abajo).
+- [ ] Control remoto: anotar los códigos reales de las 17 teclas.
+- [ ] Displays: ¿cátodo o ánodo común?
+- [ ] Pantalla LCD: cableado real.
+- [ ] LED RGB: ¿el del kit es de cátodo común?
+- [ ] Programas del curso en bloques: oír y ver con los componentes armados
+  los que se apartan del `.ino` (tabla de abajo; ya cargan en el clon).
+- [ ] Decidir si el proyecto nuevo parte solo con la placa.
+
+## Probado sin armar nada (2026-11-13)
+
+Con Playwright sobre la sala (`http://localhost`) y con el clon del kit (CH340)
+en COM6 por `scripts/puente-serie.ps1`.
+
+| Prueba | Resultado |
+| --- | --- |
+| Entrar por `https://192.168.18.111` aceptando el aviso | Contexto seguro, Web Serial disponible, simula y «Cargar a la placa» (placa simulada) termina en «¡Listo!». |
+| Tiras de la protoboard | Agujero: marca sus 5; riel: sus 50; cada marca a 0,3 px de su agujero. Igual con la protoboard girada. |
+| Ocho componentes seguidos | Quedan en fila arriba, sin encimarse ni tapar la placa. La resistencia del proyecto nuevo (la de Velxio) sí queda sobre la placa. |
+| LED sin resistencia | «Revisa tu circuito» en español: «Un LED está conectado sin resistencia…», con «Volver a arreglarlo» y «Simular igual». |
+| Recargar a mitad del armado | Vuelven los 10 componentes, todos dentro del lienzo. |
+| Simulación con la CPU frenada (DevTools, como un notebook lento) | ÷1: 60 cuadros/s, tiempo real. ÷4: 13 cuadros/s y el parpadeo de 1 s corre al ~60 %. ÷6: 9 cuadros/s, ~40 %. Lo mismo con el parpadeo solo que con el marcador o la estación del tiempo: no depende del circuito. Falta medirlo en un notebook de la sala. |
+| Los 10 programas del curso de la tabla de abajo | Cargan y se verifican en el clon (2 a 5 KB, 5 a 8 s cada uno). |
+| Monitor serie (órdenes por texto, placa real) | Con fin de línea responde en 17–51 ms; sin fin de línea, en 63–70 ms. |
+
 ## Por sesión
 
-Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques.
+Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques
+(los del curso están en sus `.bloquino`).
 
 | Sesión | Qué mirar |
 | --- | --- |
@@ -50,6 +86,24 @@ funciona bien.
   `$env:BLOQUINO_PUENTE = 4700; $env:BLOQUES_BACKEND_URL = "http://localhost"; npx vitest run src/__tests__/bloquino-carga.test.ts -t "placa real"`.
 - Desde un equipo de alumno: entrar por `https://` más la IP, con la autoridad
   instalada o aceptando el aviso, y cargar desde ahí.
+
+## Programas del curso en bloques
+
+El curso pasa a mostrar cada programa en bloques (`sketches/sesion-NN/<nombre>/<nombre>.bloquino`
+en `Curso_Arduino`). Todos compilan y simulan; estos se
+apartan del `.ino` porque no hay bloque exacto, y conviene oírlos o verlos en
+la placa real:
+
+| Programa | Qué cambia | Qué mirar |
+| --- | --- | --- |
+| S4 `contador` | Las variables de bloques son decimales | El monitor muestra «1.00, 2.00…»: ¿molesta? |
+| S5 `sirena` | 659 Hz en vez de 660 (menú de notas) | Suena igual. |
+| S5 `piano` | Nota de 0,1 s mientras se aprieta, en vez de sonar hasta soltar | Sin cortes al mantener apretado; con dos botones, las notas se turnan. |
+| S6 `perilla` y `saludo_perilla` | Perilla de 0 a 100 en vez de 0 a 1023 | El servo recorre todo el ángulo. |
+| S7 `theremin` | Cuatro notas por tramos de 15 cm en vez de un tono continuo | ¿Sigue siendo divertido? |
+| S7 `estacionamiento_pito` | Pitido de 0,1 s en rojo | Suena casi continuo. |
+| S8 `fiebre` y `fiebre_aviso` | Nota de 1 s en vez de un tono sin fin | Sobre 30 °C suena seguido. |
+| S9 `lampara_humor` | Sin eco el sensor da 400 cm: queda azul, no rojo | Sin mano delante, el color. |
 
 ## En cualquier momento
 
