@@ -1,7 +1,9 @@
 # Bloquino en la sala: un contenedor con la página y el backend de compilación.
 #   docker compose -f docker-compose.bloquino.yml up -d --build
-# Los alumnos entran a http://<IP del notebook del profesor>.
-# Otro puerto: definir BLOQUINO_PUERTO antes (los alumnos agregan :puerto).
+# Mejor con scripts/sala.ps1, que además pone la IP de hoy en el certificado.
+# Los alumnos entran a https://<IP del notebook del profesor> (o http://, que
+# simula pero no carga a la placa).
+# Otro puerto de HTTP: definir BLOQUINO_PUERTO antes (los alumnos agregan :puerto).
 # Guía: docs/bloquino-dia-de-clase.md
 name: bloquino
 services:
@@ -12,5 +14,15 @@ services:
     image: bloquino:sala
     container_name: bloquino
     restart: unless-stopped
+    environment:
+      # IP y nombres del notebook que valen en el certificado, separados por coma.
+      BLOQUINO_NOMBRES: ${BLOQUINO_NOMBRES:-}
     ports:
       - "${BLOQUINO_PUERTO:-80}:80"
+      - "443:443"
+    volumes:
+      # La autoridad certificadora: se conserva al reconstruir la imagen.
+      - certs:/certs
+
+volumes:
+  certs:
