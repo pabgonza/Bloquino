@@ -47,7 +47,7 @@ function posPin(id, pin) {
 }
 
 /** Punto de un componente del que se lo toma o por el que se le pasa el mouse.
- *  La perilla se toma por una esquina (el dial gira) y por la caja de su dibujo: la del elemento mide mal. */
+ *  La perilla se toma por una esquina de su dibujo: el dial gira. */
 function agarre(id) {
   return page.evaluate((id) => {
     const el = id === 'uno' ? document.querySelector('[data-board-id="arduino-uno"]') : document.getElementById(id);

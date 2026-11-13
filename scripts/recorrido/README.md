@@ -74,8 +74,11 @@ segundos antes de la llamada siguiente. Las capturas quedan en
 - El botón sale de la paleta girado 90°: así va a caballo del canal, con las
   patitas 1 en una columna (filas c y h) y las 2 dos columnas al lado. Sin
   girar no cruza el canal y en una sola mitad queda en corto.
-- La perilla se arrastra tomándola de la base (el dial gira) y la caja de su
-  elemento mide mal: usar la del dibujo interno.
+- La perilla se arrastra tomándola de la base (el dial gira).
+- Varios elementos de wokwi (sensor de distancia, perilla, servo, LCD…) no
+  fijan su display: en línea, su caja es la línea de texto al pie del dibujo y
+  `agarre` tomaba el sensor por un cuadro de pin. `alumno.css` los deja en
+  `inline-block`, con la caja igual al dibujo.
 - Una resistencia vertical de la fila c de arriba llega a la fila g de abajo:
   sirve para poner una en serie entre el cable del pin y la patita.
 - El panel de un sensor se abre con un clic sobre él durante la simulación.

@@ -329,6 +329,12 @@
 .bq-pagina .dynamic-component-wrapper > .web-component-container {
   pointer-events: auto;
 }
+/* Estos elementos de wokwi no fijan su display y quedan en línea: su caja es
+   la línea de texto al pie del dibujo, no el dibujo. En bloque, la caja y el
+   dibujo coinciden (el dibujo y los cuadros de pin no se mueven). */
+.bq-pagina .web-component-container > :is(wokwi-hc-sr04, wokwi-rgb-led, wokwi-servo, wokwi-potentiometer, wokwi-lcd1602, wokwi-7segment, wokwi-ir-receiver) {
+  display: inline-block;
+}
 /* Sin el nombre bajo cada componente, como en Tinkercad: viene en inglés de
    los metadatos y tapa la protoboard. */
 .bq-pagina .component-label {
