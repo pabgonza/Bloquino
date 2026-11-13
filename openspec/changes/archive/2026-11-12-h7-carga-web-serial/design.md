@@ -25,4 +25,4 @@ La placa de prueba (UNO original, Optiboot 4.4) se sondeó antes de diseñar: tr
 
 - El clon CH340 del kit no se probó en este hito: la placa disponible es un UNO original. El protocolo y el reinicio por DTR son los mismos; queda como prueba de Pablo.
 - Instalar la autoridad en cada equipo de alumno es un paso manual. Aceptar el aviso del navegador sin instalarla también deja la página en contexto seguro, con Web Serial (comprobado), pero el aviso vuelve.
-- El selector de puerto es del navegador y no se puede automatizar: la primera elección la hace una persona. Por eso la conexión Web Serial con la placa real, en un navegador real, queda como prueba de Pablo; todo lo demás está probado.
+- El selector de puerto es del navegador y no se puede automatizar: la primera elección la hace una persona. Pablo la hizo una vez en su Chrome y otra en el navegador de pruebas; con ese permiso, el guion de la página corrió contra la placa real.

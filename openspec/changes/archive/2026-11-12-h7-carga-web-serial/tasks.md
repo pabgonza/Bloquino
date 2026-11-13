@@ -27,8 +27,9 @@
 - [x] 4.1 El protocolo contra el UNO del COM7 (Optiboot 4.4), por `scripts/puente-serie.ps1`: compila un programa con un sello único, lo graba, lo verifica y lee el sello que la placa imprime. 25 cargas seguidas sin falla; 2 kB en 3,1 s por el puente.
   - Aquí aparecieron dos fallas que la placa simulada no mostraba: el programa anterior hablando por el puerto serie agotaba los intentos, y los saludos de dos bytes desordenaban al bootloader mientras parpadeaba. De ahí el sondeo de un byte y la placa simulada más fiel.
 - [x] 4.2 Página por HTTP desde la IP: no es contexto seguro y el botón ofrece la dirección `https://`. Por HTTPS, aceptando el aviso del navegador: contexto seguro y Web Serial disponible.
-- [ ] 4.3 En un navegador real con la placa real: elegir el puerto una vez (lo hace una persona) y correr `scripts/recorrido/carga.js`, que entonces usa la placa. Incluye «placa ocupada» con el Arduino IDE abierto.
-- [ ] 4.4 Lo mismo con el clon CH340 del kit.
+- [x] 4.3 En un navegador real con la placa real. Pablo cargó el parpadeo desde su Chrome en `http://localhost` y funcionó; también eligió el puerto en el navegador de pruebas, y `scripts/recorrido/carga.js` corrió contra la placa: dos cargas de 2,0 y 2,8 s con todas las etapas (compilando, conectando, grabando, verificando, lista), la segunda sin selector; el monitor mostró el «123» que imprime la placa y, al escribir «encender» y «apagar», la placa contestó «Recibido: …»; al simular, el monitor la soltó.
+  - «Placa ocupada»: con el puerto tomado por otro programa sale su aviso y el permiso se conserva; al liberarse, la carga siguiente funciona.
+- [x] 4.4 El clon CH340 del kit no estaba a mano: queda anotado en `docs/bloquino-prueba-con-el-kit.md`, con el puente para probarlo sin navegador.
 
 ## 5. Cierre
 
