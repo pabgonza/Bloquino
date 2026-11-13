@@ -17,6 +17,8 @@ export interface Contexto {
   locales: Set<string>;
   /** El programa se genera con corrutinas: las esperas ceden el turno */
   paralelo: boolean;
+  /** Bloques propios que se están generando, del más externo al actual (ver bloques.ts) */
+  dentroDe: string[];
   esperar(ms: string): string;
   esperarHasta(condicion: string): string;
   /** Lo que va en el `for` para declarar el contador de un bucle */
@@ -34,6 +36,7 @@ export const contextoClasico = (): Contexto => ({
   funciones: new Set(),
   locales: new Set(),
   paralelo: false,
+  dentroDe: [],
   esperar: (ms) => `delay(${ms});\n`,
   esperarHasta: (condicion) => `while (!(${condicion})) {}\n`,
   contador: (nombre) => `int ${nombre}`,

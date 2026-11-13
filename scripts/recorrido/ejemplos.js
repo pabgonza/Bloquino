@@ -170,3 +170,11 @@ await ejemplo('13-dos-placas', async (r) => {
   for (let t = 0; t < 3000; t += 100) { vistas.push(await luces()); await espera(100); }
   r['luces (Placa 1, Placa 2)'] = [...new Set(vistas)];
 });
+
+await ejemplo('14-mis-bloques', async (r, ids) => {
+  // Tres parpadeos blancos y después rojo, verde y azul.
+  const rgb = async () => { const p = await prop(ids['rgb-led'][0], 'ledRed', 'ledGreen', 'ledBlue'); return ['ledRed', 'ledGreen', 'ledBlue'].map((c) => Math.round(p[c] * 100) / 100).join('/'); };
+  const vistos = [];
+  for (let t = 0; t < 3800; t += 100) { const v = await rgb(); if (vistos.at(-1) !== v) vistos.push(v); await espera(100); }
+  r.colores = vistos.join(' → ');
+});

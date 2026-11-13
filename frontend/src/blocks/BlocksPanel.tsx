@@ -3,33 +3,18 @@
  * verdad del programa: cada cambio se guarda en `bloques.json` del grupo de
  * archivos de la placa y regenera su sketch, que el botón Run compila.
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Blockly } from './blockly';
-import { CATEGORIAS, PALETA, SOMBREROS, TEXTO, TOPE_SCRIPTS } from './catalogo';
+import { PALETA, SOMBREROS, TEXTO, TOPE_SCRIPTS } from './catalogo';
 import { num, txt } from './catalogo/base';
+import { type Definir, dialogo as dialogoMisBloques } from './catalogo/misBloques';
+import { paleta as paletaMisBloques, vigilar } from './misBloques';
+import Dialogo from './misBloques/Dialogo';
+import { tema } from './tema';
 import { generar } from './generador';
 import { ARCHIVO_BLOQUES, BLOQUES_INICIALES, esTexto } from './archivo';
 import { useEditorStore } from '../store/useEditorStore';
 import './bloques.css';
-
-const tema = Blockly.Theme.defineTheme('bloquino', {
-  name: 'bloquino',
-  base: Blockly.Themes.Zelos,
-  blockStyles: {
-    ...Object.fromEntries(
-      CATEGORIAS.map((c) => [
-        c.id,
-        { colourPrimary: c.color, hat: c.id === 'eventos' ? 'cap' : '' },
-      ]),
-    ),
-    // Bloques propios de Blockly que usa el catálogo: número, variables y texto.
-    math_blocks: { colourPrimary: '#59C059' },
-    variable_blocks: { colourPrimary: '#FF8C1A' },
-    text_blocks: { colourPrimary: '#7F8C8D' },
-  },
-  // La página es oscura y la paleta clara: sin esto los nombres heredan el blanco.
-  componentStyles: { toolboxForegroundColour: '#333' },
-});
 
 // Categoría de la paleta con un punto de color junto al nombre, en vez de la
 // barra lateral de Blockly.
@@ -57,6 +42,9 @@ Blockly.registry.register(
 
 export default function BlocksPanel() {
   const ref = useRef<HTMLDivElement>(null);
+  const area = useRef<Blockly.WorkspaceSvg>(null);
+  // Diálogo de Mis bloques abierto: para crear (sin definición) o para editar.
+  const [dialogo, setDialogo] = useState<{ definicion?: Definir } | null>(null);
 
   useEffect(() => {
     const ws = Blockly.inject(ref.current!, {
@@ -100,6 +88,12 @@ export default function BlocksPanel() {
         ...textos.map((v) => ({ kind: 'block', type: 'ab_variable_texto', gap: 8, fields: campo(v) })),
       ];
     });
+    // Mis bloques: su paleta, el diálogo de crear y editar, y sus reglas.
+    area.current = ws;
+    ws.registerButtonCallback('CREAR_BLOQUE', () => setDialogo({}));
+    ws.registerToolboxCategoryCallback('MIS_BLOQUES', paletaMisBloques as () => Blockly.utils.toolbox.FlyoutDefinition);
+    dialogoMisBloques.abrir = (definicion) => setDialogo({ definicion });
+    vigilar(ws);
     // Los bloques sin sombrero quedan deshabilitados: atenuados y fuera del código.
     ws.addChangeListener(Blockly.Events.disableOrphans);
     // Tope de scripts: es de sombreros en total y Blockly limita por tipo, así
@@ -168,5 +162,12 @@ export default function BlocksPanel() {
     };
   }, []);
 
-  return <div ref={ref} style={{ position: 'absolute', inset: 0 }} />;
+  return (
+    <>
+      <div ref={ref} style={{ position: 'absolute', inset: 0 }} />
+      {dialogo && (
+        <Dialogo ws={area.current!} definicion={dialogo.definicion} cerrar={() => setDialogo(null)} />
+      )}
+    </>
+  );
 }

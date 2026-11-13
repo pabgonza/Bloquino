@@ -6,6 +6,18 @@ import { TECLAS } from '../../bloquino/componentes/teclas';
 import { DISPLAY_DIGITOS, DISPLAY_SEGMENTOS, LCD_PINES } from '../catalogo/pantallas';
 import { PAQUETES, llenar } from '../paquetes';
 import { contextoClasico } from './contexto';
+import {
+  type Definir,
+  type Entrada,
+  type Parte,
+  type TipoEntrada,
+  type Uso,
+  definicion,
+  esEntrada,
+  limpiar,
+  usos,
+} from '../catalogo/misBloques';
+import { cierraCiclo } from '../misBloques';
 
 export const gen = Object.assign(new Blockly.CodeGenerator('Arduino'), { ctx: contextoClasico() });
 
@@ -62,14 +74,15 @@ const milis = (b: Bloque) => {
 };
 
 /** Nombre de la variable del bloque, válido en C++ (`mi cuenta` → `mi_cuenta`). */
-const nombreVariable = (b: Bloque) =>
-  b
-    .getField('VAR')!
-    .getText()
-    .normalize('NFD')
-    .replace(/\p{M}/gu, '')
-    .replace(/\W/g, '_')
-    .replace(/^(\d)/, '_$1');
+const nombreVariable = (b: Bloque) => limpiar(b.getField('VAR')!.getText());
+
+/**
+ * Con corrutinas, los nombres de un bloque propio expandido en su uso
+ * (entradas y contadores) llevan delante los bloques propios que lo rodean:
+ * `parpadear_vez` no pisa al `vez` del `repetir` que rodea al uso.
+ */
+const prefijo = () =>
+  gen.ctx.paralelo && gen.ctx.dentroDe.length ? gen.ctx.dentroDe.join('_') + '_' : '';
 
 /** Variable usada por el bloque: global, salvo que sea el contador de un `contar` que lo rodea. */
 const variable = (b: Bloque) => {
@@ -77,7 +90,7 @@ const variable = (b: Bloque) => {
   let p = b.getSurroundParent();
   while (p && !(p.type === 'ab_contar' && nombreVariable(p) === v)) p = p.getSurroundParent();
   if (!p) gen.ctx.globales.add(`float ${v} = 0;`);
-  return v;
+  return p ? prefijo() + v : v;
 };
 
 /** Cesión de turno al final de cada vuelta de un bucle que puede no terminar (nada en modo clásico). */
@@ -93,12 +106,12 @@ G.ab_esperar = (b) => gen.ctx.esperar(milis(b));
 G.ab_repetir = (b) => {
   let nivel = 1;
   for (let p = b.getSurroundParent(); p; p = p.getSurroundParent()) if (p.type === b.type) nivel++;
-  const v = nivel > 1 ? `vez${nivel}` : 'vez';
+  const v = prefijo() + (nivel > 1 ? `vez${nivel}` : 'vez');
   return `for (${gen.ctx.contador(v)} = 0; ${v} < ${valor(b, 'VECES', ORDEN.RELACION)}; ${v}++) {\n${cuerpo(b)}}\n`;
 };
 G.ab_mientras = (b) => `while (${condicion(b)}) {\n${cuerpo(b)}${finDeVuelta()}}\n`;
 G.ab_contar = (b) => {
-  const v = nombreVariable(b);
+  const v = prefijo() + nombreVariable(b);
   return `for (${gen.ctx.contador(v)} = ${valor(b, 'DESDE')}; ${v} <= ${valor(b, 'HASTA', ORDEN.RELACION)}; ${v}++) {\n${cuerpo(b)}}\n`;
 };
 G.ab_si = (b) => `if (${condicion(b)}) {\n${cuerpo(b)}}\n`;
@@ -288,13 +301,18 @@ G.ab_tecla_ultima = (b) => {
   return ['nombreTecla(teclaControl)', ORDEN.ATOMO];
 };
 
+/** Un script, o la definición de un bloque propio que se usa. */
+const raizValida = (r: Bloque) =>
+  SOMBREROS.includes(r.type) ||
+  (r.type === 'ab_definir' && usos(r.workspace, (r as Definir).definicion).some((u) => u.isEnabled()));
+
 // ── Pantallas ───────────────────────────────────────────────────────────────
 // LCD 16x2 en paralelo (4 bits) con LiquidCrystal. Los pines salen del bloque
 // «preparar pantalla» del programa; sin él, los del ejemplo de la librería.
 const lcd = (b: Bloque) => {
   const preparar = b.workspace
     .getBlocksByType('ab_lcd_preparar', false)
-    .find((p) => p.isEnabled() && SOMBREROS.includes(p.getRootBlock().type));
+    .find((p) => p.isEnabled() && raizValida(p.getRootBlock()));
   const pines = Object.entries(LCD_PINES).map(([c, p]) => (preparar ? campo(preparar, c) : p));
   gen.ctx.includes.add('#include <LiquidCrystal.h>');
   gen.ctx.globales.add(`LiquidCrystal lcd(${pines.join(', ')});`);
@@ -347,7 +365,7 @@ void refrescarDisplay() {
 const display = (b: Bloque) => {
   const preparar = ['ab_display4_preparar', 'ab_display_preparar']
     .flatMap((tipo) => b.workspace.getBlocksByType(tipo, false))
-    .find((p) => p.isEnabled() && SOMBREROS.includes(p.getRootBlock().type));
+    .find((p) => p.isEnabled() && raizValida(p.getRootBlock()));
   const pines = (porDefecto: Record<string, string>) =>
     Object.entries(porDefecto)
       .map(([c, p]) => (preparar ? campo(preparar, c) : p))
@@ -420,3 +438,81 @@ for (const p of PAQUETES)
       if (d.tick) gen.ctx.tick.add(t(p.tick!));
       return `${t(d.codigo)}\n${d.esperarHasta ? gen.ctx.esperarHasta(t(d.esperarHasta)) : ''}`;
     };
+
+// ── Mis bloques ─────────────────────────────────────────────────────────────
+// Con un solo programa, cada bloque propio es una función y cada uso, una
+// llamada. Con corrutinas, cada uso se expande en su lugar para que sus
+// esperas cedan el turno, y sus entradas pasan a `static` del script.
+const TIPO: Record<TipoEntrada, string> = { numero: 'float', texto: 'String', sino: 'bool' };
+const RESERVADAS = new Set(
+  (
+    'setup loop main if else for while do switch case default break continue return goto true false ' +
+    'int long short float double char bool boolean byte word void unsigned signed const static volatile ' +
+    'auto class struct union enum new delete this sizeof operator template typename namespace using ' +
+    'public private protected virtual friend inline extern register try catch throw String Serial ' +
+    'pinMode digitalWrite digitalRead analogWrite analogRead delay delayMicroseconds millis micros ' +
+    'tone noTone map constrain random randomSeed abs min max sq sqrt pow sin cos tan round floor ceil ' +
+    'pulseIn shiftIn shiftOut attachInterrupt detachInterrupt bitRead bitWrite bitSet bitClear ' +
+    'HIGH LOW INPUT OUTPUT INPUT_PULLUP LED_BUILTIN PI ' +
+    'aTexto distanciaCm leerTexto nombreTecla mostrarCifra refrescarDisplay EMPEZAR TERMINAR CEDER ' +
+    'ESPERAR ESPERAR_HASTA paso despierta cronometro lcd teclaControl teclasRecibidas vistas ' +
+    'displayNumero CIFRAS DISPLAY_SEGMENTOS DISPLAY_DIGITOS vez'
+  ).split(' '),
+);
+const reservada = (n: string) => RESERVADAS.has(n) || /^(programa|vez|servo|dht)\d+$/.test(n);
+
+/** Nombres de C++ del bloque y de sus entradas, sin choques con el sketch ni con las variables. */
+function nombres(def: Definir) {
+  const variables = new Set(def.workspace.getVariableMap().getAllVariables().map((v) => limpiar(v.getName())));
+  const usados = new Set<string>();
+  const libre = (t: string, sufijo: string) => {
+    let n = limpiar(t);
+    if (reservada(n) || variables.has(n) || usados.has(n)) n += sufijo;
+    usados.add(n);
+    return n;
+  };
+  return {
+    funcion: libre(def.partes[0].texto, '_bloque'),
+    entradas: new Map(def.partes.filter(esEntrada).map((p) => [p.id, libre(p.texto, '_entrada')])),
+  };
+}
+
+/** Lo que se le da a una entrada en un uso. */
+const argumento = (b: Bloque, p: Parte) =>
+  p.tipo === 'texto' ? texto(b, p.id) : valor(b, p.id, ORDEN.NADA, p.tipo === 'sino' ? 'false' : '0');
+
+G.ab_mi_bloque = (b) => {
+  const def = definicion(b.workspace, (b as Uso).definicion);
+  if (!def || cierraCiclo(b as Uso)) return '';
+  const { funcion, entradas } = nombres(def);
+  const args = def.partes.filter(esEntrada).map((p) => ({ p, valor: argumento(b, p) }));
+  const declarar = ({ p }: (typeof args)[number]) => `${TIPO[p.tipo as TipoEntrada]} ${prefijo()}${entradas.get(p.id)}`;
+  gen.ctx.dentroDe.push(funcion);
+  // Corrutinas: las entradas se asignan al entrar a `static` del script.
+  const asignar = gen.ctx.paralelo
+    ? args.map((a) => {
+        gen.ctx.locales.add(`static ${declarar(a)};`);
+        return `${prefijo()}${entradas.get(a.p.id)} = ${a.valor};\n`;
+      })
+    : [];
+  const hace = gen.blockToCode(def.getNextBlock()) as string;
+  gen.ctx.dentroDe.pop();
+  if (!gen.ctx.paralelo) {
+    gen.ctx.funciones.add(`void ${funcion}(${args.map(declarar).join(', ')}) {\n${hace && gen.prefixLines(hace, gen.INDENT)}}`);
+    return `${funcion}(${args.map((a) => a.valor).join(', ')});\n`;
+  }
+  const comentario = def.partes
+    .map((p) => (esEntrada(p) ? `(${p.texto} = ${args.find((a) => a.p === p)!.valor})` : p.texto))
+    .join(' ');
+  return `// ${comentario}\n${asignar.join('')}${hace}`;
+};
+
+// Dentro de su definición, la entrada es el parámetro (o su `static`); fuera,
+// vale 0, texto vacío o falso, como en Scratch.
+G.ab_entrada = (b) => {
+  const e = b as Entrada;
+  const raiz = b.getRootBlock() as Definir;
+  const nombre =
+    raiz.type === 'ab_definir' && raiz.definicion === e.definicion && nombres(raiz).entradas.get(e.entrada);
+  return [nombre ? prefijo() + nombre : { numero: '0', texto: '""', sino: 'false' }[e.tipo], ORDEN.ATOMO];
+};

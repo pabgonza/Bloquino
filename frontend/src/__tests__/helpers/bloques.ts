@@ -4,6 +4,7 @@
  */
 import { Blockly } from '../../blocks/blockly';
 import { generar } from '../../blocks/generador';
+import { type Parte, nuevaDefinicion } from '../../blocks/catalogo/misBloques';
 
 export type B = Record<string, unknown>;
 
@@ -46,6 +47,34 @@ export const preparar = (...pines: number[]): B => ({
   type: 'ab_lcd_preparar',
   fields: Object.fromEntries(['RS', 'E', 'D4', 'D5', 'D6', 'D7'].map((c, i) => [c, String(pines[i])])),
 });
+
+// Mis bloques
+export const nombre = (texto: string): Parte => ({ tipo: 'nombre', texto, id: 'n' });
+export const numero = (texto: string, id = texto): Parte => ({ tipo: 'numero', texto, id });
+export const rotulo = (texto: string): Parte => ({ tipo: 'rotulo', texto, id: `r-${texto}` });
+/** Copia de una entrada, para usarla en la definición. */
+export const entrada = (definicion: string, id: string, texto = id, tipo = 'numero') => ({
+  block: { type: 'ab_entrada', extraState: { definicion, entrada: id, tipo, texto } },
+});
+/** «definir» con lo que hace debajo. */
+export const definir = (id: string, partes: Parte[], ...hace: B[]): B => ({
+  ...nuevaDefinicion(id, partes),
+  ...(hace.length && { next: { block: cadena(hace) } }),
+});
+export const usar = (id: string, partes: Parte[], valores: Record<string, object> = {}): B => ({
+  type: 'ab_mi_bloque',
+  extraState: { definicion: id, partes },
+  inputs: valores,
+});
+export const repetir = (veces: object, ...hace: B[]): B => ({
+  type: 'ab_repetir',
+  inputs: { VECES: veces, DO: { block: cadena(hace) } },
+});
+// «definir parpadear (veces) veces»: repetir (veces) [encender, esperar, apagar, esperar].
+export const PARPADEAR = [nombre('parpadear'), numero('veces'), rotulo('veces')];
+export const defParpadear = (pin = 13, s = 0.2) =>
+  definir('p', PARPADEAR, repetir(entrada('p', 'veces'), led('HIGH', pin), esperar(s), led('LOW', pin), esperar(s)));
+export const parpadear = (veces: number) => usar('p', PARPADEAR, { veces: num(veces) });
 
 /** Sketch de un programa. Los scripts quedan en el orden dado, de arriba hacia abajo. */
 export function sketch(bloques: B[], variables: B[] = []) {

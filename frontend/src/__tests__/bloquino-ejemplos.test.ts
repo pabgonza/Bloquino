@@ -72,9 +72,9 @@ const seMontan = (s: Tramo, t: Tramo) => {
 };
 
 describe('ejemplos', () => {
-  it('son trece, numerados', () => {
+  it('son catorce, numerados', () => {
     expect(EJEMPLOS.map((e) => e.archivo.slice(0, 2))).toEqual(
-      Array.from({ length: 13 }, (_, i) => String(i + 1).padStart(2, '0')),
+      Array.from({ length: 14 }, (_, i) => String(i + 1).padStart(2, '0')),
     );
   });
 
@@ -127,6 +127,9 @@ describe('ejemplos', () => {
       'variables_get',
       'ab_definir_texto',
       'ab_variable_texto',
+      'ab_definir',
+      'ab_mi_bloque',
+      'ab_entrada',
     ];
     expect([...new Set(paleta)].filter((t) => !usados.has(t))).toEqual([]);
   });

@@ -126,6 +126,11 @@ la placa real:
   se programa; Cargar a la placa graba la elegida. Borrar una placa pide
   confirmar, y Ctrl+Z la devuelve con su programa. Ejemplo:
   `13-dos-placas.bloquino`. ¿Se entiende cuál se está programando?
+- Mis bloques, como en Scratch: «Crear un bloque» con entradas de número,
+  texto y sí/no; arrastrar una entrada desde el sombrero «definir» deja una
+  copia; clic derecho → «Editar». Ejemplo: `14-mis-bloques.bloquino` en el
+  LED RGB del kit. ¿Se entiende que el «definir» no corre solo? ¿Sirve para
+  la sesión 9 (`color (r) (g) (b)`)?
 
 ## Decisiones tomadas
 

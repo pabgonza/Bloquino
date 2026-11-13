@@ -14,6 +14,7 @@ import operadores from './operadores';
 import avanzado from './avanzado';
 import './variables';
 export { TEXTO } from './variables';
+import './misBloques';
 import { PAQUETES } from '../paquetes';
 
 export const CATEGORIAS: Categoria[] = [
@@ -26,8 +27,10 @@ export const CATEGORIAS: Categoria[] = [
   pantallas,
   serie,
   operadores,
-  // Sin paleta propia: depende de las variables que existan (ver BlocksPanel).
-  { id: 'variables', color: '#FF8C1A' },
+  // Sin paleta propia: dependen de las variables y los bloques que existan
+  // (ver BlocksPanel). Mis bloques, rosada como en Scratch.
+  { id: 'variables', color: '#FF8C1A', custom: 'VARIABLE' },
+  { id: 'mis_bloques', color: '#FF6680', custom: 'MIS_BLOQUES' },
   avanzado,
 ];
 
@@ -49,6 +52,6 @@ export const PALETA = {
     kind: 'category',
     name: `%{BKY_AB_CAT_${c.id.toUpperCase()}}`,
     colour: c.color,
-    ...(c.paleta ? { contents: c.paleta } : { custom: 'VARIABLE' }),
+    ...(c.paleta ? { contents: c.paleta } : { custom: c.custom }),
   })),
 };

@@ -30,6 +30,10 @@ el programa de bloques, que se carga como JSON.
   confirmación y Ctrl+Z, numeración, placa de la paleta, circuito sin placas).
   Rehace `frontend/public/ejemplos/13-dos-placas.bloquino`. Se corre como
   `grupo.js`.
+- `mis-bloques.js`: Mis bloques (crear con el diálogo, arrastrar una entrada
+  desde el sombrero, usar, editar, Ctrl+Z, aviso al borrar una definición con
+  usos, recursión atenuada, borrar sin usos, simular, recargar). Rehace
+  `frontend/public/ejemplos/14-mis-bloques.bloquino`.
 - `carga.js`: «Cargar a la placa» (h7): avance, monitor serie de la placa y
   soltarla al simular. Con un UNO conectado y ya autorizado en el navegador
   (la primera vez lo elige una persona), carga a la placa real; si no, a una

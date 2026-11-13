@@ -7,8 +7,9 @@ type Definicion = Record<string, unknown> & { args?: object[] };
 export interface Categoria {
   id: string;
   color: string;
-  /** Bloques de la paleta; sin ella, la categoría la arma Blockly (variables). */
+  /** Bloques de la paleta; sin ella, la arma el callback `custom` (variables, mis bloques). */
   paleta?: object[];
+  custom?: string;
 }
 
 export function categoria(

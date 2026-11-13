@@ -180,6 +180,25 @@ menos un uso habilitado, además de los sombreros.
 - [Proyectos con bloques propios abiertos en una versión anterior] → los tipos
   desconocidos no cargan; Bloquino no tiene versiones viejas en uso.
 
+## Ajustes al implementar
+
+- **Arrastre con copia**: funcionó en Zelos (tarea 1.1). La estrategia imita
+  la de la paleta de Blockly (`getTargetBlock` crea la copia y la arrastra);
+  un `ConnectionChecker` propio impide soltar bloques en los huecos del
+  sombrero. No hizo falta el respaldo.
+- **Estado de usos y entradas**: `ab_mi_bloque` guarda también las `partes` y
+  `ab_entrada` su `tipo` y `texto`, para dibujarse sin depender de que la
+  definición se cargue antes.
+- **Modo clásico**: solo se generan las funciones de los bloques que se usan
+  (la función se arma al generar su primer uso), así una definición sin usar
+  no agrega `pinMode` al `setup()`.
+- **Borrar con usos**: la definición vuelve a donde estaba antes de arrastrarla
+  (se anota su lugar en cada evento sin arrastre en curso).
+- **Vista previa del diálogo**: muestra el sombrero «definir» con los nombres
+  de las entradas, más claro que el uso con sus huecos en 0.
+- **Definición nueva**: aparece bajo los bloques de la izquierda de lo visible
+  y el área se desplaza hasta ella.
+
 ## Migration Plan
 
 Nada que migrar: los proyectos sin bloques propios no cambian. Reconstruir la

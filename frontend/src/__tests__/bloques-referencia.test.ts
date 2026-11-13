@@ -25,6 +25,7 @@ describe('programas de referencia', () => {
       'barrido-servo',
       'boton-led',
       'cancion',
+      'color-rgb',
       'dos-parpadeos',
       'mezcla-rgb',
       'musica-de-fondo',
