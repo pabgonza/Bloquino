@@ -10,6 +10,7 @@ import { startSimulation } from '../simulation/spice/start';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 import { useCompileLogsStore } from '../store/useCompileLogsStore';
 import textos from '../i18n/locales/es/bloquino.json';
+import { cargarALaPlaca, useCarga } from './flash/cargar';
 import { PaletaComponentes } from './PaletaComponentes';
 import { PanelPrograma } from './PanelPrograma';
 import {
@@ -44,6 +45,8 @@ export function PaginaAlumno() {
   const errores = logs.filter((l) => l.type === 'error' && l.target?.id !== 'circuit-check');
   const [erroresVistos, setErroresVistos] = useState(logs);
   const [guardado, setGuardado] = useState<Guardado>('guardado');
+  const carga = useCarga((s) => s.carga);
+  const cargando = !!carga && carga.fase !== 'lista' && carga.fase !== 'error';
   const selector = useRef<HTMLInputElement>(null);
   // Proyectos cargados hasta ahora. El lienzo se monta cuando ya hay uno y se
   // vuelve a montar al abrir un archivo: Velxio encuadra el circuito al montarse.
@@ -180,8 +183,8 @@ export function PaginaAlumno() {
         >
           {corriendo ? textos.detener : textos.iniciar}
         </button>
-        <button className="bq-boton" disabled title={textos.cargarPronto}>
-          {textos.cargar}
+        <button className="bq-boton" disabled={cargando} onClick={() => void cargarALaPlaca()}>
+          {cargando ? textos.carga.cargando : textos.cargar}
         </button>
       </header>
 
@@ -194,6 +197,18 @@ export function PaginaAlumno() {
         >
           {ranura && cargas > 0 && <SimulatorCanvas key={cargas} headerSlot={ranura} />}
           <CompileProgressCard />
+          {carga && (
+            <div className={`bq-carga bq-carga-${carga.fase}`} role="status">
+              {!cargando && (
+                <button onClick={() => useCarga.setState({ carga: null })}>{textos.cerrar}</button>
+              )}
+              <strong>{textos.carga.fases[carga.fase]}</strong>
+              {'pct' in carga && <progress max={100} value={carga.pct} />}
+              {carga.fase === 'error' && <p>{carga.mensaje}</p>}
+              {carga.fase === 'error' && carga.enlace && <a href={carga.enlace}>{carga.enlace}</a>}
+              {carga.fase === 'error' && carga.detalle && <pre>{carga.detalle}</pre>}
+            </div>
+          )}
           {errores.length > 0 && erroresVistos !== logs && (
             <div className="bq-error" role="alert">
               <strong>{textos.errorCompilar}</strong>

@@ -136,6 +136,55 @@
   white-space: pre-wrap;
 }
 
+/* Avance de la carga a la placa real. */
+.bq-carga {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 30;
+  width: min(420px, calc(100% - 24px));
+  padding: 10px 12px;
+  background: #f4f9ff;
+  border: 2px solid #2f6fd0;
+  border-radius: 8px;
+  transform: translateX(-50%);
+}
+.bq-carga-lista {
+  background: #f1fbf3;
+  border-color: #2e9d4f;
+}
+.bq-carga-error {
+  background: #fff4f4;
+  border-color: #d93f3f;
+}
+.bq-carga button {
+  float: right;
+  margin-left: 8px;
+}
+.bq-carga progress {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+}
+.bq-carga p {
+  margin: 6px 0 0;
+}
+.bq-carga pre {
+  max-height: 140px;
+  margin: 8px 0 0;
+  overflow: auto;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+.bq-serie-real {
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-weight: 600;
+  color: #fff;
+  background: #2e9d4f;
+  border-radius: 10px;
+}
+
 /* ── Paleta de componentes ────────────────────────────────────────────────── */
 .bq-paleta {
   display: flex;

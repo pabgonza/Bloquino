@@ -80,7 +80,9 @@ const BOARD_COLOR: Partial<Record<string, string>> = {
   attiny85: 'var(--color-feedback-warning)',
 };
 
-export const SerialMonitor: React.FC = () => {
+// Bloquino: `placaReal` deja escribir sin simulación, cuando el monitor está
+// conectado a una placa de verdad (ver bloquino/flash/cargar.ts).
+export const SerialMonitor: React.FC<{ placaReal?: boolean }> = ({ placaReal }) => {
   const { t } = useTranslation();
   const boards = useSimulatorStore((s) => s.boards);
   const activeBoardId = useSimulatorStore((s) => s.activeBoardId);
@@ -410,7 +412,7 @@ export const SerialMonitor: React.FC = () => {
                 : t('editor.serial.placeholderText')
             }
             style={styles.input}
-            disabled={!activeBoard?.running}
+            disabled={!activeBoard?.running && !placaReal}
           />
           <select
             value={lineEnding}
@@ -422,7 +424,7 @@ export const SerialMonitor: React.FC = () => {
             <option value="cr">{t('editor.serial.lineEnd.cr')}</option>
             <option value="both">{t('editor.serial.lineEnd.both')}</option>
           </select>
-          <button onClick={handleSend} disabled={!activeBoard?.running} style={styles.sendBtn}>
+          <button onClick={handleSend} disabled={!activeBoard?.running && !placaReal} style={styles.sendBtn}>
             {t('editor.serial.send')}
           </button>
         </div>

@@ -6,7 +6,28 @@
   "iniciar": "Iniciar simulación",
   "detener": "Detener simulación",
   "cargar": "Cargar a la placa",
-  "cargarPronto": "Disponible próximamente",
+  "carga": {
+    "cargando": "Cargando…",
+    "fases": {
+      "compilando": "Preparando el programa…",
+      "conectando": "Buscando la placa…",
+      "grabando": "Cargando el programa a la placa…",
+      "verificando": "Revisando que quedó bien…",
+      "lista": "¡Listo! Tu programa ya está en la placa.",
+      "error": "No se pudo cargar a la placa"
+    },
+    "fallas": {
+      "navegador": "Este navegador no puede cargar a la placa. Usa Chrome o Edge en un computador.",
+      "sinHttps": "Desde esta dirección no se puede cargar a la placa. Descarga tu proyecto y ábrelo en la dirección segura:",
+      "sinElegir": "No elegiste ninguna placa. Conecta el cable USB, pulsa Cargar a la placa y elige tu Arduino en la lista.",
+      "ocupada": "La placa está ocupada por otro programa. Cierra el Arduino IDE o la otra pestaña que la esté usando y vuelve a cargar.",
+      "noCompila": "El programa tiene un error y no se pudo preparar.",
+      "sinRespuesta": "La placa no responde. Revisa que el cable USB esté bien puesto y que sea un Arduino UNO, y vuelve a cargar.",
+      "otraPlaca": "Esa placa no es un Arduino UNO.",
+      "malGrabado": "El programa no quedó bien grabado. Revisa el cable USB y vuelve a cargar."
+    },
+    "placaReal": "placa real"
+  },
   "errorCompilar": "El programa no se pudo compilar",
   "cerrar": "Cerrar",
   "nuevo": "Nuevo",

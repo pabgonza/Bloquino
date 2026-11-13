@@ -7,6 +7,7 @@ import { SerialMonitor } from '../components/simulator/SerialMonitor';
 import { useEditorStore } from '../store/useEditorStore';
 import { ARCHIVO_BLOQUES, esTexto, marcarTexto } from '../blocks/archivo';
 import textos from '../i18n/locales/es/bloquino.json';
+import { useCarga } from './flash/cargar';
 
 const BlocksPanel = lazy(() => import('../blocks/BlocksPanel'));
 
@@ -23,6 +24,7 @@ export function PanelPrograma() {
   const enTexto = !!bloques && esTexto(bloques.content);
   const [conTexto, setConTexto] = useState(false);
   const [serieAbierta, setSerieAbierta] = useState(false);
+  const placaReal = useCarga((s) => s.placaReal);
   const vista: Vista = enTexto ? 'texto' : conTexto ? 'ambos' : 'bloques';
 
   const elegir = (nueva: Vista) => {
@@ -81,10 +83,11 @@ export function PanelPrograma() {
         onClick={() => setSerieAbierta((abierta) => !abierta)}
       >
         {serieAbierta ? '▾' : '▸'} {textos.monitorSerie}
+        {placaReal && <span className="bq-serie-real">{textos.carga.placaReal}</span>}
       </button>
       {serieAbierta && (
         <div className="bq-serie">
-          <SerialMonitor />
+          <SerialMonitor placaReal={placaReal} />
         </div>
       )}
     </div>

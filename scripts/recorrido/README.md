@@ -21,6 +21,11 @@ el programa de bloques, que se carga como JSON.
   de 7 segmentos (h8), cableados directo a la placa.
 - `seleccion.js`: un clic selecciona un componente o un cable, nunca los dos;
   Supr y R actúan sobre lo seleccionado.
+- `carga.js`: «Cargar a la placa» (h7): avance, monitor serie de la placa y
+  soltarla al simular. Con un UNO conectado y ya autorizado en el navegador
+  (la primera vez lo elige una persona), carga a la placa real; si no, a una
+  placa simulada dentro de la página. La carga real sin navegador se prueba
+  con `scripts/puente-serie.ps1` (ver su cabecera).
 - `ejemplos.js`: abre cada proyecto de `frontend/public/ejemplos/`, lo simula e
   interactúa; deja las capturas de `docs/ejemplos/`.
 - `sala.js` y `sala.bloquino`: prueba de la imagen de la sala (h9) sobre la
@@ -34,7 +39,7 @@ el programa de bloques, que se carga como JSON.
 Con el frontend (`npx vite`, puerto 5173) y el backend (puerto 3080) arriba:
 
 ```
-node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos lcd control display seleccion
+node scripts/recorrido/conv.mjs s2 s3 s4 s5 s6 s7 s8 s9 s10 bloques canciones variables textos lcd control display seleccion carga
 ```
 
 En el MCP de Playwright, una vez por sesión de trabajo (`browser_run_code_unsafe`):
