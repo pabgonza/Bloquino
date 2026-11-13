@@ -12,7 +12,8 @@ Agregar una línea a `scripts/librerias-kit.txt`, con su versión fija:
 propio.
 
 - **Imagen de la sala**: reconstruirla
-  (`docker compose -f docker-compose.bloquino.yml up -d --build`; ver
+  con `.\scripts\sala.ps1 --build` (`docker compose … up --build` a secas deja
+  el certificado sin la IP del día; ver
   [bloquino-dia-de-clase.md](bloquino-dia-de-clase.md)).
 - **Contenedor de desarrollo** (`velxio-spike`): correr el script que lee la
   lista. Se puede repetir sin problema, y hay que repetirlo si el contenedor
