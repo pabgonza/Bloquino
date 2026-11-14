@@ -41,11 +41,11 @@ El catálogo SHALL incluir `tocar nota [nota] por [n] segundos en pin [p]` y `si
 
 #### Scenario: Nota con duración
 - **WHEN** se usa `tocar nota la por 0.5 segundos en pin 8`
-- **THEN** se genera `tone(8, 440, 500);` seguido de `delay(500);`
+- **THEN** se genera `tone(8, 440);`, `delay(500);` y `noTone(8);`: la nota la apaga el programa, no la duración de `tone()`
 
 #### Scenario: Nota en un programa de varios scripts
 - **WHEN** un script usa `tocar nota la por 0.5 segundos en pin 8` y otro parpadea un LED cada 0.1 segundos
-- **THEN** se genera `tone(8, 440, 500);` seguido de una espera cooperativa de 500 ms, y el LED sigue parpadeando mientras la nota suena
+- **THEN** se genera `tone(8, 440);`, una espera cooperativa de 500 ms y `noTone(8);`, y el LED sigue parpadeando mientras la nota suena
 
 #### Scenario: Canciones en la categoría
 - **WHEN** el usuario abre la categoría Sonido
