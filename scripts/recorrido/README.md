@@ -40,7 +40,8 @@ el programa de bloques, que se carga como JSON.
   placa simulada dentro de la página. La carga real sin navegador se prueba
   con `scripts/puente-serie.ps1` (ver su cabecera).
 - `ejemplos.js`: abre cada proyecto de `frontend/public/ejemplos/`, lo simula e
-  interactúa; deja las capturas de `docs/ejemplos/`.
+  interactúa; deja las capturas de `docs/ejemplos/`. Para correr solo algunos:
+  `page.__solo = ['04', '06']` antes de `cargar('ejemplos')`.
 - `sala.js` y `sala.bloquino`: prueba de la imagen de la sala (h9) sobre la
   página ya compilada. No usa `lib.js` ni `conv.mjs`: se corre directo con
   `browser_run_code_unsafe` (parámetro `filename`), tras poner en `DIRECCION`

@@ -1,6 +1,7 @@
 // Ejemplos de frontend/public/ejemplos: abre cada uno con «Abrir», lo simula y
 // hace lo que haría el alumno (apretar, mover el sensor, escribir en el monitor
 // serie, usar el control). Deja una captura de cada uno en docs/ejemplos/.
+// Con page.__solo = ['04', '06'] antes de correrlo, solo esos.
 await nuevo();
 await page.evaluate(() => { window.confirm = () => true; });
 const led13 = () => page.evaluate(() => !!document.querySelector('wokwi-arduino-uno').led13);
@@ -15,6 +16,7 @@ const color = (id) => page.evaluate((id) => window.__s.useSimulatorStore.getStat
 
 /** Abre un ejemplo, lo simula, corre su prueba y deja la captura. */
 async function ejemplo(nombre, prueba) {
+  if (page.__solo && !page.__solo.some((n) => nombre.startsWith(n))) return;
   await page.setInputFiles('input[type=file]', `./frontend/public/ejemplos/${nombre}.bloquino`);
   await espera(2500);
   const ids = await page.evaluate(() => { const o = {}; for (const c of window.__s.useSimulatorStore.getState().components) (o[c.metadataId] ??= []).push(c.id); return o; });
