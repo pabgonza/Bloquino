@@ -256,13 +256,13 @@ describe('luces', () => {
 });
 
 describe('sonido y movimiento', () => {
-  it('nota con duración: tone y luego la espera', () => {
+  it('nota con duración: tone, la espera y noTone', () => {
     const nota = {
       type: 'ab_tocar_nota',
       fields: { NOTA: '440', PIN: '8' },
       inputs: { S: num(0.5) },
     };
-    expect(enSetup(nota).slice(-2)).toEqual(['tone(8, 440, 500);', 'delay(500);']);
+    expect(enSetup(nota).slice(-3)).toEqual(['tone(8, 440);', 'delay(500);', 'noTone(8);']);
   });
 
   it('el menú de notas tiene dos octavas, con la en 440', () => {

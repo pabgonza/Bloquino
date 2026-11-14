@@ -18,7 +18,7 @@
   "group-arduino-uno": [
    {
     "name": "sketch.ino",
-    "content": "// Generado desde bloques\nunsigned long cronometro = 0;\nfloat tiempo = 0;\n\nString aTexto(float n) {\n  return n == (long)n ? String((long)n) : String(n);\n}\n\nvoid setup() {\n  pinMode(12, OUTPUT);\n  pinMode(2, INPUT_PULLUP);\n  pinMode(8, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  Serial.println(\"Prepárate...\");\n  delay((random(1, 5) + 1) * 1000);\n  digitalWrite(12, HIGH);\n  cronometro = millis();\n  while (!(digitalRead(2) == LOW)) {}\n  tiempo = (millis() - cronometro) / 1000.0;\n  digitalWrite(12, LOW);\n  Serial.println(String(\"Milisegundos: \") + aTexto(tiempo * 1000));\n  if (tiempo < 0.5) {\n    // ¡Rápido!\n    tone(8, 880, 200);\n    delay(200);\n  }\n  while (!(!(digitalRead(2) == LOW))) {}\n  delay(1000);\n}\n"
+    "content": "// Generado desde bloques\nunsigned long cronometro = 0;\nfloat tiempo = 0;\n\nString aTexto(float n) {\n  return n == (long)n ? String((long)n) : String(n);\n}\n\nvoid setup() {\n  pinMode(12, OUTPUT);\n  pinMode(2, INPUT_PULLUP);\n  pinMode(8, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  Serial.println(\"Prepárate...\");\n  delay((random(1, 5) + 1) * 1000);\n  digitalWrite(12, HIGH);\n  cronometro = millis();\n  while (!(digitalRead(2) == LOW)) {}\n  tiempo = (millis() - cronometro) / 1000.0;\n  digitalWrite(12, LOW);\n  Serial.println(String(\"Milisegundos: \") + aTexto(tiempo * 1000));\n  if (tiempo < 0.5) {\n    // ¡Rápido!\n    tone(8, 880);\n    delay(200);\n    noTone(8);\n  }\n  while (!(!(digitalRead(2) == LOW))) {}\n  delay(1000);\n}\n"
    },
    {
     "name": "bloques.json",

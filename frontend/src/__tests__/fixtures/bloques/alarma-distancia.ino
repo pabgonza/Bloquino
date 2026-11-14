@@ -22,8 +22,9 @@ void setup() {
 void loop() {
   if (distanciaCm(7, 6) < 20) {
     digitalWrite(13, HIGH);
-    tone(8, 440, 200);
+    tone(8, 440);
     delay(200);
+    noTone(8);
   } else {
     digitalWrite(13, LOW);
   }

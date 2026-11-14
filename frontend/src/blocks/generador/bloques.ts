@@ -159,11 +159,12 @@ G.ab_led_rgb = (b) =>
     .join('');
 
 // ── Sonido y movimiento ─────────────────────────────────────────────────────
-// tone() con duración no bloquea: la espera hace que la nota suene completa
-// antes del bloque siguiente.
+// La nota la apaga el programa después de la espera, no la duración de
+// tone(): si se apagara sola, en la placa real se cruza con el tone() de la
+// nota siguiente y esa suena rara.
 G.ab_tocar_nota = (b) => {
-  const ms = milis(b);
-  return `tone(${pin(b, 'OUTPUT')}, ${campo(b, 'NOTA')}, ${ms});\n${gen.ctx.esperar(ms)}`;
+  const p = pin(b, 'OUTPUT');
+  return `tone(${p}, ${campo(b, 'NOTA')});\n${gen.ctx.esperar(milis(b))}noTone(${p});\n`;
 };
 G.ab_silenciar = (b) => `noTone(${pin(b, 'OUTPUT')});\n`;
 G.ab_servo = (b) => {

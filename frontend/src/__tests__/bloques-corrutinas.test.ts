@@ -132,13 +132,13 @@ describe('cesión de turno', () => {
     );
   });
 
-  it('tocar nota: tone y espera cooperativa', () => {
+  it('tocar nota: tone, espera cooperativa y noTone', () => {
     const nota = {
       type: 'ab_tocar_nota',
       fields: { NOTA: '440', PIN: '8' },
       inputs: { S: num(0.5) },
     };
-    expect(junto(nota).slice(1, 3)).toEqual(['tone(8, 440, 500);', 'ESPERAR(500);']);
+    expect(junto(nota).slice(1, 4)).toEqual(['tone(8, 440);', 'ESPERAR(500);', 'noTone(8);']);
   });
 });
 

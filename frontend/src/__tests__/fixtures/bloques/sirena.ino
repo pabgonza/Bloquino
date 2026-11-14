@@ -4,8 +4,10 @@ void setup() {
 }
 
 void loop() {
-  tone(8, 440, 300);
+  tone(8, 440);
   delay(300);
-  tone(8, 659, 300);
+  noTone(8);
+  tone(8, 659);
   delay(300);
+  noTone(8);
 }
