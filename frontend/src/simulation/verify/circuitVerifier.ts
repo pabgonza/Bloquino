@@ -39,6 +39,7 @@ export type WarningCode =
   | 'short-circuit'
   | 'source-overload'
   | 'led-overcurrent'
+  | 'display-overcurrent' // Bloquino: display sin resistencias (bloquino/revisionDisplay.ts)
   | 'over-voltage'
   | 'reverse-polarity'
   | 'missing-connection'

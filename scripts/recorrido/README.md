@@ -18,7 +18,9 @@ el programa de bloques, que se carga como JSON.
 - `textos.js`: variable de texto creada con el mouse y órdenes por el monitor
   serie (h8).
 - `lcd.js`, `control.js`, `display.js`: pantalla LCD, control remoto y displays
-  de 7 segmentos (h8), cableados directo a la placa.
+  de 7 segmentos (h8), cableados directo a la placa. Los displays van sin
+  resistencias: `display.js` comprueba el aviso «Revisa tu circuito» y simula
+  igual.
 - `seleccion.js`: un clic selecciona un componente o un cable, nunca los dos;
   Supr y R actúan sobre lo seleccionado.
 - `grupo.js`: varias piezas a la vez (Shift + clic, Ctrl+A, rectángulo con

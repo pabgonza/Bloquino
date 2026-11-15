@@ -530,6 +530,7 @@
       "runAnyway": "Simular igual",
       "codes": {
         "led-overcurrent": "Un LED está conectado sin resistencia: uno real se quemaría al instante. Ponle una resistencia de 220 Ω en serie.",
+        "display-overcurrent": "Un display de 7 segmentos está conectado sin resistencias: sus segmentos son LED y uno real se dañaría. Pon una resistencia entre cada segmento y su pin: de 220 Ω en el de 1 dígito, de 1 kΩ en el de 4.",
         "unstable-solve": "Hay un corto circuito o un componente sin nada que limite su corriente (por ejemplo, un LED sin resistencia). Revisa las conexiones.",
         "power-short": "El positivo (5 V o 3,3 V) está unido directo a GND: es un corto circuito. Quita ese cable.",
         "solver-failed": "No pude calcular este circuito. Revisa que no haya dos fuentes de energía conectadas una contra la otra.",

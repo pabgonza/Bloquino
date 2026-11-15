@@ -14,12 +14,21 @@ const leer = () => page.evaluate(({ id, CIFRAS }) => {
 }, { id: display, CIFRAS });
 // Espera a que el tiempo de la placa, dentro de un ciclo de `periodo` ms, llegue a `fase`.
 const enFase = async (periodo, fase) => { for (let i = 0; i < 80; i++) { const { texto, ms } = await leer(); if (Math.abs((ms % periodo) - fase) < 150) return texto; await espera(60); } return 'sin fase'; };
+// Van sin resistencias: la revisión avisa («Revisa tu circuito») y se simula igual.
+const simularIgual = async (clave) => {
+  await page.getByRole('button', { name: 'Iniciar simulación' }).click();
+  const igual = page.getByRole('button', { name: 'Simular igual' });
+  if (!(await igual.waitFor({ timeout: 20000 }).then(() => true, () => false))) { nota('SIN AVISO: ' + clave); return false; }
+  R[clave] = await igual.locator('xpath=../..').locator('li').allInnerTexts();
+  await igual.click();
+  return page.getByRole('button', { name: 'Detener simulación' }).waitFor({ timeout: 60000 }).then(() => true, () => false);
+};
 const SEG = { A: '2', B: '3', C: '4', D: '5', E: '6', F: '7', G: '8' };
 for (const [s, p] of Object.entries(SEG)) R['cable-' + s] = await cable(display, s, 'uno', p);
 R['cable-COM'] = await cable(display, 'COM.1', 'uno', 'GND.2');
 const mostrar = (NUMERO) => ({ type: 'ab_display_mostrar', inputs: { NUMERO } });
 R.sketch1 = resumen(await programar([alIniciar(porSiempre(mostrar(num(7)), esperarB(1), mostrar(num(4)), esperarB(1)))]), 2);
-if (await simular()) {
+if (await simularIgual('aviso 1 dígito')) {
   R['1 dígito'] = [await enFase(2000, 500), await enFase(2000, 1500)];
   await page.mouse.move(700, 740);
   await page.screenshot({ path: './.playwright-mcp/display-1.jpg', type: 'jpeg', quality: 85, scale: 'css' });
@@ -43,7 +52,7 @@ for (const [d, p] of Object.entries({ DIG1: '9', DIG2: '10', DIG3: '11', DIG4: '
 const preparar4 = { type: 'ab_display4_preparar', fields: { COMUN: 'catodo', ...SEG, D1: '9', D2: '10', D3: '11', D4: '12' } };
 const cuenta = { block: { type: 'variables_get', fields: { VAR: { id: 'n' } } } };
 R.sketch4 = resumen(await programar([alIniciar(preparar4, mostrar(num(1234)), esperarB(2), porSiempre(mostrar(cuenta), { type: 'math_change', fields: { VAR: { id: 'n' } }, inputs: { DELTA: num(7) } }, esperarB(0.5)))], [{ name: 'cuenta', id: 'n' }]), 2);
-if (await simular()) {
+if (await simularIgual('aviso 4 dígitos')) {
   await espera(900);
   R['4 dígitos'] = [(await leer()).texto];
   await page.mouse.move(700, 740);

@@ -17,6 +17,7 @@ import type { StoreSnapshot } from '../spice/storeAdapter';
 import type { Wire } from '../../types/wire';
 import { buildNetlist } from '../spice/NetlistBuilder';
 import { verifyCircuit, occupiedSourcePairs, sourcePairKey, type VerificationResult } from './circuitVerifier';
+import { displaysSinResistencia } from '../../bloquino/revisionDisplay'; // Bloquino: display sin resistencias
 
 /** The slice of the simulator store the pre-flight reads. */
 export interface PreflightState {
@@ -147,6 +148,7 @@ export async function verifyCircuitFromStore(): Promise<VerificationResult | nul
     });
     const input = buildInputFromStore(snap);
     const result = await verifyCircuit(input, { synthesizedPins });
+    result.errors.push(...displaysSinResistencia(input)); // Bloquino: display sin resistencias
     // Concise outcome log: verification failing silently in production is
     // hard to spot otherwise (the rules read 0 A when currents are missing).
     console.log(
