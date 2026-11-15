@@ -1,7 +1,7 @@
 {
   "format": "velxio-project",
   "version": 1,
-  "exportedAt": "2026-11-13T17:35:25.758Z",
+  "exportedAt": "2026-11-15T18:15:40.641Z",
   "name": "14-mis-bloques",
   "boards": [
     {
@@ -19,11 +19,11 @@
     "group-arduino-uno": [
       {
         "name": "sketch.ino",
-        "content": "// Generado desde bloques\nvoid color(float r, float g, float b) {\n  analogWrite(11, r);\n  analogWrite(10, g);\n  analogWrite(9, b);\n}\n\nvoid parpadear(float veces) {\n  for (int vez = 0; vez < veces; vez++) {\n    color(255, 255, 255);\n    delay(200);\n    color(0, 0, 0);\n    delay(200);\n  }\n}\n\nvoid setup() {\n  pinMode(11, OUTPUT);\n  pinMode(10, OUTPUT);\n  pinMode(9, OUTPUT);\n  parpadear(3);\n}\n\nvoid loop() {\n  color(255, 0, 0);\n  delay(1000);\n  color(0, 255, 0);\n  delay(1000);\n  color(0, 0, 255);\n  delay(1000);\n}\n"
+        "content": "// Generado desde bloques\nvoid color(float r, float g, float b) {\n  analogWrite(11, 255 - r);\n  analogWrite(10, 255 - g);\n  analogWrite(9, 255 - b);\n}\n\nvoid parpadear(float veces) {\n  for (int vez = 0; vez < veces; vez++) {\n    color(255, 255, 255);\n    delay(200);\n    color(0, 0, 0);\n    delay(200);\n  }\n}\n\nvoid setup() {\n  pinMode(11, OUTPUT);\n  pinMode(10, OUTPUT);\n  pinMode(9, OUTPUT);\n  parpadear(3);\n}\n\nvoid loop() {\n  color(255, 0, 0);\n  delay(1000);\n  color(0, 255, 0);\n  delay(1000);\n  color(0, 0, 255);\n  delay(1000);\n}\n"
       },
       {
         "name": "bloques.json",
-        "content": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"ab_al_iniciar\",\"id\":\"^gCx`zgC0JkQ5];f+0TS\",\"x\":30,\"y\":30,\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"3oYSnIZ}9K(|VT3ijK(7\",\"extraState\":{\"definicion\":\"parpadear\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"parpadear\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"veces\",\"id\":\"veces\"},{\"tipo\":\"rotulo\",\"texto\":\"veces\",\"id\":\"rotulo\"}]},\"inputs\":{\"veces\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"Aa+-H9S#^yLOvA;Dq,J)\",\"fields\":{\"NUM\":3}}}},\"next\":{\"block\":{\"type\":\"ab_por_siempre\",\"id\":\"Gs,5s-+4@vJ(41PAT2z~\",\"inputs\":{\"DO\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"WaG~}IsJi4~pr|YLF(W6\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"Cxj,t_V0G$~5KcMwDp~(\",\"fields\":{\"NUM\":255}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"L_%5U=^0u;s4[/uQU},Z\",\"fields\":{\"NUM\":0}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"pOfV.^c!pUoQ;_m2{s!b\",\"fields\":{\"NUM\":0}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"8+dMr*|az9`hpaeuEVY*\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"q4H.tj@KJ,.;,?~{t,7.\",\"fields\":{\"NUM\":1}}}},\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\";{Uy9XSvDS_(Wu(X25Tg\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"PS|g@Rm)$e5Kl@wvlG!3\",\"fields\":{\"NUM\":0}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"+WaaZ07QGTD:ZO`CRR^p\",\"fields\":{\"NUM\":255}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"]V$UjO+Bn[v|d[8N|X/:\",\"fields\":{\"NUM\":0}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"A:Cy09N1-_]iMPY_zdX7\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"n/_P1?UYl$b={y/9V]p]\",\"fields\":{\"NUM\":1}}}},\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"JHFNmL^rFi9Zs0GgBgng\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"0QfX}AfTjrm!E}~l1z,4\",\"fields\":{\"NUM\":0}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"kY|~m|6e9c3VAV~ySkd|\",\"fields\":{\"NUM\":0}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"QgO8SlzN;e%;g*7WJl`S\",\"fields\":{\"NUM\":255}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"+FrEll3=^GmNdu_V*m,H\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"c8=U,`ACMV(6[+m*zIoH\",\"fields\":{\"NUM\":1}}}}}}}}}}}}}}}}}}}}}},{\"type\":\"ab_definir\",\"id\":\"60DZdOoRYtj*OGQye%h)\",\"x\":30,\"y\":290,\"extraState\":{\"id\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"lhCBy19h.%tt?O-Ka/0Z\",\"deletable\":false,\"extraState\":{\"definicion\":\"color\",\"entrada\":\"r\",\"tipo\":\"numero\",\"texto\":\"r\"}}},\"g\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"qC}hM6RC8HcYjp`@=-9x\",\"deletable\":false,\"extraState\":{\"definicion\":\"color\",\"entrada\":\"g\",\"tipo\":\"numero\",\"texto\":\"g\"}}},\"b\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"J9l}K`(xQT`Q{xy3XI$]\",\"deletable\":false,\"extraState\":{\"definicion\":\"color\",\"entrada\":\"b\",\"tipo\":\"numero\",\"texto\":\"b\"}}}},\"next\":{\"block\":{\"type\":\"ab_pin_pwm\",\"id\":\"D?WzzSQND((~Y+P;C.cI\",\"fields\":{\"PIN\":\"11\"},\"inputs\":{\"VALOR\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"|ykg0vPdMlILEZY~W:qT\",\"extraState\":{\"definicion\":\"color\",\"entrada\":\"r\",\"tipo\":\"numero\",\"texto\":\"r\"}}}},\"next\":{\"block\":{\"type\":\"ab_pin_pwm\",\"id\":\"B2HY5UJx|gKLBX};a{ZA\",\"fields\":{\"PIN\":\"10\"},\"inputs\":{\"VALOR\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"{{CJyJ9e#BObr^2{`Shj\",\"extraState\":{\"definicion\":\"color\",\"entrada\":\"g\",\"tipo\":\"numero\",\"texto\":\"g\"}}}},\"next\":{\"block\":{\"type\":\"ab_pin_pwm\",\"id\":\"+Dad1AzlgGeqP.3W_e*j\",\"fields\":{\"PIN\":\"9\"},\"inputs\":{\"VALOR\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"Kw;Tjp[!Onv9G9U3ss}$\",\"extraState\":{\"definicion\":\"color\",\"entrada\":\"b\",\"tipo\":\"numero\",\"texto\":\"b\"}}}}}}}}}}},{\"type\":\"ab_definir\",\"id\":\"nt:jk91cxa#4^L%-z/nr\",\"x\":30,\"y\":550,\"extraState\":{\"id\":\"parpadear\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"parpadear\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"veces\",\"id\":\"veces\"},{\"tipo\":\"rotulo\",\"texto\":\"veces\",\"id\":\"rotulo\"}]},\"inputs\":{\"veces\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"2-.WwLG`SA5A%/jz.sE*\",\"deletable\":false,\"extraState\":{\"definicion\":\"parpadear\",\"entrada\":\"veces\",\"tipo\":\"numero\",\"texto\":\"veces\"}}}},\"next\":{\"block\":{\"type\":\"ab_repetir\",\"id\":\"58eEj;=RK5B@rCX;rJ+W\",\"inputs\":{\"VECES\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\",:6JJC{?-A~ZOdB{,RRu\",\"extraState\":{\"definicion\":\"parpadear\",\"entrada\":\"veces\",\"tipo\":\"numero\",\"texto\":\"veces\"}}},\"DO\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"}*HRw+hR|Se?~3V4}g_v\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"Wht.-7~4ySeMr??rvm3U\",\"fields\":{\"NUM\":255}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"hl^uA|5tnML^BI(Gj.J4\",\"fields\":{\"NUM\":255}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"hM-+tsODH`dM+Ppm!|{I\",\"fields\":{\"NUM\":255}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"(Qkx%YxkWt0)YmcR]sBx\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"P}Hr}_`mZkvqj?9Hm7Lx\",\"fields\":{\"NUM\":0.2}}}},\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"XK(J,*=+hfq:7i=MDLaS\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"|N~R[cuF[(u%y`30k^U1\",\"fields\":{\"NUM\":0}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"-v5%mt6g/Qb{VFsnz8mD\",\"fields\":{\"NUM\":0}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"r/});QUW$(q*)Rn$84Nw\",\"fields\":{\"NUM\":0}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"d7O,2HX}qK7v53NY1)U8\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"5Sq#I%lo+n`;uZIeYicz\",\"fields\":{\"NUM\":0.2}}}}}}}}}}}}}}}}]}}"
+        "content": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"ab_al_iniciar\",\"id\":\"h5uP)u^p!];#nm3Oc#zP\",\"x\":30,\"y\":30,\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"+gU1T%[Nmpjj90a@r,=a\",\"extraState\":{\"definicion\":\"parpadear\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"parpadear\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"veces\",\"id\":\"veces\"},{\"tipo\":\"rotulo\",\"texto\":\"veces\",\"id\":\"rotulo\"}]},\"inputs\":{\"veces\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"]RIHeYC3OBHf!3_^L.V%\",\"fields\":{\"NUM\":3}}}},\"next\":{\"block\":{\"type\":\"ab_por_siempre\",\"id\":\"W#U(]c5S@}!BkSdsj_63\",\"inputs\":{\"DO\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"gzo5Kg5rIe]danfrzqZY\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"m3*wcGH*abrr!iy*aEFk\",\"fields\":{\"NUM\":255}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"2HV7HVe|SoH|sI^X3Zyk\",\"fields\":{\"NUM\":0}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"NT]nDbLI]TFqBahsMyI6\",\"fields\":{\"NUM\":0}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"ULo*n]*NYcvt2fJ[XB3C\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"4f;yeM1R;:?Z~~M$Ls9X\",\"fields\":{\"NUM\":1}}}},\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"Whl2cfH=A*J%NYXYhFWX\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"G2y{g:_:D6]ms]PqgD!:\",\"fields\":{\"NUM\":0}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"s5vj.^1P@nj]8Kew8/@(\",\"fields\":{\"NUM\":255}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"POGPC2lpl!kLx}V8To%_\",\"fields\":{\"NUM\":0}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"omUtL6n(p@z-uF+3(FSF\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"{jt[~:r{A!EY,`b:|C5C\",\"fields\":{\"NUM\":1}}}},\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\".i61(+@J@$O_3x2,nCP=\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"d:=PW8r.wwe/[xUVv4e5\",\"fields\":{\"NUM\":0}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"d@v=lci`1wjGMo-@A[NI\",\"fields\":{\"NUM\":0}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"0A=VxrC+DmQ``(!0`^?z\",\"fields\":{\"NUM\":255}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"`3SFKG8|pAa[2uVCGlRH\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"65N}4Qn(A7Yf,pR9,U16\",\"fields\":{\"NUM\":1}}}}}}}}}}}}}}}}}}}}}},{\"type\":\"ab_definir\",\"id\":\"+JhohY#%a^v-B@xmos5q\",\"x\":30,\"y\":290,\"extraState\":{\"id\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"jm3V9`fQD*W$0R!r66Fk\",\"deletable\":false,\"extraState\":{\"definicion\":\"color\",\"entrada\":\"r\",\"tipo\":\"numero\",\"texto\":\"r\"}}},\"g\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"gDkD7!:D(YO=93LRTLN!\",\"deletable\":false,\"extraState\":{\"definicion\":\"color\",\"entrada\":\"g\",\"tipo\":\"numero\",\"texto\":\"g\"}}},\"b\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"~vu23T,%Y]fOKm!/r)@H\",\"deletable\":false,\"extraState\":{\"definicion\":\"color\",\"entrada\":\"b\",\"tipo\":\"numero\",\"texto\":\"b\"}}}},\"next\":{\"block\":{\"type\":\"ab_pin_pwm\",\"id\":\"Lq^EH]a(j}Jdz=cmEhr=\",\"fields\":{\"PIN\":\"11\"},\"inputs\":{\"VALOR\":{\"block\":{\"type\":\"ab_aritmetica\",\"id\":\"GY.Gq.h~=L+i(6webK=x\",\"fields\":{\"OP\":\"-\"},\"inputs\":{\"A\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"bA~gNYb[@M~ZjuP?8q[d\",\"fields\":{\"NUM\":255}}},\"B\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"6w_4$`Zk$s@?TqBlKgJn\",\"extraState\":{\"definicion\":\"color\",\"entrada\":\"r\",\"tipo\":\"numero\",\"texto\":\"r\"}}}}}}},\"next\":{\"block\":{\"type\":\"ab_pin_pwm\",\"id\":\"6N(`cUhoVj=3.jG)*C$s\",\"fields\":{\"PIN\":\"10\"},\"inputs\":{\"VALOR\":{\"block\":{\"type\":\"ab_aritmetica\",\"id\":\":_q?j|qwlR#:`W756riO\",\"fields\":{\"OP\":\"-\"},\"inputs\":{\"A\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"Q4fM`xenIaRx,4eoA]Zr\",\"fields\":{\"NUM\":255}}},\"B\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"yuPX+tp9E]^L_Aumo0SD\",\"extraState\":{\"definicion\":\"color\",\"entrada\":\"g\",\"tipo\":\"numero\",\"texto\":\"g\"}}}}}}},\"next\":{\"block\":{\"type\":\"ab_pin_pwm\",\"id\":\"@dT]^R28f)+Z6,R0S;b8\",\"fields\":{\"PIN\":\"9\"},\"inputs\":{\"VALOR\":{\"block\":{\"type\":\"ab_aritmetica\",\"id\":\"*,Fyb.Ctn:]6OOp#YKwM\",\"fields\":{\"OP\":\"-\"},\"inputs\":{\"A\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"7Ol*HS=m,=r!mbUqoqM`\",\"fields\":{\"NUM\":255}}},\"B\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"pa_:[6X=h$4%t3:s{HuM\",\"extraState\":{\"definicion\":\"color\",\"entrada\":\"b\",\"tipo\":\"numero\",\"texto\":\"b\"}}}}}}}}}}}}}},{\"type\":\"ab_definir\",\"id\":\"Dl?[MQ4D}@KawK0x*och\",\"x\":30,\"y\":550,\"extraState\":{\"id\":\"parpadear\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"parpadear\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"veces\",\"id\":\"veces\"},{\"tipo\":\"rotulo\",\"texto\":\"veces\",\"id\":\"rotulo\"}]},\"inputs\":{\"veces\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"bWyfu84[GH?X$z_)/!eI\",\"deletable\":false,\"extraState\":{\"definicion\":\"parpadear\",\"entrada\":\"veces\",\"tipo\":\"numero\",\"texto\":\"veces\"}}}},\"next\":{\"block\":{\"type\":\"ab_repetir\",\"id\":\"8Rbnut3dl9s@~t8I0edD\",\"inputs\":{\"VECES\":{\"block\":{\"type\":\"ab_entrada\",\"id\":\"@.C9(X*}:%Dna]lu6S8@\",\"extraState\":{\"definicion\":\"parpadear\",\"entrada\":\"veces\",\"tipo\":\"numero\",\"texto\":\"veces\"}}},\"DO\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"eE`5$lq;tEmlmYs5Oceh\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"G{g;x19FFv[k7!+symmR\",\"fields\":{\"NUM\":255}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"bs(9zxOo(+t?NDcU2`HV\",\"fields\":{\"NUM\":255}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"bC_SEhA(%YNGuz(A!466\",\"fields\":{\"NUM\":255}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"TWkHMZe:9y[#+IU-d50;\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"0Rz3`f~iR/6o_{v/d[^`\",\"fields\":{\"NUM\":0.2}}}},\"next\":{\"block\":{\"type\":\"ab_mi_bloque\",\"id\":\"a[}K);:EG(]?#Q=Ak`y/\",\"extraState\":{\"definicion\":\"color\",\"partes\":[{\"tipo\":\"nombre\",\"texto\":\"color\",\"id\":\"n\"},{\"tipo\":\"numero\",\"texto\":\"r\",\"id\":\"r\"},{\"tipo\":\"numero\",\"texto\":\"g\",\"id\":\"g\"},{\"tipo\":\"numero\",\"texto\":\"b\",\"id\":\"b\"}]},\"inputs\":{\"r\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"WHZlQT9|$%og%~|LD*F4\",\"fields\":{\"NUM\":0}}},\"g\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"iun/*+Qc5[9qa6^_x9fp\",\"fields\":{\"NUM\":0}}},\"b\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"j:DSfrIun9/a]/(RC!Au\",\"fields\":{\"NUM\":0}}}},\"next\":{\"block\":{\"type\":\"ab_esperar\",\"id\":\"5VfxK;Pp*|Bcg^vcVQSc\",\"inputs\":{\"S\":{\"shadow\":{\"type\":\"math_number\",\"id\":\"q)/yl7+p(rM~JinxP|n5\",\"fields\":{\"NUM\":0.2}}}}}}}}}}}}}}}}]}}"
       }
     ]
   },
@@ -43,7 +43,8 @@
       "properties": {
         "ledRed": 0,
         "ledGreen": 0,
-        "ledBlue": 0
+        "ledBlue": 0,
+        "common": "anode"
       }
     },
     {
@@ -93,7 +94,7 @@
         "x": 198.55999999999995,
         "y": -89.60000000000002
       },
-      "color": "#000000",
+      "color": "#cc0000",
       "autoRouted": false
     },
     {
@@ -181,7 +182,7 @@
       "waypoints": [
         {
           "x": 198.55999999999995,
-          "y": -41.599999999999994
+          "y": -32
         }
       ],
       "id": "wire-1794512564698",
@@ -193,38 +194,38 @@
       },
       "end": {
         "componentId": "breadboard_1794512545480_2ihy4l8pb",
-        "pinName": "bn.25",
+        "pinName": "bp.25",
         "x": 198.57333333333332,
-        "y": -41.599999999999994
+        "y": -32
       },
-      "color": "#000000",
+      "color": "#cc0000",
       "autoRouted": false
     },
     {
       "waypoints": [
         {
-          "x": 160.1733333333333,
-          "y": 36
+          "x": 25.773333333333312,
+          "y": 269
         },
         {
-          "x": 165.5,
-          "y": 36
+          "x": 210,
+          "y": 269
         }
       ],
       "id": "wire-1794512566828",
       "start": {
         "componentId": "breadboard_1794512545480_2ihy4l8pb",
-        "pinName": "bn.21",
-        "x": 160.1733333333333,
-        "y": -41.599999999999994
+        "pinName": "bp.10",
+        "x": 25.773333333333312,
+        "y": -32
       },
       "end": {
         "componentId": "arduino-uno",
-        "pinName": "GND.1",
-        "x": 165.5,
-        "y": 59
+        "pinName": "5V",
+        "x": 210,
+        "y": 241.5
       },
-      "color": "#000000",
+      "color": "#cc0000",
       "autoRouted": false
     },
     {

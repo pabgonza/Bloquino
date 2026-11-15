@@ -149,13 +149,13 @@ G.ab_led_brillo = (b) => {
     : `map(${n}, 0, 100, 0, 255)`;
   return `analogWrite(${pin(b, 'OUTPUT')}, ${pwm});\n`;
 };
-// Cátodo común: nivel alto = encendido.
+// Cátodo común: nivel alto = encendido. Ánodo común, al revés.
 G.ab_led_rgb = (b) =>
   ['R', 'G', 'B']
-    .map(
-      (canal, i) =>
-        `analogWrite(${pin(b, 'OUTPUT', canal)}, ${parseInt(campo(b, 'COLOR').slice(1 + 2 * i, 3 + 2 * i), 16)});\n`,
-    )
+    .map((canal, i) => {
+      const v = parseInt(campo(b, 'COLOR').slice(1 + 2 * i, 3 + 2 * i), 16);
+      return `analogWrite(${pin(b, 'OUTPUT', canal)}, ${campo(b, 'COMUN') === 'anodo' ? 255 - v : v});\n`;
+    })
     .join('');
 
 // ── Sonido y movimiento ─────────────────────────────────────────────────────

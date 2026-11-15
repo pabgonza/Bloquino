@@ -74,7 +74,17 @@ export default categoria(
     },
     ab_led_brillo: { args: [pinPwm(), valor('BRILLO', 'Number')], ...INSTRUCCION },
     ab_led_rgb: {
-      args: [pinPwm('R'), pinPwm('G'), pinPwm('B'), { type: 'ab_campo_color', name: 'COLOR' }],
+      args: [
+        // Cátodo primero: es el que queda en un programa guardado sin el campo.
+        menu('COMUN', [
+          ['%{BKY_AB_CATODO}', 'catodo'],
+          ['%{BKY_AB_ANODO}', 'anodo'],
+        ]),
+        pinPwm('R'),
+        pinPwm('G'),
+        pinPwm('B'),
+        { type: 'ab_campo_color', name: 'COLOR' },
+      ],
       ...INSTRUCCION,
     },
   },
@@ -82,6 +92,6 @@ export default categoria(
     { type: 'ab_led', fields: { ESTADO: 'HIGH', PIN: '13' } },
     { type: 'ab_led', fields: { ESTADO: 'LOW', PIN: '13' } },
     { type: 'ab_led_brillo', fields: { PIN: '9' }, inputs: { BRILLO: num(50) } },
-    { type: 'ab_led_rgb', fields: { R: '9', G: '10', B: '11' } },
+    { type: 'ab_led_rgb', fields: { COMUN: 'anodo', R: '9', G: '10', B: '11' } }, // el LED del kit
   ],
 );

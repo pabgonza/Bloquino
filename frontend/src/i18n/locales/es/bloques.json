@@ -35,7 +35,7 @@
   "AB_ENCENDER": "encender",
   "AB_APAGAR": "apagar",
   "AB_LED_BRILLO": "brillo del LED en pin %1 a %2 %%",
-  "AB_LED_RGB": "color del LED RGB (pines %1 %2 %3) a %4",
+  "AB_LED_RGB": "color del LED RGB %1 (pines %2 %3 %4) a %5",
 
   "AB_TOCAR_NOTA": "tocar nota %1 por %2 segundos en pin %3",
   "AB_NOTAS": "do re mi fa sol la si",

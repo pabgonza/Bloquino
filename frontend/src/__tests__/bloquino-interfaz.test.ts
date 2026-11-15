@@ -94,6 +94,8 @@ describe('paleta del kit', () => {
     expect(editables('led')).toEqual(['color: Color']);
     expect(editables('resistor')).toEqual(['value: Resistencia (Ω)']);
     expect(editables('servo')).toEqual([]);
+    expect(editables('rgb-led')).toEqual(['common: Tipo']);
+    expect(de('rgb-led').properties.find((p) => p.name === 'common')!.optionLabels?.anode).toBe('Ánodo común');
     const color = de('led').properties.find((p) => p.name === 'color')!;
     expect(color.options).toContain('green');
     expect(color.optionLabels?.green).toBe('Verde');

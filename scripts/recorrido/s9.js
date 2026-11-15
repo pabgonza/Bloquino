@@ -1,4 +1,5 @@
-// Sesión 9: LED RGB (R 3, G 5, B 6, patita común a GND). Cada color lleva su
+// Sesión 9: LED RGB de ánodo común, como el del kit (R 3, G 5, B 6, patita
+// común a 5 V; el bloque con «ánodo común»). Cada color lleva su
 // 220 Ω a caballo del canal: el cable del pin llega arriba y la resistencia
 // baja hasta la columna de la patita.
 await nuevo();
@@ -12,12 +13,12 @@ for (const [patita, pin] of [['R', '3'], ['G', '5'], ['B', '6']]) {
   R['res-' + patita] = await asentar(res, '1', proto, `${col}t.c`);
   R['cable-' + patita] = await cable(proto, `${col}t.a`, 'uno', pin);
 }
-R['cable-comun'] = await cable(proto, R.rgb.COM.replace(/\w$/, 'j'), proto, 'bn.24');
-R['cable-gnd'] = await cable(proto, 'bn.45', 'uno', 'GND.2');
+R['cable-comun'] = await cable(proto, R.rgb.COM.replace(/\w$/, 'j'), proto, 'bp.24');
+R['cable-5v'] = await cable(proto, 'bp.48', 'uno', '5V');
 await page.mouse.move(700, 720);
 await page.screenshot({ path: './.playwright-mcp/s9-armado.jpg', type: 'jpeg', quality: 85, scale: 'css' });
 
-const color = (COLOR) => ({ type: 'ab_led_rgb', fields: { R: '3', G: '5', B: '6', COLOR } });
+const color = (COLOR) => ({ type: 'ab_led_rgb', fields: { COMUN: 'anodo', R: '3', G: '5', B: '6', COLOR } });
 R.sketch = resumen(await programar([alIniciar(porSiempre(color('#ff0000'), esperarB(0.5), color('#00ff00'), esperarB(0.5), color('#0000ff'), esperarB(0.5), color('#ffff00'), esperarB(0.5)))]), 12).slice(-200);
 R.simula = await simular();
 if (R.simula) {

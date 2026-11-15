@@ -14,13 +14,13 @@ el botón **Abrir** de la página. En la sala también se pueden bajar desde
 | 05 | [perilla mágica](ejemplos/05-perilla-magica.jpg) | Potenciómetro (A0), servo (9) y LED (11). | Girar la perilla: el servo va de 0° a 180° y el LED cambia de brillo. El monitor muestra el valor. |
 | 06 | [barrera](ejemplos/06-barrera.jpg) | Sensor de distancia (12 y 11), servo (3), LED rojo (9), LED verde (5) y buzzer (8). | Clic en el sensor y mover «Distancia»: bajo 20 cm sube la barrera y pita; el verde brilla más mientras más cerca. |
 | 07 | [estación del tiempo](ejemplos/07-estacion-del-tiempo.jpg) | Pantalla LCD (12, 11, 5, 4, 3, 2) y sensor de temperatura y humedad (13). | La pantalla saluda y después muestra temperatura y humedad. Clic en el sensor y subir la temperatura sobre 30: aparece «CALOR». |
-| 08 | [lámpara de colores](ejemplos/08-lampara-de-colores.jpg) | LED RGB (11, 10 y 9) con tres resistencias. | Escribir en el monitor serie `rojo`, `verde`, `azul`, `azar` o `apagar`. |
+| 08 | [lámpara de colores](ejemplos/08-lampara-de-colores.jpg) | LED RGB de ánodo común (11, 10 y 9) con tres resistencias; la patita común a 5 V. | Escribir en el monitor serie `rojo`, `verde`, `azul`, `azar` o `apagar`. |
 | 09 | [control y dígito](ejemplos/09-control-y-digito.jpg) | Display de 1 dígito (2 a 8) con siete resistencias de 220 Ω, receptor infrarrojo (10), control remoto y protoboard chica. | Clic en las teclas del control: un número lo muestra, «borrar» apaga y «OK» cuenta de 0 a 9. El monitor dice la tecla y su código. |
 | 10 | [marcador](ejemplos/10-marcador.jpg) | Display de 4 dígitos (2 a 12) con siete resistencias de 1 kΩ en los segmentos, y potenciómetro (A0). | Muestra 1234 y después sigue a la perilla, de 0 a 9999. Escribir un número en el monitor serie lo muestra 3 segundos. |
 | 11 | [reflejos](ejemplos/11-reflejos.jpg) | Botón (2), LED verde (12) y buzzer (8). | Apretar el botón apenas prende el LED: el monitor dice cuántos milisegundos tardaste, y pita si fue menos de medio segundo. |
 | 12 | [bloques de pin](ejemplos/12-bloques-de-pin.jpg) | Botón entre 5V y el pin 2 con resistencia de 10 kΩ a tierra, LED (9) y potenciómetro (A0). | La luz «L» sigue al botón y el LED a la perilla, con los bloques de Avanzado. |
 | 13 | [dos placas](ejemplos/13-dos-placas.jpg) | Placa 1 y Placa 2, cada una con su programa: el pin 13 de la 1 va al pin 2 de la 2, y GND con GND. | La «L» de la Placa 1 parpadea y la de la Placa 2 la sigue. En Código, el selector de arriba cambia de placa. |
-| 14 | [mis bloques](ejemplos/14-mis-bloques.jpg) | LED RGB (11, 10 y 9) con tres resistencias, como el 08. | Parpadea blanco 3 veces y después pasa por rojo, verde y azul. En Mis bloques están `color (r) (g) (b)` y `parpadear (veces) veces`; clic derecho → «Editar» en un «definir». |
+| 14 | [mis bloques](ejemplos/14-mis-bloques.jpg) | LED RGB de ánodo común (11, 10 y 9) con tres resistencias, como el 08. | Parpadea blanco 3 veces y después pasa por rojo, verde y azul. En Mis bloques están `color (r) (g) (b)` y `parpadear (veces) veces`; clic derecho → «Editar» en un «definir». |
 | 15 | [latido](ejemplos/15-latido.jpg) | LED (13), botón (7) y buzzer (3). | El LED late. Cada pulsación hace el latido más lento (el monitor dice la espera); sobre 3 segundos suena la alarma, al tiro: el latido espera con «esperar … segundos o hasta que espera > 3». |
 
 Las capturas de `docs/ejemplos/` las deja el guion de prueba mientras simula.
@@ -45,7 +45,9 @@ Las capturas de `docs/ejemplos/` las deja el guion de prueba mientras simula.
 ## Diferencias con el kit real
 
 - **LED RGB**: el simulador muestra cada color encendido o apagado, sin
-  intensidades intermedias; por eso «azar» elige entre colores plenos.
+  intensidades intermedias; por eso «azar» elige entre colores plenos. El
+  LED del kit, y el de los ejemplos 08 y 14, es de ánodo común (patita común a
+  5 V): cada color se enciende con 255 menos el valor.
 - **Control remoto**: los códigos de las teclas son supuestos hasta leerlos del
   control del kit (el ejemplo 09 sirve para eso: muestra el código de cada
   tecla en el monitor).

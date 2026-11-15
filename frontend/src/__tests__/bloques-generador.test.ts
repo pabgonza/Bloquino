@@ -5,6 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { Blockly } from '../blocks/blockly';
+import luces from '../blocks/catalogo/luces';
 import {
   type B,
   alIniciar,
@@ -246,6 +247,22 @@ describe('luces', () => {
       'analogWrite(10, 0);',
       'analogWrite(11, 0);',
     ]);
+  });
+
+  it('color RGB rojo con ánodo común: invertido', () => {
+    const rgb = { type: 'ab_led_rgb', fields: { COMUN: 'anodo', R: '9', G: '10', B: '11', COLOR: '#ff0000' } };
+    expect(enSetup(rgb).slice(-3)).toEqual([
+      'analogWrite(9, 0);',
+      'analogWrite(10, 255);',
+      'analogWrite(11, 255);',
+    ]);
+  });
+
+  it('color RGB: sin el tipo es de cátodo común; en la paleta, de ánodo', () => {
+    const ws = new Blockly.Workspace();
+    expect(ws.newBlock('ab_led_rgb').getFieldValue('COMUN')).toBe('catodo');
+    ws.dispose();
+    expect(JSON.stringify(luces.paleta)).toContain('"COMUN":"anodo"');
   });
 
   it('encender y apagar muestran su texto en español', () => {

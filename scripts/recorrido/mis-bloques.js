@@ -172,7 +172,8 @@ const fija = (def, p) => ({ block: { type: 'ab_entrada', deletable: false, extra
 const copia = (def, id) => ({ block: { type: 'ab_entrada', extraState: { definicion: def, entrada: id, tipo: 'numero', texto: id } } });
 const definirB = (id, partes, ...hace) => ({ type: 'ab_definir', extraState: { id, partes }, inputs: Object.fromEntries(partes.filter((p) => p.tipo === 'numero').map((p) => [p.id, fija(id, p)])), next: { block: cadena(hace) } });
 const colorB = (r, g, b) => ({ type: 'ab_mi_bloque', extraState: { definicion: 'color', partes: COLOR }, inputs: { r: num(r), g: num(g), b: num(b) } });
-const pwmB = (pin, e) => ({ type: 'ab_pin_pwm', fields: { PIN: String(pin) }, inputs: { VALOR: copia('color', e) } });
+// El LED del 08 es de ánodo común: cada color se enciende con 255 - valor.
+const pwmB = (pin, e) => ({ type: 'ab_pin_pwm', fields: { PIN: String(pin) }, inputs: { VALOR: { block: { type: 'ab_aritmetica', fields: { OP: '-' }, inputs: { A: num(255), B: copia('color', e) } } } } });
 R['11 sketch'] = resumen(await programar([
   alIniciar({ type: 'ab_mi_bloque', extraState: { definicion: 'parpadear', partes: PARPADEAR }, inputs: { veces: num(3) } },
     porSiempre(colorB(255, 0, 0), esperarB(1), colorB(0, 255, 0), esperarB(1), colorB(0, 0, 255), esperarB(1))),

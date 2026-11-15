@@ -77,6 +77,9 @@
     "breadboard-mini": "Protoboard chica"
   },
   "propiedades": {
+    "rgb-led": {
+      "common": { "nombre": "Tipo", "opciones": { "cathode": "Cátodo común", "anode": "Ánodo común" } }
+    },
     "led": {
       "color": {
         "nombre": "Color",

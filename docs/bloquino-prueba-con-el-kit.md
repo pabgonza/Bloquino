@@ -26,7 +26,7 @@ pegarlas.
 | 1 Botones y sonido | 03, 11, `piano` del curso | Rebote; programas de sonido del curso. |
 | 2 Perilla y servo | 05 | Ruido de la perilla; «50.00» en el monitor. |
 | 3 Barrera | 06, `theremin`, `estacionamiento_pito` | Umbral real del sensor. |
-| 4 Colores | 08 | LED RGB: ¿cátodo común? |
+| 4 Colores | 08 | LED RGB del kit: de ánodo común (patita común a 5 V), como el del ejemplo 08. |
 | 5 Pantalla y temperatura | 07 | Pantalla LCD: cableado real; patitas del DHT11. |
 | 6 Control y dígito | 09 | Códigos de las 17 teclas; display: ¿cátodo o ánodo? |
 | 7 Marcador | 10 | Display de 4 dígitos: ¿cátodo o ánodo?, fantasmas. |
@@ -35,6 +35,10 @@ pegarlas.
 
 Probado en la placa el 2026-11-14: la rockola (04) con buzzer pasivo, después
 del arreglo de «tocar nota».
+
+Probado en la placa el 2026-11-15 (Pablo): armados 1 a 4. Del 1 al 3, todo
+bien. En el 4, el LED RGB del kit resultó de ánodo común: de ahí el change
+`led-rgb-anodo-comun`. Quedan del 5 al 9.
 
 ## Probado sin armar nada (2026-11-13)
 
@@ -67,7 +71,7 @@ Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques
 | 6 Servo y perilla | La perilla se gira arrastrando el dial; para moverla de lugar se toma de la base. El servo sigue a la perilla sin saltos. Con `mover a 0°` y `mover a 180°` no salta: gira a velocidad constante, como en Tinkercad (1,1 s de extremo a extremo). ¿El del kit tarda parecido? |
 | 7 Distancia | El panel «Distancia» responde al tiro. Acercar la mano al sensor real y comparar el umbral de 20 cm. |
 | 8 Temperatura | Las patitas del módulo en pantalla (S / + / −) están en el mismo orden que en el del kit. |
-| 9 LED RGB | Los colores mezclados (amarillo, violeta) se parecen a los del LED real. ¿El del kit es de cátodo común? |
+| 9 LED RGB | Los colores mezclados (amarillo, violeta) se parecen a los del LED real. El del kit es de ánodo común: con `color del LED RGB ánodo común` el color pedido es el que se ve. |
 | 10 Integración | Todo junto, sin que la simulación se ponga lenta en un notebook de la sala. |
 
 ## Componentes de h8

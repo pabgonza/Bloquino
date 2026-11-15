@@ -23,6 +23,9 @@ PartSimulationRegistry.register('rgb-led', {
     const el = element as any;
     const unsubscribers: (() => void)[] = [];
     const useResolver = typeof getPinResolver === 'function';
+    // Bloquino: de ánodo común (propiedad `common`, la del kit) cada color prende
+    // en bajo; sin la propiedad, cátodo común como en Velxio.
+    const nivel = (v: number) => ((el as { common?: string }).common === 'anode' ? 255 - v : v);
 
     // Digital path: prefer PinResolver so each channel works when driven
     // through an active device (e.g. a P-MOSFET high-side switch).
@@ -42,10 +45,10 @@ PartSimulationRegistry.register('rgb-led', {
       if (useResolver) {
         const resolver = getPinResolver!(pinName);
         if (resolver) {
-          el[prop] = resolver.getCurrentState() === 'HIGH' ? 255 : 0;
+          el[prop] = nivel(resolver.getCurrentState() === 'HIGH' ? 255 : 0);
           unsubscribers.push(
             resolver.onChange((state) => {
-              el[prop] = state === 'HIGH' ? 255 : 0;
+              el[prop] = nivel(state === 'HIGH' ? 255 : 0);
             }),
           );
         }
@@ -54,7 +57,7 @@ PartSimulationRegistry.register('rgb-led', {
         if (pin !== null) {
           unsubscribers.push(
             pinManager.onPinChange(pin, (_: number, state: boolean) => {
-              el[prop] = state ? 255 : 0;
+              el[prop] = nivel(state ? 255 : 0);
             }),
           );
         }
@@ -69,7 +72,7 @@ PartSimulationRegistry.register('rgb-led', {
     for (const { pin, prop } of pwmPins) {
       unsubscribers.push(
         pinManager.onPwmChange(pin, (_: number, dc: number) => {
-          el[prop] = Math.round(dc * 255);
+          el[prop] = nivel(Math.round(dc * 255));
         }),
       );
     }
@@ -424,9 +427,6 @@ PartSimulationRegistry.register('servo', {
               ((avrSimulator as any).getClockHz() as number)
             : CPU_HZ;
 
-        const unsubscribe = pinManager.onPinChange(pinSIG, (_pin, state) => {
-          if (state) {
-            riseTime = getCycles();
         // Bloquino: el servo gira hacia el ángulo pedido a velocidad constante,
         // como el de Tinkercad (15° cada 0,1 s: de 0° a 180° en 1,1 s), en
         // tiempo de la placa. Avanza con cada pulso (cada 20 ms); sin pulsos
@@ -434,6 +434,9 @@ PartSimulationRegistry.register('servo', {
         const GRADOS_POR_SEGUNDO = 160;
         let ultimoPulso = 0;
 
+        const unsubscribe = pinManager.onPinChange(pinSIG, (_pin, state) => {
+          if (state) {
+            riseTime = getCycles();
           } else if (riseTime >= 0) {
             const ahora = getCycles();
             const pulseUs = ((ahora - riseTime) / clockHz) * 1_000_000;
