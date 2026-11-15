@@ -32,6 +32,10 @@ En modo alumno, la paleta SHALL ofrecer solo los componentes del kit del curso y
 - **WHEN** el alumno abre la ficha de un display de 7 segmentos
 - **THEN** ve solo `Tipo`, con las opciones `Cátodo común` y `Ánodo común`
 
+#### Scenario: LED RGB como el del kit
+- **WHEN** el alumno agrega el LED RGB y abre su ficha
+- **THEN** sale de ánodo común, y la ficha muestra solo `Tipo`, con las opciones `Cátodo común` y `Ánodo común`
+
 ### Requirement: Modo profe
 Abrir el editor con el parámetro `profe` en la URL SHALL activar el modo profe, que muestra todo lo que el modo alumno oculta. El navegador SHALL recordar el modo entre visitas, y el parámetro `alumno` SHALL volver al modo alumno.
 
