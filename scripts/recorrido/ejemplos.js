@@ -83,6 +83,7 @@ await ejemplo('04-rockola', async (r, ids) => {
 await ejemplo('05-perilla-magica', async (r, ids) => {
   for (const v of [0, 512, 1023]) {
     await perilla(ids.potentiometer[0], v);
+    await espera(1200); // el servo tarda en llegar
     r['perilla ' + v] = { ...(await prop(ids.servo[0], 'angle')), brillo: Math.round((await prop(ids.led[0], 'brightness')).brightness * 100) / 100, dice: (await serie()).at(-1) };
   }
 });

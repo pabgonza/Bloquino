@@ -427,9 +427,16 @@ PartSimulationRegistry.register('servo', {
         const unsubscribe = pinManager.onPinChange(pinSIG, (_pin, state) => {
           if (state) {
             riseTime = getCycles();
+        // Bloquino: el servo gira hacia el ángulo pedido a velocidad constante,
+        // como el de Tinkercad (15° cada 0,1 s: de 0° a 180° en 1,1 s), en
+        // tiempo de la placa. Avanza con cada pulso (cada 20 ms); sin pulsos
+        // no se mueve, y un hueco largo entre dos cuenta como 50 ms.
+        const GRADOS_POR_SEGUNDO = 160;
+        let ultimoPulso = 0;
+
           } else if (riseTime >= 0) {
-            const pulseCycles = getCycles() - riseTime;
-            const pulseUs = (pulseCycles / clockHz) * 1_000_000;
+            const ahora = getCycles();
+            const pulseUs = ((ahora - riseTime) / clockHz) * 1_000_000;
             riseTime = -1;
             // Bloquino: margen de 100 µs y recorte a 0-180. El pulso de
             // write(0) mide unos µs menos que 544 y se descartaba: el servo
@@ -438,7 +445,12 @@ PartSimulationRegistry.register('servo', {
               const angle = Math.round(
                 ((pulseUs - MIN_PULSE_US) / (MAX_PULSE_US - MIN_PULSE_US)) * 180,
               );
-              el.angle = Math.max(0, Math.min(180, angle));
+              const actual = Number(el.angle) || 0;
+              const destino = Math.max(0, Math.min(180, angle));
+              const paso = Math.min((ahora - ultimoPulso) / clockHz, 0.05) * GRADOS_POR_SEGUNDO;
+              ultimoPulso = ahora;
+              el.angle =
+                Math.abs(destino - actual) <= paso ? destino : actual + Math.sign(destino - actual) * paso;
             }
           }
         });

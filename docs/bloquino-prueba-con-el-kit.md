@@ -64,7 +64,7 @@ Armar lo mismo en la pantalla y en la mesa, con el mismo programa de bloques
 | 3 Semáforo | Los LED asientan donde se sueltan. Cambiar el color de dos LED a verde y amarillo desde la ficha. La resistencia baja sola al riel −. |
 | 4 Botón | El botón sale ya girado y calza a caballo del canal. ¿Coincide con cómo calza el del kit? Apretar con el mouse prende el LED. |
 | 5 Buzzer | Las notas suenan con la altura correcta (comparar con el buzzer real) y sin cortes. Conectarlo al revés: debe sonar igual. |
-| 6 Servo y perilla | La perilla se gira arrastrando el dial; para moverla de lugar se toma de la base. El servo sigue a la perilla sin saltos. |
+| 6 Servo y perilla | La perilla se gira arrastrando el dial; para moverla de lugar se toma de la base. El servo sigue a la perilla sin saltos. Con `mover a 0°` y `mover a 180°` no salta: gira a velocidad constante, como en Tinkercad (1,1 s de extremo a extremo). ¿El del kit tarda parecido? |
 | 7 Distancia | El panel «Distancia» responde al tiro. Acercar la mano al sensor real y comparar el umbral de 20 cm. |
 | 8 Temperatura | Las patitas del módulo en pantalla (S / + / −) están en el mismo orden que en el del kit. |
 | 9 LED RGB | Los colores mezclados (amarillo, violeta) se parecen a los del LED real. ¿El del kit es de cátodo común? |
