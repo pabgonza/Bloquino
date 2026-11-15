@@ -20,9 +20,15 @@ import {
   sketch,
 } from './helpers/bloques';
 
-const cancion = (accion: 'tocar' | 'empezar', CANCION = 'MARIO_BROS', PIN = '8'): B => ({
+// Sin velocidad, como un programa guardado antes del menú: carga en normal.
+const cancion = (
+  accion: 'tocar' | 'empezar',
+  CANCION = 'MARIO_BROS',
+  PIN = '8',
+  VELOCIDAD?: string,
+): B => ({
   type: `ab_${accion}_cancion`,
-  fields: { CANCION, PIN },
+  fields: { CANCION, PIN, ...(VELOCIDAD && { VELOCIDAD }) },
 });
 const detener: B = { type: 'ab_detener_cancion', fields: { PIN: '8' } };
 const siSonando = (...bloques: B[]): B => ({
@@ -34,7 +40,7 @@ const siSonando = (...bloques: B[]): B => ({
 });
 
 describe('paquete en el catálogo', () => {
-  it('los bloques de canciones van al final de Sonido, con el pin 8', () => {
+  it('los bloques de canciones van al final de Sonido, a velocidad normal y con el pin 8', () => {
     const categoria = PALETA.contents.find((c) => c.name.includes('SONIDO'))!;
     const sonido = (categoria as { contents: object[] }).contents as {
       type: string;
@@ -48,7 +54,40 @@ describe('paquete en el catálogo', () => {
       'ab_detener_cancion',
       'ab_cancion_sonando',
     ]);
-    expect(sonido.slice(2).map((b) => b.fields)).toEqual(Array(4).fill({ PIN: '8' }));
+    expect(sonido.slice(2).map((b) => b.fields)).toEqual([
+      { VELOCIDAD: 'NORMAL', PIN: '8' },
+      { VELOCIDAD: 'NORMAL', PIN: '8' },
+      { PIN: '8' },
+      { PIN: '8' },
+    ]);
+  });
+
+  it('el menú de velocidad va de muy lenta a muy rápida y parte en normal', () => {
+    const ws = new Blockly.Workspace();
+    for (const tipo of ['ab_tocar_cancion', 'ab_empezar_cancion']) {
+      const menu = ws.newBlock(tipo).getField('VELOCIDAD') as Blockly.FieldDropdown;
+      expect(menu.getOptions().map(([texto]) => texto)).toEqual([
+        'muy lenta',
+        'lenta',
+        'normal',
+        'rápida',
+        'muy rápida',
+      ]);
+      expect(menu.getValue()).toBe('NORMAL');
+    }
+    ws.dispose();
+  });
+
+  it('un programa guardado sin velocidad carga en normal', () => {
+    const ws = new Blockly.Workspace();
+    const guardado = cancion('tocar', 'ODE_TO_JOY', '9') as unknown as Blockly.serialization.blocks.State;
+    const b = Blockly.serialization.blocks.append(guardado, ws);
+    expect([b.getFieldValue('CANCION'), b.getFieldValue('VELOCIDAD'), b.getFieldValue('PIN')]).toEqual([
+      'ODE_TO_JOY',
+      'NORMAL',
+      '9',
+    ]);
+    ws.dispose();
   });
 
   it('el menú ofrece las cuatro canciones y parte en Mario Bros', () => {
@@ -94,6 +133,33 @@ describe('programa simple', () => {
       'musica8.imperialMarch();',
       'musica8.happyBirthday();',
       'musica8.odeToJoy();',
+    ]);
+  });
+
+  it('otra velocidad pasa el tempo de la partitura multiplicado; normal, ninguno', () => {
+    const velocidades = ['MUY_LENTA', 'LENTA', 'NORMAL', 'RAPIDA', 'MUY_RAPIDA'];
+    const codigo = sketch([alIniciar(...velocidades.map((v) => cancion('tocar', 'MARIO_BROS', '8', v)))]);
+    expect(cuerpo(codigo, 'setup')).toEqual([
+      'musica8.marioBros(100);',
+      'musica8.marioBros(150);',
+      'musica8.marioBros();',
+      'musica8.marioBros(250);',
+      'musica8.marioBros(300);',
+    ]);
+  });
+
+  it('el tempo sale de la partitura de cada canción, redondeado', () => {
+    const codigo = sketch([
+      alIniciar(
+        cancion('tocar', 'IMPERIAL_MARCH', '8', 'RAPIDA'),
+        cancion('tocar', 'HAPPY_BIRTHDAY', '8', 'MUY_LENTA'),
+        cancion('tocar', 'ODE_TO_JOY', '8', 'RAPIDA'),
+      ),
+    ]);
+    expect(cuerpo(codigo, 'setup')).toEqual([
+      'musica8.imperialMarch(150);',
+      'musica8.happyBirthday(70);',
+      'musica8.odeToJoy(143);',
     ]);
   });
 
@@ -156,6 +222,11 @@ describe('con corrutinas', () => {
     ]);
     expect(cuerpo(codigo, 'loop')).toEqual(['musica8.update();', 'programa1();', 'programa2();']);
     expect(codigo).not.toContain('odeToJoy');
+  });
+
+  it('de fondo, a otra velocidad, el tempo va en start()', () => {
+    const codigo = sketch([alIniciar(cancion('empezar', 'ODE_TO_JOY', '8', 'LENTA'), parpadeo(13, 0.2))]);
+    expect(cuerpo(codigo, 'programa1')[1]).toBe('musica8.start(BuzzerMusic::ODE_TO_JOY, 86);');
   });
 
   it('dos buzzers avanzan cada uno con su objeto', () => {

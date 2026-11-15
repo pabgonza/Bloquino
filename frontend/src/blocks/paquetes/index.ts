@@ -22,7 +22,7 @@ export interface Paquete {
   global: string;
   /** Código de cada vuelta de `loop()`, para los bloques con `tick`. */
   tick?: string;
-  /** Valor de cada campo en la paleta. */
+  /** Valor de cada campo en la paleta y en los programas guardados sin él. */
   porDefecto?: Record<string, string>;
   menus?: Record<string, Opcion[]>;
   bloques: {
@@ -46,7 +46,7 @@ export const PAQUETES = Object.values(
   import.meta.glob<Paquete>('./*.json', { eager: true, import: 'default' }),
 );
 
-for (const p of PAQUETES)
+for (const p of PAQUETES) {
   Blockly.defineBlocksWithJsonArray(
     p.bloques.map((b) => ({
       type: b.tipo,
@@ -64,10 +64,31 @@ for (const p of PAQUETES)
       ...(b.forma === 'logico' ? LOGICO : INSTRUCCION),
     })),
   );
+  // `porDefecto` también para los programas guardados sin ese campo.
+  for (const b of p.bloques) {
+    const { init } = Blockly.Blocks[b.tipo];
+    Blockly.Blocks[b.tipo].init = function (this: Blockly.Block) {
+      init.call(this);
+      for (const c of b.campos) if (p.porDefecto?.[c]) this.setFieldValue(p.porDefecto[c], c);
+    };
+  }
+}
 
-/** Reemplaza `{CAMPO}` y `{CAMPO.dato}` de una plantilla con lo elegido en el bloque. */
+/**
+ * Reemplaza `{CAMPO}` y `{CAMPO.dato}` de una plantilla con lo elegido en el
+ * bloque. `{A.x*B.y}` es el producto redondeado de esos datos, o nada si a una
+ * opción le falta el dato; un argumento vacío al final de una llamada se quita
+ * (velocidad normal → `marioBros()`).
+ */
 export const llenar = (p: Paquete, b: Blockly.Block, plantilla: string) =>
-  plantilla.replace(/\{(\w+)(?:\.(\w+))?\}/g, (_, campo: string, dato?: string) => {
-    const valor = String(b.getFieldValue(campo));
-    return dato ? p.menus![campo].find((o) => o.valor === valor)![dato] : valor;
-  });
+  plantilla
+    .replace(/\{([\w.*]+)\}/g, (_, expr: string) => {
+      const v = expr.split('*').map((ref) => {
+        const [campo, dato] = ref.split('.');
+        const valor = String(b.getFieldValue(campo));
+        return dato ? p.menus![campo].find((o) => o.valor === valor)![dato] : valor;
+      });
+      if (v.length === 1) return v[0];
+      return v.every(Boolean) ? String(Math.round(v.reduce((a, x) => a * Number(x), 1))) : '';
+    })
+    .replace(/, \)/g, ')');

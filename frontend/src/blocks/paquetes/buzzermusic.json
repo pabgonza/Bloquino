@@ -9,30 +9,37 @@
   "include": "#include <BuzzerMusic.h>",
   "global": "BuzzerMusic musica{PIN}({PIN});",
   "tick": "musica{PIN}.update();",
-  "porDefecto": { "PIN": "8" },
+  "porDefecto": { "VELOCIDAD": "NORMAL", "PIN": "8" },
   "menus": {
     "CANCION": [
-      { "texto": "Mario Bros", "valor": "MARIO_BROS", "metodo": "marioBros" },
-      { "texto": "Marcha Imperial", "valor": "IMPERIAL_MARCH", "metodo": "imperialMarch" },
-      { "texto": "Cumpleaños feliz", "valor": "HAPPY_BIRTHDAY", "metodo": "happyBirthday" },
-      { "texto": "Himno de la Alegría", "valor": "ODE_TO_JOY", "metodo": "odeToJoy" }
+      { "texto": "Mario Bros", "valor": "MARIO_BROS", "metodo": "marioBros", "tempo": "200" },
+      { "texto": "Marcha Imperial", "valor": "IMPERIAL_MARCH", "metodo": "imperialMarch", "tempo": "120" },
+      { "texto": "Cumpleaños feliz", "valor": "HAPPY_BIRTHDAY", "metodo": "happyBirthday", "tempo": "140" },
+      { "texto": "Himno de la Alegría", "valor": "ODE_TO_JOY", "metodo": "odeToJoy", "tempo": "114" }
+    ],
+    "VELOCIDAD": [
+      { "texto": "muy lenta", "valor": "MUY_LENTA", "factor": "0.5" },
+      { "texto": "lenta", "valor": "LENTA", "factor": "0.75" },
+      { "texto": "normal", "valor": "NORMAL" },
+      { "texto": "rápida", "valor": "RAPIDA", "factor": "1.25" },
+      { "texto": "muy rápida", "valor": "MUY_RAPIDA", "factor": "1.5" }
     ]
   },
   "bloques": [
     {
       "tipo": "ab_tocar_cancion",
-      "texto": "tocar canción %1 en pin %2",
-      "campos": ["CANCION", "PIN"],
-      "codigo": "musica{PIN}.start(BuzzerMusic::{CANCION});",
+      "texto": "tocar canción %1 a velocidad %2 en pin %3",
+      "campos": ["CANCION", "VELOCIDAD", "PIN"],
+      "codigo": "musica{PIN}.start(BuzzerMusic::{CANCION}, {CANCION.tempo*VELOCIDAD.factor});",
       "tick": true,
       "esperarHasta": "!musica{PIN}.isPlaying()",
-      "bloqueante": "musica{PIN}.{CANCION.metodo}();"
+      "bloqueante": "musica{PIN}.{CANCION.metodo}({CANCION.tempo*VELOCIDAD.factor});"
     },
     {
       "tipo": "ab_empezar_cancion",
-      "texto": "empezar canción %1 en pin %2",
-      "campos": ["CANCION", "PIN"],
-      "codigo": "musica{PIN}.start(BuzzerMusic::{CANCION});",
+      "texto": "empezar canción %1 a velocidad %2 en pin %3",
+      "campos": ["CANCION", "VELOCIDAD", "PIN"],
+      "codigo": "musica{PIN}.start(BuzzerMusic::{CANCION}, {CANCION.tempo*VELOCIDAD.factor});",
       "tick": true
     },
     {

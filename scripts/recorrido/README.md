@@ -11,8 +11,9 @@ el programa de bloques, que se carga como JSON.
   bloques con el mouse, constructores de bloques).
 - `sN.js`: cuerpo de la sesión N. Deja sus resultados en `R`.
 - `bloques.js`: programar con el mouse (arrastrar, menú, número, papelera).
-- `canciones.js`: canciones de BuzzerMusic (h6): bloques arrastrados, canción
-  de fondo con parpadeo, detener con el botón y canción sola.
+- `canciones.js`: canciones de BuzzerMusic (h6): bloques arrastrados, menús
+  de canción y de velocidad, canción de fondo con parpadeo, detener con el
+  botón y canción sola, normal y muy rápida.
 - `variables.js`: crear una variable, `fijar` con su número y usarla donde
   C++ espera un entero.
 - `textos.js`: variable de texto creada con el mouse y órdenes por el monitor

@@ -1,8 +1,8 @@
 // h6: canciones de BuzzerMusic. Buzzer en el pin 8 y botón en el pin 2, como
 // en la sesión 5. El programa se arma con el mouse sobre el parpadeo inicial:
-// «empezar canción» bajo «al iniciar», su menú de canción y un segundo
-// programa «cuando se presiona botón» → «detener canción». Al final, «tocar
-// canción» sola (la de las slides).
+// «empezar canción» bajo «al iniciar», sus menús de canción y de velocidad y
+// un segundo programa «cuando se presiona botón» → «detener canción». Al
+// final, «tocar canción» sola (la de las slides) y muy rápida.
 await nuevo();
 await limpiar();
 const proto = await agregar('Protoboard');
@@ -33,6 +33,14 @@ await espera(400);
 R.canciones = await page.locator('.blocklyDropDownDiv .blocklyMenuItem').allInnerTexts();
 await page.locator('.blocklyDropDownDiv .blocklyMenuItem').filter({ hasText: 'Himno de la Alegría' }).first().click();
 R['2 menú'] = (await leer()).includes('musica8.start(BuzzerMusic::ODE_TO_JOY);');
+
+// 2b. Menú de velocidad: normal → rápida (114 × 1,25 = 143 por minuto).
+const vel = await campoDe('ab_empezar_cancion', 1);
+await page.mouse.click(vel.x, vel.y);
+await espera(400);
+R.velocidades = await page.locator('.blocklyDropDownDiv .blocklyMenuItem').allInnerTexts();
+await page.locator('.blocklyDropDownDiv .blocklyMenuItem').filter({ hasText: /^\W*rápida$/ }).first().click();
+R['2b velocidad'] = (await leer()).includes('musica8.start(BuzzerMusic::ODE_TO_JOY, 143);');
 
 // 3. Segundo programa, debajo del primero: «cuando se presiona botón» → «detener canción».
 const base = await forma('ab_por_siempre');
@@ -84,5 +92,14 @@ await espiarAudio();
 if (await simular()) {
   await espera(1500);
   R['mario'] = await notasOidas();
+  await detener();
+}
+
+// 7. La misma canción muy rápida (300 por minuto): figuras de 67 ms en vez de 100.
+R['muy rápida'] = resumen(await programar([alIniciar({ type: 'ab_tocar_cancion', fields: { CANCION: 'MARIO_BROS', VELOCIDAD: 'MUY_RAPIDA', PIN: '8' } })]), 8);
+await espiarAudio();
+if (await simular()) {
+  await espera(1500);
+  R['mario muy rápida'] = await notasOidas();
   await detener();
 }

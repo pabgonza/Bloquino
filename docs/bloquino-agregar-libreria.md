@@ -37,7 +37,7 @@ registrarlo en otro lado.
 | `include` | Línea `#include` de la librería. |
 | `global` | Declaración del objeto. Con `{PIN}` en el nombre queda un objeto por pin usado. |
 | `tick` | Código que debe correr en cada vuelta de `loop()`, para los bloques con `"tick": true`. |
-| `porDefecto` | Valor de cada campo cuando el bloque está en la paleta. |
+| `porDefecto` | Valor de cada campo cuando el bloque está en la paleta, y en los proyectos guardados antes de que el bloque tuviera ese campo. |
 | `menus` | Menús propios: lista de opciones con `texto` (lo que lee el alumno), `valor` y los datos extra que se quieran. |
 | `bloques` | Los bloques (abajo). |
 
@@ -57,6 +57,12 @@ Cada bloque:
 En el código, `{CAMPO}` se reemplaza por lo elegido en ese campo y
 `{CAMPO.dato}` por un dato extra de la opción elegida
 (`musica{PIN}.{CANCION.metodo}();` → `musica8.marioBros();`).
+`{A.x*B.y}` multiplica datos de las opciones elegidas y redondea; si a una
+opción le falta el dato queda vacío, y un argumento vacío al final de una
+llamada se quita. Así la velocidad de las canciones:
+`musica{PIN}.{CANCION.metodo}({CANCION.tempo*VELOCIDAD.factor});` da
+`musica8.marioBros(250);` a velocidad rápida (`tempo` 200, `factor` 1.25) y
+`musica8.marioBros();` a velocidad normal, que no tiene `factor`.
 
 Un bloque con `tick` hace que el programa se genere con corrutinas aunque
 tenga un solo `al iniciar`: con `delay()` su trabajo de fondo se detendría.

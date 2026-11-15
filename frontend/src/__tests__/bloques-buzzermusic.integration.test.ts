@@ -56,9 +56,9 @@ async function placa(bloques: B[]) {
   };
 }
 
-const cancion = (accion: 'tocar' | 'empezar', CANCION: string): B => ({
+const cancion = (accion: 'tocar' | 'empezar', CANCION: string, VELOCIDAD = 'NORMAL'): B => ({
   type: `ab_${accion}_cancion`,
-  fields: { CANCION, PIN: '8' },
+  fields: { CANCION, VELOCIDAD, PIN: '8' },
 });
 const detener: B = { type: 'ab_detener_cancion', fields: { PIN: '8' } };
 /** Script que enciende el LED del pin 11 mientras la canción suena. */
@@ -97,6 +97,24 @@ describe.skipIf(!CON_BACKEND)('canciones en un AVR emulado', { timeout: 180_000 
     const ritmo = periodos(p.cambios(13));
     expect(ritmo).toHaveLength(10);
     ritmo.forEach((ms) => cerca(ms, 200, 0.02));
+  });
+
+  it('a velocidad rápida, Mario Bros va a 250 por minuto: figuras de 80 ms', async () => {
+    const p = await placa([alIniciar(cancion('tocar', 'MARIO_BROS', 'RAPIDA'))]);
+    p.correr(800);
+    const notas = p.notas().slice(0, 6);
+    [2637, 2637, 2637, 2093, 2637, 3136].forEach((hz, i) => cerca(notas[i].hz, hz));
+    notas.forEach((n) => cerca(n.ms, 72, 0.1));
+    expect(notas.map((n) => Math.round(n.inicio / 80))).toEqual([0, 1, 3, 5, 6, 8]);
+  });
+
+  it('de fondo y lenta, el himno va a 86 por minuto: negras de 698 ms', async () => {
+    const p = await placa([alIniciar(cancion('empezar', 'ODE_TO_JOY', 'LENTA'), parpadeo(13, 0.2))]);
+    p.correr(2900);
+    const notas = p.notas().slice(0, 4);
+    [330, 330, 349, 392].forEach((hz, i) => cerca(notas[i].hz, hz));
+    notas.forEach((n) => cerca(n.ms, 628));
+    periodos(p.cambios(13)).forEach((ms) => cerca(ms, 200, 0.02));
   });
 
   it('tocar canción cede el turno y sigue cuando la canción termina', async () => {

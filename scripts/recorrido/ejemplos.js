@@ -73,6 +73,11 @@ await ejemplo('04-rockola', async (r, ids) => {
   await espera(1200);
   r['notas tras detener'] = (await notasOidas()).length;
   r['LED quieto'] = await cambios(led13, 800);
+  // Sin canción sonando, el azul toca Cumpleaños feliz rápida (175 por minuto).
+  await espiarAudio();
+  await apretar(azul, 200); await soltar();
+  await espera(2500);
+  r['cumpleaños rápida'] = (await notasOidas()).slice(0, 6);
 });
 
 await ejemplo('05-perilla-magica', async (r, ids) => {
