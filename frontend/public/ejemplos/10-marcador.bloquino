@@ -31,7 +31,7 @@
    "id": "display_4_1794512998867_urpiiyqr5",
    "metadataId": "display-4",
    "x": 141,
-   "y": -102,
+   "y": -210,
    "properties": {
     "digits": 4,
     "common": "cathode"
@@ -49,6 +49,76 @@
     "step": 1,
     "startDegree": -135,
     "endDegree": 135
+   }
+  },
+  {
+   "id": "resistor_1794520000000_10segf",
+   "metadataId": "resistor",
+   "x": 149.15,
+   "y": -40.8,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520001000_10sega",
+   "metadataId": "resistor",
+   "x": 158.65,
+   "y": -4.799999999999997,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520002000_10sege",
+   "metadataId": "resistor",
+   "x": 177.65,
+   "y": -40.8,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520003000_10segd",
+   "metadataId": "resistor",
+   "x": 187.65,
+   "y": -4.799999999999997,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520004000_10segc",
+   "metadataId": "resistor",
+   "x": 203.65,
+   "y": -40.8,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520005000_10segg",
+   "metadataId": "resistor",
+   "x": 213.15,
+   "y": -4.799999999999997,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520006000_10segb",
+   "metadataId": "resistor",
+   "x": 232.15,
+   "y": -40.8,
+   "properties": {
+    "value": "1000",
+    "rotation": 90
    }
   }
  ],
@@ -94,30 +164,30 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "F",
     "x": 232.2768,
-    "y": -92.22
+    "y": -200.22
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "12",
+    "componentId": "resistor_1794520000000_10segf",
+    "pinName": "1",
     "x": 184.5,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [
     {
      "x": 232.2768,
-     "y": -116.22
+     "y": -224.22
     },
     {
      "x": 117,
-     "y": -116.22
+     "y": -224.22
     },
     {
      "x": 117,
-     "y": 27
+     "y": -81
     },
     {
      "x": 184.5,
-     "y": 27
+     "y": -81
     }
    ],
    "color": "#8B00FF",
@@ -129,30 +199,30 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "A",
     "x": 222.67559999999997,
-    "y": -92.22
+    "y": -200.22
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "11",
+    "componentId": "resistor_1794520001000_10sega",
+    "pinName": "1",
     "x": 194,
-    "y": 59
+    "y": -22.799999999999997
    },
    "waypoints": [
     {
      "x": 222.67559999999997,
-     "y": -108.22
+     "y": -216.22
     },
     {
      "x": 125,
-     "y": -108.22
+     "y": -216.22
     },
     {
      "x": 125,
-     "y": 18
+     "y": -90
     },
     {
      "x": 194,
-     "y": 18
+     "y": -90
     }
    ],
    "color": "#0000cc",
@@ -164,7 +234,7 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "DIG1",
     "x": 213.0744,
-    "y": -92.22
+    "y": -200.22
    },
    "end": {
     "componentId": "arduino-uno",
@@ -175,19 +245,19 @@
    "waypoints": [
     {
      "x": 213.0744,
-     "y": -100.22
+     "y": -208.22
     },
     {
      "x": 133,
-     "y": -100.22
+     "y": -208.22
     },
     {
      "x": 133,
-     "y": 9
+     "y": -99
     },
     {
      "x": 203.5,
-     "y": 9
+     "y": -99
     }
    ],
    "color": "#8B4513",
@@ -199,13 +269,13 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "E",
     "x": 213.0744,
-    "y": -24.180000000000007
+    "y": -132.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "9",
+    "componentId": "resistor_1794520002000_10sege",
+    "pinName": "1",
     "x": 213,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [],
    "color": "#00FFFF",
@@ -217,13 +287,13 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "D",
     "x": 222.67559999999997,
-    "y": -24.180000000000007
+    "y": -132.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "8",
+    "componentId": "resistor_1794520003000_10segd",
+    "pinName": "1",
     "x": 223,
-    "y": 59
+    "y": -22.799999999999997
    },
    "waypoints": [],
    "color": "#22c55e",
@@ -235,22 +305,22 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "C",
     "x": 241.878,
-    "y": -24.180000000000007
+    "y": -132.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "7",
+    "componentId": "resistor_1794520004000_10segc",
+    "pinName": "1",
     "x": 239,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [
     {
      "x": 241.878,
-     "y": 36
+     "y": -72
     },
     {
      "x": 239,
-     "y": 36
+     "y": -72
     }
    ],
    "color": "#FF8C00",
@@ -262,22 +332,22 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "G",
     "x": 251.4792,
-    "y": -24.180000000000007
+    "y": -132.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "6",
+    "componentId": "resistor_1794520005000_10segg",
+    "pinName": "1",
     "x": 248.5,
-    "y": 59
+    "y": -22.799999999999997
    },
    "waypoints": [
     {
      "x": 251.4792,
-     "y": 36
+     "y": -72
     },
     {
      "x": 248.5,
-     "y": 36
+     "y": -72
     }
    ],
    "color": "#808080",
@@ -289,7 +359,7 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "DIG4",
     "x": 261.0804,
-    "y": -24.180000000000007
+    "y": -132.18
    },
    "end": {
     "componentId": "arduino-uno",
@@ -300,11 +370,11 @@
    "waypoints": [
     {
      "x": 261.0804,
-     "y": 36
+     "y": -72
     },
     {
      "x": 258,
-     "y": 36
+     "y": -72
     }
    ],
    "color": "#FFD700",
@@ -316,30 +386,30 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "B",
     "x": 261.0804,
-    "y": -92.22
+    "y": -200.22
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "4",
+    "componentId": "resistor_1794520006000_10segb",
+    "pinName": "1",
     "x": 267.5,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [
     {
      "x": 261.0804,
-     "y": -100.22
+     "y": -208.22
     },
     {
      "x": 345,
-     "y": -100.22
+     "y": -208.22
     },
     {
      "x": 345,
-     "y": 18
+     "y": -90
     },
     {
      "x": 267.5,
-     "y": 18
+     "y": -90
     }
    ],
    "color": "#FF00FF",
@@ -351,7 +421,7 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "DIG3",
     "x": 251.4792,
-    "y": -92.22
+    "y": -200.22
    },
    "end": {
     "componentId": "arduino-uno",
@@ -362,19 +432,19 @@
    "waypoints": [
     {
      "x": 251.4792,
-     "y": -108.22
+     "y": -216.22
     },
     {
      "x": 353,
-     "y": -108.22
+     "y": -216.22
     },
     {
      "x": 353,
-     "y": 27
+     "y": -81
     },
     {
      "x": 277,
-     "y": 27
+     "y": -81
     }
    ],
    "color": "#FFFFFF",
@@ -386,7 +456,7 @@
     "componentId": "display_4_1794512998867_urpiiyqr5",
     "pinName": "DIG2",
     "x": 241.878,
-    "y": -92.22
+    "y": -200.22
    },
    "end": {
     "componentId": "arduino-uno",
@@ -397,19 +467,19 @@
    "waypoints": [
     {
      "x": 241.878,
-     "y": -116.22
+     "y": -224.22
     },
     {
      "x": 361,
-     "y": -116.22
+     "y": -224.22
     },
     {
      "x": 361,
-     "y": 36
+     "y": -72
     },
     {
      "x": 286.5,
-     "y": 36
+     "y": -72
     }
    ],
    "color": "#8B4513",
@@ -467,6 +537,132 @@
     }
    ],
    "color": "#22c55e",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520100000",
+   "start": {
+    "componentId": "resistor_1794520000000_10segf",
+    "pinName": "2",
+    "x": 184.5,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "12",
+    "x": 184.5,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#8B00FF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520101000",
+   "start": {
+    "componentId": "resistor_1794520001000_10sega",
+    "pinName": "2",
+    "x": 194,
+    "y": 36
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "11",
+    "x": 194,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#0000cc",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520102000",
+   "start": {
+    "componentId": "resistor_1794520002000_10sege",
+    "pinName": "2",
+    "x": 213,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "9",
+    "x": 213,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#00FFFF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520103000",
+   "start": {
+    "componentId": "resistor_1794520003000_10segd",
+    "pinName": "2",
+    "x": 223,
+    "y": 36
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "8",
+    "x": 223,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#22c55e",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520104000",
+   "start": {
+    "componentId": "resistor_1794520004000_10segc",
+    "pinName": "2",
+    "x": 239,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "7",
+    "x": 239,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#FF8C00",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520105000",
+   "start": {
+    "componentId": "resistor_1794520005000_10segg",
+    "pinName": "2",
+    "x": 248.5,
+    "y": 36
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "6",
+    "x": 248.5,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#808080",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520106000",
+   "start": {
+    "componentId": "resistor_1794520006000_10segb",
+    "pinName": "2",
+    "x": 267.5,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "4",
+    "x": 267.5,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#FF00FF",
    "autoRouted": false
   }
  ],

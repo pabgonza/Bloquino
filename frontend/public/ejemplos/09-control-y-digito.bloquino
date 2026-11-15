@@ -49,7 +49,7 @@
    "id": "7segment_1794512797572_zldv2tudl",
    "metadataId": "7segment",
    "x": 240,
-   "y": -117,
+   "y": -213,
    "properties": {
     "color": "red",
     "offColor": "#444",
@@ -77,6 +77,76 @@
    "x": 370,
    "y": -20,
    "properties": {}
+  },
+  {
+   "id": "resistor_1794520000000_09segf",
+   "metadataId": "resistor",
+   "x": 187.65,
+   "y": -40.8,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520001000_09segg",
+   "metadataId": "resistor",
+   "x": 203.65,
+   "y": -4.799999999999997,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520002000_09sege",
+   "metadataId": "resistor",
+   "x": 213.15,
+   "y": -40.8,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520003000_09segd",
+   "metadataId": "resistor",
+   "x": 222.65,
+   "y": -4.799999999999997,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520004000_09segc",
+   "metadataId": "resistor",
+   "x": 232.15,
+   "y": -40.8,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520005000_09segb",
+   "metadataId": "resistor",
+   "x": 241.65,
+   "y": -4.799999999999997,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
+  },
+  {
+   "id": "resistor_1794520006000_09sega",
+   "metadataId": "resistor",
+   "x": 251.15,
+   "y": -40.8,
+   "properties": {
+    "value": "220",
+    "rotation": 90
+   }
   }
  ],
  "wires": [
@@ -86,7 +156,7 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "COM.2",
     "x": 269.7195,
-    "y": -107.22
+    "y": -203.22
    },
    "end": {
     "componentId": "breadboard_mini_1794512796307_txjpkdvw2",
@@ -97,15 +167,15 @@
    "waypoints": [
     {
      "x": 269.7195,
-     "y": -165
+     "y": -261
     },
     {
      "x": 20,
-     "y": -165
+     "y": -261
     },
     {
      "x": 20,
-     "y": -30.720000000000013
+     "y": -126.72000000000001
     }
    ],
    "color": "#000000",
@@ -237,30 +307,30 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "F",
     "x": 260.1183,
-    "y": -107.22
+    "y": -203.22
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "8",
+    "componentId": "resistor_1794520000000_09segf",
+    "pinName": "1",
     "x": 223,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [
     {
      "x": 260.1183,
-     "y": -123.22
+     "y": -219.22
     },
     {
      "x": 224,
-     "y": -123.22
+     "y": -219.22
     },
     {
      "x": 224,
-     "y": 27
+     "y": -69
     },
     {
      "x": 223,
-     "y": 27
+     "y": -69
     }
    ],
    "color": "#8B00FF",
@@ -272,30 +342,30 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "G",
     "x": 250.5171,
-    "y": -107.22
+    "y": -203.22
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "7",
+    "componentId": "resistor_1794520001000_09segg",
+    "pinName": "1",
     "x": 239,
-    "y": 59
+    "y": -22.799999999999997
    },
    "waypoints": [
     {
      "x": 250.5171,
-     "y": -115.22
+     "y": -211.22
     },
     {
      "x": 232,
-     "y": -115.22
+     "y": -211.22
     },
     {
      "x": 232,
-     "y": 18
+     "y": -78
     },
     {
      "x": 239,
-     "y": 18
+     "y": -78
     }
    ],
    "color": "#808080",
@@ -307,22 +377,22 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "E",
     "x": 250.5171,
-    "y": -39.18000000000001
+    "y": -135.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "6",
+    "componentId": "resistor_1794520002000_09sege",
+    "pinName": "1",
     "x": 248.5,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [
     {
      "x": 250.5171,
-     "y": 9
+     "y": -87
     },
     {
      "x": 248.5,
-     "y": 9
+     "y": -87
     }
    ],
    "color": "#00FFFF",
@@ -334,22 +404,22 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "D",
     "x": 260.1183,
-    "y": -39.18000000000001
+    "y": -135.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "5",
+    "componentId": "resistor_1794520003000_09segd",
+    "pinName": "1",
     "x": 258,
-    "y": 59
+    "y": -22.799999999999997
    },
    "waypoints": [
     {
      "x": 260.1183,
-     "y": 0
+     "y": -96
     },
     {
      "x": 258,
-     "y": 0
+     "y": -96
     }
    ],
    "color": "#22c55e",
@@ -361,22 +431,22 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "C",
     "x": 279.3207,
-    "y": -39.18000000000001
+    "y": -135.18
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "4",
+    "componentId": "resistor_1794520004000_09segc",
+    "pinName": "1",
     "x": 267.5,
-    "y": 59
+    "y": -58.8
    },
    "waypoints": [
     {
      "x": 279.3207,
-     "y": -27
+     "y": -123
     },
     {
      "x": 267.5,
-     "y": -27
+     "y": -123
     }
    ],
    "color": "#FF8C00",
@@ -388,30 +458,30 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "B",
     "x": 288.9219,
-    "y": -107.22
+    "y": -203.22
    },
    "end": {
-    "componentId": "arduino-uno",
-    "pinName": "3",
+    "componentId": "resistor_1794520005000_09segb",
+    "pinName": "1",
     "x": 277,
-    "y": 59
+    "y": -22.799999999999997
    },
    "waypoints": [
     {
      "x": 288.9219,
-     "y": -115.22
+     "y": -211.22
     },
     {
      "x": 295,
-     "y": -115.22
+     "y": -211.22
     },
     {
      "x": 295,
-     "y": -18
+     "y": -114
     },
     {
      "x": 277,
-     "y": -18
+     "y": -114
     }
    ],
    "color": "#8B4513",
@@ -423,7 +493,150 @@
     "componentId": "7segment_1794512797572_zldv2tudl",
     "pinName": "A",
     "x": 279.3207,
-    "y": -107.22
+    "y": -203.22
+   },
+   "end": {
+    "componentId": "resistor_1794520006000_09sega",
+    "pinName": "1",
+    "x": 286.5,
+    "y": -58.8
+   },
+   "waypoints": [
+    {
+     "x": 279.3207,
+     "y": -219.22
+    },
+    {
+     "x": 303,
+     "y": -219.22
+    },
+    {
+     "x": 303,
+     "y": -105
+    },
+    {
+     "x": 286.5,
+     "y": -105
+    }
+   ],
+   "color": "#0000cc",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520100000",
+   "start": {
+    "componentId": "resistor_1794520000000_09segf",
+    "pinName": "2",
+    "x": 223,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "8",
+    "x": 223,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#8B00FF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520101000",
+   "start": {
+    "componentId": "resistor_1794520001000_09segg",
+    "pinName": "2",
+    "x": 239,
+    "y": 36
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "7",
+    "x": 239,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#808080",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520102000",
+   "start": {
+    "componentId": "resistor_1794520002000_09sege",
+    "pinName": "2",
+    "x": 248.5,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "6",
+    "x": 248.5,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#00FFFF",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520103000",
+   "start": {
+    "componentId": "resistor_1794520003000_09segd",
+    "pinName": "2",
+    "x": 258,
+    "y": 36
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "5",
+    "x": 258,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#22c55e",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520104000",
+   "start": {
+    "componentId": "resistor_1794520004000_09segc",
+    "pinName": "2",
+    "x": 267.5,
+    "y": 0
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "4",
+    "x": 267.5,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#FF8C00",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520105000",
+   "start": {
+    "componentId": "resistor_1794520005000_09segb",
+    "pinName": "2",
+    "x": 277,
+    "y": 36
+   },
+   "end": {
+    "componentId": "arduino-uno",
+    "pinName": "3",
+    "x": 277,
+    "y": 59
+   },
+   "waypoints": [],
+   "color": "#8B4513",
+   "autoRouted": false
+  },
+  {
+   "id": "wire-1794520106000",
+   "start": {
+    "componentId": "resistor_1794520006000_09sega",
+    "pinName": "2",
+    "x": 286.5,
+    "y": 0
    },
    "end": {
     "componentId": "arduino-uno",
@@ -431,24 +644,7 @@
     "x": 286.5,
     "y": 59
    },
-   "waypoints": [
-    {
-     "x": 279.3207,
-     "y": -123.22
-    },
-    {
-     "x": 303,
-     "y": -123.22
-    },
-    {
-     "x": 303,
-     "y": -9
-    },
-    {
-     "x": 286.5,
-     "y": -9
-    }
-   ],
+   "waypoints": [],
    "color": "#0000cc",
    "autoRouted": false
   }
