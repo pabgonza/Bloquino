@@ -12,23 +12,29 @@ verdad. Media hora, con la página de alumno (`/editor?alumno`) y el kit al lado
   y Supr lo elimina. Con la simulación corriendo, **clic** sobre un sensor abre
   su panel de valores.
 
-## Pendiente (2026-11-13)
+## Pendiente (2026-11-14)
 
-Lo que falta probar con el kit y en la sala; el detalle de cada punto está
-más abajo.
+Lo que falta probar en la placa y en la sala está en
+[bloquino-prueba-con-el-kit.html](bloquino-prueba-con-el-kit.html) (abrirlo en
+el navegador): 8 armados y la sala, cada uno con su circuito, sus conexiones y
+su lista de comprobaciones, y la tabla de lo que no hace falta probar. Las
+marcas se guardan en el navegador y «Copiar resultados» las deja listas para
+pegarlas.
 
-- [ ] Sala: regla de firewall con los puertos 80 y 443 y entrar desde otro
-  equipo de la red (`docs/bloquino-dia-de-clase.md`). En este notebook no
-  hay regla «Bloquino» y la red figura como Pública.
-- [ ] Cargar a la placa real desde otro equipo por `https://<IP>`, con la
-  autoridad instalada o aceptando el aviso (desde el mismo notebook ya
-  funciona: ver abajo).
-- [ ] Control remoto: anotar los códigos reales de las 17 teclas.
-- [ ] Displays: ¿cátodo o ánodo común?
-- [ ] Pantalla LCD: cableado real.
-- [ ] LED RGB: ¿el del kit es de cátodo común?
-- [ ] Programas del curso en bloques: oír y ver con los componentes armados
-  los que se apartan del `.ino` (tabla de abajo; ya cargan en el clon).
+| Armado | Ejemplo | Pendiente que cierra |
+| --- | --- | --- |
+| 1 Botones y sonido | 03, 11, `piano` del curso | Rebote; programas de sonido del curso. |
+| 2 Perilla y servo | 05 | Ruido de la perilla; «50.00» en el monitor. |
+| 3 Barrera | 06, `theremin`, `estacionamiento_pito` | Umbral real del sensor. |
+| 4 Colores | 08 | LED RGB: ¿cátodo común? |
+| 5 Pantalla y temperatura | 07 | Pantalla LCD: cableado real; patitas del DHT11. |
+| 6 Control y dígito | 09 | Códigos de las 17 teclas; display: ¿cátodo o ánodo? |
+| 7 Marcador | 10 | Display de 4 dígitos: ¿cátodo o ánodo?, fantasmas. |
+| 8 Dos placas | 13 | Cada placa carga por su puerto. |
+| 9 Sala | — | Firewall (en este notebook no hay regla «Bloquino» y la red figura como Pública) y cargar desde otro equipo por `https://<IP>`. |
+
+Probado en la placa el 2026-11-14: la rockola (04) con buzzer pasivo, después
+del arreglo de «tocar nota».
 
 ## Probado sin armar nada (2026-11-13)
 
@@ -103,7 +109,7 @@ la placa real:
 | S7 `theremin` | Cuatro notas por tramos de 15 cm en vez de un tono continuo | ¿Sigue siendo divertido? |
 | S7 `estacionamiento_pito` | Pitido de 0,1 s en rojo | Suena casi continuo. |
 | S8 `fiebre` y `fiebre_aviso` | Nota de 1 s en vez de un tono sin fin | Sobre 30 °C suena seguido. |
-| S9 `lampara_humor` | Sin eco el sensor da 400 cm: queda azul, no rojo | Sin mano delante, el color. |
+| S9 `lampara_humor` | Sin eco el sensor da 400 cm: con la rueda queda rojo, igual que a 5 cm | Sin mano delante, el color. |
 
 ## En cualquier momento
 
@@ -111,7 +117,8 @@ la placa real:
   un riel, el riel entero. También con la protoboard girada.
 - Agregar varios componentes seguidos: ninguno cae encima de otro ni de la placa.
 - Armar un LED sin resistencia y simular: aparece «Revisa tu circuito», en
-  español y sin códigos raros.
+  español y sin códigos raros. Lo mismo con un display de 7 segmentos directo
+  a los pines: pide una resistencia por segmento.
 - Arrastrar bloques, cambiar un menú, escribir un número, botar un bloque.
 - Canciones (Sonido): `empezar canción` con un parpadeo debajo suena y parpadea
   a la vez; comparar la melodía con el buzzer real y la misma librería.
