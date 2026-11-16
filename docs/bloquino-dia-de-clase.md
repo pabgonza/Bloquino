@@ -85,6 +85,11 @@ Para cargar: conectar el Arduino por USB, pulsar «Cargar a la placa» y, la
 primera vez, elegir la placa en la lista del navegador. Funciona en Chrome y
 Edge de computador; no en Firefox, Safari ni celulares.
 
+Un alumno con Mac entra igual, con Chrome; el certificado, los permisos y el
+driver se hacen de otra forma:
+[guia-de-la-clase/mac.html](guia-de-la-clase/mac.html) (sin probar en un Mac
+todavía).
+
 ### La placa no aparece en la lista
 
 El clon del kit usa el chip USB CH340. Windows 10 y 11 instalan su driver

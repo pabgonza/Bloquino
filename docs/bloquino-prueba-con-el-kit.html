@@ -72,14 +72,14 @@ button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid
 <tr><td>1</td><td>Botones y sonido</td><td>03, 11, piano del curso</td><td>Rebote, notas seguidas</td><td>01, 02, 04 (ya probada), 15, sirena</td></tr>
 <tr><td>2</td><td>Perilla y servo</td><td>05</td><td>Ruido de la perilla, corriente del servo, «50.00» en el monitor</td><td>12, <code>perilla</code> y <code>contador</code> del curso</td></tr>
 <tr><td>3</td><td>Barrera</td><td>06 (+ theremin y estacionamiento)</td><td>Umbral real del sensor, servo con pito</td><td>alarma del curso</td></tr>
-<tr><td>4</td><td>Colores</td><td>08</td><td><b>¿LED RGB de cátodo común?</b> Orden de patas, mezclas</td><td>14, sesión 9 del curso</td></tr>
+<tr><td>4</td><td>Colores</td><td>08</td><td>LED RGB: resultó de <b>ánodo común</b>. Orden de patas, mezclas</td><td>14, sesión 9 del curso</td></tr>
 <tr><td>5</td><td>Pantalla y temperatura</td><td>07</td><td><b>Cableado real de la LCD</b>, patitas del DHT11</td><td><code>fiebre</code> del curso</td></tr>
 <tr><td>6</td><td>Control y dígito</td><td>09</td><td><b>Códigos de las 17 teclas</b>, <b>¿cátodo o ánodo?</b></td><td>—</td></tr>
 <tr><td>7</td><td>Marcador</td><td>10</td><td>Display de 4 dígitos: fantasmas, brillo, <b>¿cátodo o ánodo?</b></td><td>—</td></tr>
 <tr><td>8</td><td>Dos placas</td><td>13</td><td>Cada placa a su puerto</td><td>—</td></tr>
 <tr><td>9</td><td>Sala</td><td>—</td><td><b>Firewall</b>, <b>cargar desde otro equipo</b></td><td>—</td></tr>
 </table>
-<p class="sub" style="margin-top:8px">En negrita, lo que estaba pendiente desde el 13-nov. Orden sugerido si hay poco tiempo: 6, 4, 5, 7, 9; después 1, 2, 3, 8.</p>
+<p class="sub" style="margin-top:8px">En negrita, lo que estaba pendiente desde el 13-nov. <b>Probados el 15-nov: 1, 2, 3 y 4.</b> Orden sugerido para lo que queda: 6, 5, 7, 9; después 8.</p>
 
 <h3>Antes de empezar</h3>
 <ul class="lista">
@@ -90,7 +90,7 @@ button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid
 </section>
 
 <section id="p1" data-prueba>
-<h2><span class="n">1</span>Botones y sonido <span class="chip">03 · 11 · piano</span></h2>
+<h2><span class="n">1</span>Botones y sonido <span class="chip">03 · 11 · piano</span> <span class="chip decide">✔ probado el 15-nov</span></h2>
 <p class="sub">Un armado para tres programas. La rockola (04) usa este mismo armado y ya se probó el 14-nov con el buzzer pasivo.</p>
 <div class="dos">
   <figure><a href="ejemplos/03-botones.jpg" target="_blank"><img src="ejemplos/03-botones.jpg" alt="Circuito del ejemplo 03"></a><figcaption>03-botones. Falta sumar el buzzer, como en la rockola.</figcaption></figure>
@@ -105,28 +105,28 @@ button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid
 </div>
 <h3>03-botones</h3>
 <ul class="lista">
-  <li><label><input type="checkbox"><span>Un botón prende el verde; los dos juntos, el rojo.</span></label></li>
-  <li><label><input type="checkbox"><span>Rebote: 10 pulsaciones del botón 1 → el monitor cuenta 1 a 9 y vuelve a 0, sin saltarse ni repetir.</span></label></li>
-  <li><label><input type="checkbox"><span>«Soltaste el botón azul» sale una sola vez por cada soltada (probar 10).</span></label></li>
-  <li><label><input type="checkbox"><span>El botón del kit calza a caballo del canal igual que en la pantalla.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Un botón prende el verde; los dos juntos, el rojo.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Rebote: 10 pulsaciones del botón 1 → el monitor cuenta 1 a 9 y vuelve a 0, sin saltarse ni repetir.</span></label></li>
+  <li><label><input type="checkbox" checked><span>«Soltaste el botón azul» sale una sola vez por cada soltada (probar 10).</span></label></li>
+  <li><label><input type="checkbox" checked><span>El botón del kit calza a caballo del canal igual que en la pantalla.</span></label></li>
 </ul>
 <h3>11-reflejos</h3>
 <ul class="lista">
-  <li><label><input type="checkbox"><span>«Prepárate…», el verde prende entre 2 y 5 s después; al apretar, «Milisegundos:» da un número creíble (150 a 400).</span></label></li>
-  <li><label><input type="checkbox"><span>Bajo 500 ms pita; sobre 500 ms, no.</span></label></li>
+  <li><label><input type="checkbox" checked><span>«Prepárate…», el verde prende entre 2 y 5 s después; al apretar, «Milisegundos:» da un número creíble (150 a 400).</span></label></li>
+  <li><label><input type="checkbox" checked><span>Bajo 500 ms pita; sobre 500 ms, no.</span></label></li>
 </ul>
 <h3>Piano del curso <code>Curso_Arduino\sketches\sesion-05\piano\piano.bloquino</code></h3>
-<p class="sub">Botones 1 y 2 = do y mi; el tercer botón (pin 4) no hace falta.</p>
+<p class="sub">Desde el 15-nov las notas van de izquierda a derecha en los pines 4, 3 y 2 (do, mi, sol): con los botones de los pines 2 y 3 suenan sol y mi; el del pin 4 no hace falta.</p>
 <ul class="lista">
-  <li><label><input type="checkbox"><span>Mantener apretado: la nota suena seguida, sin cortes que molesten.</span></label></li>
-  <li><label><input type="checkbox"><span>Los dos botones a la vez: las notas se turnan.</span></label></li>
-  <li><label><input type="checkbox"><span>Buzzer al revés (+ a GND): suena igual.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Mantener apretado: la nota suena seguida, sin cortes que molesten.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Los dos botones a la vez: las notas se turnan.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Buzzer al revés (+ a GND): suena igual.</span></label></li>
 </ul>
 <textarea class="nota" placeholder="Notas del armado 1"></textarea>
 </section>
 
 <section id="p2" data-prueba>
-<h2><span class="n">2</span>Perilla y servo <span class="chip">05</span></h2>
+<h2><span class="n">2</span>Perilla y servo <span class="chip">05</span> <span class="chip decide">✔ probado el 15-nov</span></h2>
 <div class="dos">
   <figure><a href="ejemplos/05-perilla-magica.jpg" target="_blank"><img src="ejemplos/05-perilla-magica.jpg" alt="Circuito del ejemplo 05"></a><figcaption>05-perilla-magica</figcaption></figure>
   <table>
@@ -137,17 +137,17 @@ button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid
   </table>
 </div>
 <ul class="lista">
-  <li><label><input type="checkbox"><span>De tope a tope: el servo recorre de 0° a 180°, en el mismo sentido que en la pantalla.</span></label></li>
-  <li><label><input type="checkbox"><span>Perilla quieta: el servo no tiembla y el valor del monitor no baila.</span></label></li>
-  <li><label><input type="checkbox"><span>Mover rápido el servo no reinicia la placa (el monitor no se corta ni vuelve a empezar).</span></label></li>
-  <li><label><input type="checkbox"><span>El LED sube de brillo parejo con la perilla.</span></label></li>
-  <li><label><input type="checkbox"><span>El monitor muestra «50.00»: decidir si el decimal molesta (es lo mismo que el <code>contador</code> de la sesión 4).</span></label></li>
+  <li><label><input type="checkbox" checked><span>De tope a tope: el servo recorre de 0° a 180°, en el mismo sentido que en la pantalla.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Perilla quieta: el servo no tiembla y el valor del monitor no baila.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Mover rápido el servo no reinicia la placa (el monitor no se corta ni vuelve a empezar).</span></label></li>
+  <li><label><input type="checkbox" checked><span>El LED sube de brillo parejo con la perilla.</span></label></li>
+  <li><label><input type="checkbox" checked><span>El monitor muestra «50.00»: decidir si el decimal molesta (es lo mismo que el <code>contador</code> de la sesión 4).</span></label></li>
 </ul>
 <textarea class="nota" placeholder="Notas del armado 2"></textarea>
 </section>
 
 <section id="p3" data-prueba>
-<h2><span class="n">3</span>Barrera <span class="chip">06 · theremin · estacionamiento</span></h2>
+<h2><span class="n">3</span>Barrera <span class="chip">06 · theremin · estacionamiento</span> <span class="chip decide">✔ probado el 15-nov</span></h2>
 <p class="sub">Parte del armado 2: el servo pasa al pin 3 y se suman el sensor, otro LED y el buzzer.</p>
 <div class="dos">
   <figure><a href="ejemplos/06-barrera.jpg" target="_blank"><img src="ejemplos/06-barrera.jpg" alt="Circuito del ejemplo 06"></a><figcaption>06-barrera</figcaption></figure>
@@ -162,13 +162,14 @@ button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid
 </div>
 <h3>06-barrera</h3>
 <ul class="lista">
-  <li><label><input type="checkbox"><span>Sin nada delante: barrera abajo (0°), rojo prendido, verde apagado.</span></label></li>
-  <li><label><input type="checkbox"><span>Con una regla: la barrera sube a 90°, apaga el rojo y pita cuando la mano cruza los 20 cm (vale entre 18 y 22).</span></label></li>
-  <li><label><input type="checkbox"><span>Acercar la mano de 1 m a 10 cm: el verde va subiendo de brillo.</span></label></li>
-  <li><label><input type="checkbox"><span>Mano quieta a 30 cm: no hay disparos falsos; mientras pita, el servo no tiembla.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Sin nada delante: barrera abajo (0°), rojo prendido, verde apagado.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Con una regla: la barrera sube a 90°, apaga el rojo y pita cuando la mano cruza los 20 cm (vale entre 18 y 22).</span></label></li>
+  <li><label><input type="checkbox" checked><span>Acercar la mano de 1 m a 10 cm: el verde va subiendo de brillo.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Mano quieta a 30 cm: no hay disparos falsos; mientras pita, el servo no tiembla.</span></label></li>
 </ul>
 <h3>Opcional, sesión 7 del curso</h3>
-<p class="sub">Mover Trig al pin 9 y Echo al 10 (sacar el LED rojo). Archivos en <code>Curso_Arduino\sketches\sesion-07\</code>.</p>
+<p class="sub">Mover Trig al pin 10 y Echo al 9 (desde el 15-nov el curso los lleva así; hay que sacar el LED rojo).</p>
+<p class="sub">Archivos en <code>Curso_Arduino\sketches\sesion-07\</code>. Estas dos van sin marcar: no consta que se hayan probado.</p>
 <ul class="lista">
   <li><label><input type="checkbox"><span><code>theremin</code>: cuatro notas por tramos de 15 cm. ¿Sigue siendo divertido?</span></label></li>
   <li><label><input type="checkbox"><span><code>estacionamiento_pito</code>: bajo 10 cm el pito suena casi continuo y prende la «L».</span></label></li>
@@ -177,23 +178,23 @@ button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid
 </section>
 
 <section id="p4" data-prueba>
-<h2><span class="n">4</span>Colores <span class="chip">08</span> <span class="chip decide">decide código</span></h2>
+<h2><span class="n">4</span>Colores <span class="chip">08</span> <span class="chip decide">✔ probado el 15-nov: ánodo común</span></h2>
 <div class="dos">
   <figure><a href="ejemplos/08-lampara-de-colores.jpg" target="_blank"><img src="ejemplos/08-lampara-de-colores.jpg" alt="Circuito del ejemplo 08"></a><figcaption>08-lampara-de-colores</figcaption></figure>
   <table>
     <tr><th>Pata del LED RGB</th><th>Conexión</th></tr>
-    <tr><td>Común (la más larga)</td><td>GND</td></tr>
+    <tr><td>Común (la más larga)</td><td>5V</td></tr>
     <tr><td>R</td><td>220 Ω → pin 11</td></tr>
     <tr><td>G</td><td>220 Ω → pin 10</td></tr>
     <tr><td>B</td><td>220 Ω → pin 9</td></tr>
   </table>
 </div>
-<div class="aviso">Si no prende nada, el LED es de <b>ánodo común</b>: pasar la pata común a 5V y repetir; los colores salen invertidos (<code>rojo</code> da celeste). El bloque no tiene esa opción: anotarlo y se agrega.</div>
+<div class="aviso">Resultado del 15-nov: el LED RGB del kit es de <b>ánodo común</b>. La pata común va a 5V y el bloque del ejemplo 08 ya viene en «ánodo». Con uno de cátodo común, la pata común iría a GND y el bloque en «cátodo».</div>
 <ul class="lista">
-  <li><label><input type="checkbox"><span>Al cargar queda blanco: es de cátodo común.</span></label></li>
-  <li><label><input type="checkbox"><span>En el monitor, <code>rojo</code>, <code>verde</code> y <code>azul</code> dan ese color. Si salen cambiados, anotar el orden real de las patas.</span></label></li>
-  <li><label><input type="checkbox"><span><code>azar</code> varias veces: el amarillo, el celeste y el violeta se reconocen.</span></label></li>
-  <li><label><input type="checkbox"><span><code>apagar</code> lo apaga.</span></label></li>
+  <li><label><input type="checkbox" checked><span>Al cargar queda blanco, con la pata común a 5V: es de ánodo común.</span></label></li>
+  <li><label><input type="checkbox" checked><span>En el monitor, <code>rojo</code>, <code>verde</code> y <code>azul</code> dan ese color. Si salen cambiados, anotar el orden real de las patas.</span></label></li>
+  <li><label><input type="checkbox" checked><span><code>azar</code> varias veces: el amarillo, el celeste y el violeta se reconocen.</span></label></li>
+  <li><label><input type="checkbox" checked><span><code>apagar</code> lo apaga.</span></label></li>
 </ul>
 <textarea class="nota" placeholder="Notas del armado 4: ¿cátodo o ánodo?, orden de las patas"></textarea>
 </section>
@@ -343,7 +344,8 @@ for (const s of pruebas) {
     const marca = c.type === 'checkbox';
     const clave = 'bq-placa|' + s.id + '|' + (marca ? c.nextElementSibling.textContent : 'nota');
     const guardado = localStorage.getItem(clave);
-    if (marca) c.checked = guardado === '1'; else c.value = guardado || '';
+    // Sin nada guardado vale lo que trae la página: los armados ya probados vienen marcados.
+    if (!marca) c.value = guardado || ''; else if (guardado !== null) c.checked = guardado === '1';
     c.addEventListener('input', () => { localStorage.setItem(clave, marca ? (c.checked ? '1' : '') : c.value); avance(); });
     campos.push(c);
   }
