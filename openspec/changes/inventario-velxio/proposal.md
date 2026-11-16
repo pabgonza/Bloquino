@@ -12,7 +12,7 @@ Bloquino es un fork de Velxio congelado en `8a254109`, y del original se usa una
 
 Pero no todo lo que hoy no se usa sobra. Velxio trae piezas que pueden servir para un curso avanzado o para el modo profe: fuente de poder, baterías, generador de señales, voltímetro y amperímetro, osciloscopio, transistores y reguladores (con la simulación eléctrica ngspice), y otras placas (Nano, Mega, ESP32). Antes de borrar hay que decidir, pieza por pieza, qué se queda, qué se guarda para después y qué sale.
 
-Esto revisa la decisión vigente «lo no-UNO se oculta, no se borra». Se tomó para traer cambios de upstream con pocos conflictos. Con el fork ya muy apartado y los cambios de upstream traídos «a mano solo si valen la pena», ese motivo pesa menos. Si se borra, va una decisión nueva en `docs/decisiones.md`.
+Esto reemplaza la decisión «lo no-UNO se oculta, no se borra», que se tomó para traer cambios de upstream con pocos conflictos. La decisión nueva (2026-11-16) cuida ese mismo motivo: se borran archivos enteros, no ramas dentro de los archivos grandes.
 
 ## What Changes
 
@@ -69,13 +69,13 @@ La fase 1 puede ir en cualquier momento: solo lee y escribe un documento. La fas
 ## Impact
 
 - Fase 1: un documento nuevo, sin código.
-- Fase 2: borra archivos de Velxio en `frontend/`, `backend/`, `test/`, `docs/` y la raíz; toca archivos grandes de Velxio (`SimulatorCanvas.tsx`, `useSimulatorStore.ts`) para quitar ramas de placas, siempre con comentario `Bloquino:`.
-- Traer cambios de upstream se vuelve más difícil en lo borrado (aceptado si se toma la decisión nueva).
+- Fase 2: borra archivos y carpetas enteras de Velxio en `frontend/`, `backend/`, `test/`, `docs/` y la raíz. En los archivos grandes de Velxio solo se quitan los imports o registros que apuntan a lo borrado, con comentario `Bloquino:`; las ramas de placas se quedan.
+- Traer cambios de upstream sigue siendo barato: lo borrado son archivos que no se tocan desde Bloquino.
 - Licencia: AGPLv3 sigue; `LICENSE` y el aviso de fork se quedan.
 
 ## Decisiones abiertas
 
-1. **Borrar o seguir ocultando**: borrar lo «Sale» (más liviano y claro) frente a solo ocultarlo mejor (sin conflictos con upstream). Recomendación: borrar, con decisión nueva en `docs/decisiones.md`.
+1. ~~**Borrar o seguir ocultando**~~ — Decidido (2026-11-16, `docs/decisiones.md`): se borra lo «Sale» solo como archivos o carpetas enteras; no se quitan ramas dentro de los archivos grandes de Velxio. Lo «Futuro» sigue oculto.
 2. **Simulación eléctrica**: es lo más pesado (27 MB) y también lo que habilita fuentes, baterías, multímetro y osciloscopio. Guardarla entera, o sacarla de la página y cargarla solo en modo profe.
 3. **ESP32**: «Futuro» (un curso con WiFi) o «Sale» (QEMU y su toolchain son grandes de mantener).
 4. **`COMMERCIAL_LICENSE.md`**: es la licencia comercial de Velxio, que no aplica a Bloquino; quitarla o dejarla como referencia.
