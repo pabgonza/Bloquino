@@ -15,8 +15,8 @@ context: |
   Stack: frontend React + Vite + TypeScript + Zustand (frontend/), backend FastAPI + arduino-cli (backend/),
   simulación AVR con avr8js, componentes de @wokwi/elements. Tests con vitest (frontend/src/__tests__).
   Reglas del fork: lo nuevo va en módulos propios (frontend/src/blocks/, etc.); los archivos grandes de Velxio
-  (useSimulatorStore.ts, SimulatorCanvas.tsx, EditorToolbar.tsx) se tocan lo mínimo; lo que no es UNO se oculta,
-  no se borra; components-metadata.json es generado (los componentes propios van en
+  (useSimulatorStore.ts, SimulatorCanvas.tsx, EditorToolbar.tsx) se tocan lo mínimo; lo heredado de Velxio que no se usa: lo
+  «Futuro» se oculta y lo «Sale» se borra solo como archivos o carpetas enteras (docs/inventario-velxio.md); components-metadata.json es generado (los componentes propios van en
   scripts/component-overrides.json); Blockly se importa siempre entre amdOff y amdOn; nunca push a upstream.
   Código compacto, sin funciones de un solo uso; comentarios y textos de interfaz en español.
   Hitos (un change por hito, en orden): h1 bloques con generador clásico, h2 scripts paralelos, h3 interfaz de
