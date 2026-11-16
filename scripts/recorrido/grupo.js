@@ -3,7 +3,7 @@
 // `browser_run_code_unsafe` del MCP de Playwright (parámetro `filename`), con el
 // servidor de desarrollo arriba (lee el store por la URL del módulo de Vite).
 async (page) => {
-  const RAIZ = 'D:/Repos/pabgonza/Bloquino/';
+  const RAIZ = './';
   const R = {};
   const espera = (ms) => page.waitForTimeout(ms);
   const foto = (n) => page.screenshot({ path: RAIZ + '.playwright-mcp/grupo-' + n + '.jpg', type: 'jpeg', quality: 75, scale: 'css' });
