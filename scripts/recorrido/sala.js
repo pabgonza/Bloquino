@@ -6,7 +6,7 @@
 // no localhost: sin HTTPS el navegador desactiva funciones y hay que verlo así).
 async (page) => {
   const DIRECCION = 'http://192.168.18.111';
-  const PROYECTO = 'D:/Second_Brain/Personal/Proyectos/Plataforma_Arduino_Bloques/repo/scripts/recorrido/sala.bloquino';
+  const PROYECTO = 'D:/Repos/pabgonza/Bloquino/scripts/recorrido/sala.bloquino';
   const R = {};
   const espera = (ms) => page.waitForTimeout(ms);
   const led13 = () => page.evaluate(() => !!document.querySelector('wokwi-arduino-uno').led13);

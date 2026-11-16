@@ -6,7 +6,7 @@
 async (page) => {
   const SALA = 'http://localhost';
   const IP = 'https://192.168.18.111';
-  const RAIZ = 'D:/Second_Brain/Personal/Proyectos/Plataforma_Arduino_Bloques/repo/';
+  const RAIZ = 'D:/Repos/pabgonza/Bloquino/';
   const IMG = RAIZ + 'docs/guia-de-la-clase/img/';
   const R = {};
   const espera = (ms) => page.waitForTimeout(ms);
