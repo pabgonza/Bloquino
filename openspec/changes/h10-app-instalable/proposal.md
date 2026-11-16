@@ -16,7 +16,7 @@ Velxio tiene una aplicación de escritorio, pero es cerrada y de pago (su envolt
 - **Actualizar la página sin reinstalar**: la aplicación carga la página desde una carpeta propia que se reemplaza con un paquete de decenas de MB (la página compilada pesa 99 MB sin comprimir). Lo pesado (`arduino-cli`, el core AVR y las librerías) queda en el instalador y cambia rara vez. La aplicación muestra qué versión de la página tiene.
 - **Una sola publicación**: un script construye, desde el mismo commit, la imagen de la sala, el instalador y el paquete de la página, para que la web y la aplicación nunca queden en versiones distintas.
 
-Fuera de este hito: macOS y Linux, actualización automática (la aplicación no busca ni descarga versiones sola), firma de código, tienda de aplicaciones.
+Fuera de este hito: macOS y Linux, actualización automática (la aplicación no busca ni descarga versiones sola; perfilada en `h11-actualizacion-automatica`), firma de código, tienda de aplicaciones.
 
 ## Cuándo empezar
 

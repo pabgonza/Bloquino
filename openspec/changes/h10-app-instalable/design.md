@@ -79,7 +79,7 @@ Barra de menú oculta, visible con Alt, en español: Modo profe / Modo alumno (n
 ### 8. Página actualizable
 - **Paquete**: `bloquino-pagina-<versión>.asar`, el `dist/` de la página en el formato de archivo único que Electron lee sin descomprimir. Adentro, `bloquino-version.json`: `{ version, commit, fecha, baseMinima, archivos: { ruta: sha256 } }`.
 - **Dónde vive**: el instalador trae su página en `resources/pagina.asar`; las actualizaciones se copian a `%LOCALAPPDATA%\Bloquino\pagina\`. Al arrancar se usa la de fecha más nueva entre las dos; así, reinstalar con una página más nueva gana sola, y una actualización vieja se descarta.
-- **Actualizar desde archivo**: copia a un nombre temporal, comprueba cada `sha256` y `baseMinima`, renombra y reinicia la aplicación. Si algo falla, borra el temporal y avisa; la página anterior no se toca.
+- **Actualizar desde archivo**: copia a un nombre temporal, comprueba cada `sha256` y `baseMinima`, renombra y reinicia la aplicación. Si algo falla, borra el temporal y avisa; la página anterior no se toca. La rutina recibe la ruta del paquete y no sabe de dónde vino: `h11-actualizacion-automatica` la reutiliza para lo descargado.
 - **El proyecto sobrevive** porque el origen no cambia (decisión 2).
 - **Por qué `.asar` y no `.zip`**: Node no lee zip sin dependencias, y descomprimir 99 MB en miles de archivos hace lenta y frágil la actualización. `servicio.mjs` recibe una función de lectura: dentro de Electron lee del `.asar`; en los tests, de `frontend/dist`.
 
